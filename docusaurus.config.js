@@ -46,7 +46,19 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
         },
-        blog: false, // Optional: disable the blog plugin
+        // blog: {
+        //   // Simple blog config
+        //   routeBasePath: '/', // URL path for blog
+        //   path: './blog', // File path for blog posts
+        //   /** 
+        //    * Optional blog config 
+        //    */
+        //   // blogTitle: 'My Blog',
+        //   // blogDescription: 'Blog description',
+        //   // blogSidebarCount: 5,
+        //   // blogSidebarTitle: 'Recent Posts',
+        // },
+        // blog: false, // Optional: disable the blog plugin
         // blog: {
         //   showReadingTime: true,
         //   feedOptions: {
