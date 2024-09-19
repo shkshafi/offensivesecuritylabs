@@ -1,5 +1,5 @@
 ---
-slug: /
+# slug: /
 sidebar_position: 2
 title: Disclaimer
 sidebar_label : Disclaimer
@@ -20,10 +20,10 @@ Offensive Security Labs provides information, tools, and resources solely for ed
 - By using this website, you release Offensive Security Labs and its affiliates from all liability and responsibility for any resulting damages or harm.
 
 :::
-:::tip[Important Notes]
+
+:::info[Important Notes]
 - This website does not condone or support illegal or unethical activities.
 - You use this website at your own risk and discretion.
 - You assume full responsibility for your actions.
 :::
-
 
