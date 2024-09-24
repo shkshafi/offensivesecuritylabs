@@ -99,7 +99,8 @@ const config = {
         logo: {
           alt: 'Offensive Security Labs',
           // src: 'img/logo.svg',
-          src: 'img/logo_dark.jpg',
+          src: 'img/logo_light.png',
+          srcDark: 'img/logo_dark.jpg',
         },
         items: [
           {
