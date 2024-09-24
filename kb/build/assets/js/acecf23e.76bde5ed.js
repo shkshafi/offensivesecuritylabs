@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkoff_sec_labs=self.webpackChunkoff_sec_labs||[]).push([[1903],{1912:s=>{s.exports=JSON.parse('{"blogBasePath":"/kb/blog","blogTitle":"Blog","authorsListPath":"/kb/blog/authors"}')}}]);
