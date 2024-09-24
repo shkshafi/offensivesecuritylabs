@@ -10,8 +10,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'OffensiveSecurity Labs',
   tagline: 'OffensiveSecurity Labs',
-  favicon: 'img/favicon.ico',
-
+  // favicon: 'img/favicon.ico',
+  favicon: 'img/logo_light.png',
   // Set the production url of your site here
   url: 'https://offensivesecuritylabs.com/',
   // Set the /<baseUrl>/ pathname under which your site is served
@@ -95,10 +95,11 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'Knowledge Base',
+        title: 'Learn',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'Offensive Security Labs',
+          // src: 'img/logo.svg',
+          src: 'img/logo_dark.jpg',
         },
         items: [
           {
