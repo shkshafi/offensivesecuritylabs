@@ -18,7 +18,7 @@ const config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/kb/',
 
-  // swizzle: './swizzle',
+   
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'facebook', // Usually your GitHub org/user name.
@@ -84,7 +84,9 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      
+      colorMode: {
+        defaultMode: 'dark',
+      },
       docs: {
         sidebar: {
           hideable: true,
