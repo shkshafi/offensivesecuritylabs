@@ -6,7 +6,7 @@
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://offensivesecuritylabs.com/kb/blog"/>
     <subtitle>OffensiveSecurity Labs Blog</subtitle>
-    <icon>https://offensivesecuritylabs.com/kb/img/logo_light.png</icon>
+    <icon>https://offensivesecuritylabs.com/kb/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
         <id>https://offensivesecuritylabs.com/kb/blog/welcome</id>

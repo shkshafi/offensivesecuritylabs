@@ -11,7 +11,7 @@ const config = {
   title: 'OffensiveSecurity Labs',
   tagline: 'OffensiveSecurity Labs',
   // favicon: 'img/favicon.ico',
-  favicon: 'img/logo_light.png',
+  favicon: 'img/favicon.ico',
   // Set the production url of your site here
   url: 'https://offensivesecuritylabs.com/',
   // Set the /<baseUrl>/ pathname under which your site is served
