@@ -7,7 +7,7 @@ sidebar_label : Disclaimer
 
 
 <!-- # Tutorial Intro -->
-:::danger[Website Disclaimer]
+:::danger[Important Disclaimer]
 
 
 Offensive Security Labs provides information, tools, and resources solely for educational and informational purposes. By accessing and using this website, you acknowledge:
@@ -19,6 +19,14 @@ Offensive Security Labs provides information, tools, and resources solely for ed
 - You should seek professional advice before implementing any techniques or tips found on this website.
 - By using this website, you release Offensive Security Labs and its affiliates from all liability and responsibility for any resulting damages or harm.
 
+
+
+:::danger[Copyright and Attribution Notice]
+The content hosted on this website represents a curated collection of security concepts, best practices, and tools, developed by a community of security researchers. Every effort is made to acknowledge the original authors and provide appropriate credit. If you identify your work or data on this site without proper attribution, please notify us immediately so we can investigate and correct the oversight.
+:::
+
+:::warning[Ownership Notice]
+Please note that this website is a privately-owned, independent project, unaffiliated with any official offensive security entity, corporation, or government organization. It is solely maintained and contributed by an individual enthusiast, with the goal of providing valuable resources and insights to fellow cybersecurity professionals.
 :::
 
 :::info[Important Notes]

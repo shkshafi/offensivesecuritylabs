@@ -95,7 +95,7 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'Learn',
+        title: '',
         logo: {
           alt: 'Offensive Security Labs',
           // src: 'img/logo.svg',
@@ -107,18 +107,21 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Home',
+            label: '🏠Home',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
+          {to: '/blog', label: '✍️Blog', position: 'left'},
+          {to: '/helloreact', label: '👑Author', position: 'left'},
+          {to: '/services', label: '🛠️Services', position: 'left'},
+          {to: '/contact', label: '📬Contact', position: 'left'},
           {
             href: 'https://github.com/facebook/docusaurus',
-            label: 'Back to Offensive Security Labs',
+            label: '➡️ Back to Offensive Security Labs',
             position: 'right',
           },
         ],
       },
       footer: {
-        copyright: `Copyright © ${new Date().getFullYear()} Offensive Security Labs, Inc. Made with ❤️`,
+        copyright: `Copyright © ${new Date().getFullYear()} Offensive Security Labs. <br /> Made with ❤️`,
         links: [
           {
             label: 'Stack Overflow',
