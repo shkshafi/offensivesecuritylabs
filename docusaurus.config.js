@@ -115,6 +115,7 @@ const config = {
           {to: '/contact', label: '📬Contact', position: 'left'},
           {
             href: 'https://offensivesecuritylabs.com/',
+            target: '_self',
             label: '➡️ Back to Offensive Security Labs',
             position: 'right',
           },
