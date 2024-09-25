@@ -4,45 +4,44 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import {themes as prismThemes} from 'prism-react-renderer';
+import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'OffensiveSecurity Labs',
-  tagline: 'OffensiveSecurity Labs',
+  title: "OffensiveSecurity Labs",
+  tagline: "OffensiveSecurity Labs",
   // favicon: 'img/favicon.ico',
-  favicon: 'img/favicon.ico',
+  favicon: "img/favicon.ico",
   // Set the production url of your site here
-  url: 'https://offensivesecuritylabs.com/',
+  url: "https://offensivesecuritylabs.com/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/kb/',
+  baseUrl: "/kb/",
 
-   
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: "facebook", // Usually your GitHub org/user name.
+  projectName: "offensivesecuritylabs", // Usually your repo name.
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: "en",
+    locales: ["en"],
   },
 
   presets: [
     [
-      'classic',
+      "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          routeBasePath: '/', // Serve the docs at the site's root
-          sidebarPath: './sidebars.js',
+          routeBasePath: "/", // Serve the docs at the site's root
+          sidebarPath: "./sidebars.js",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
         },
@@ -50,8 +49,8 @@ const config = {
         //   // Simple blog config
         //   routeBasePath: '/', // URL path for blog
         //   path: './blog', // File path for blog posts
-        //   /** 
-        //    * Optional blog config 
+        //   /**
+        //    * Optional blog config
         //    */
         //   // blogTitle: 'My Blog',
         //   // blogDescription: 'Blog description',
@@ -75,7 +74,7 @@ const config = {
         //   onUntruncatedBlogPosts: 'warn',
         // },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: "./src/css/custom.css",
         },
       }),
     ],
@@ -85,7 +84,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       colorMode: {
-        defaultMode: 'dark',
+        defaultMode: "dark",
       },
       docs: {
         sidebar: {
@@ -93,31 +92,31 @@ const config = {
         },
       },
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      // image: "img/docusaurus-social-card.jpg",
       navbar: {
-        title: '',
+        title: "",
         logo: {
-          alt: 'Offensive Security Labs',
+          alt: "Offensive Security Labs",
           // src: 'img/logo.svg',
-          src: 'img/logo_light.png',
-          srcDark: 'img/logo_dark.jpg',
+          src: "img/logo_light.png",
+          srcDark: "img/logo_dark.jpg",
         },
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: '🏠Home',
+            type: "docSidebar",
+            sidebarId: "tutorialSidebar",
+            position: "left",
+            label: "🏠Home",
           },
-          {to: '/blog', label: '✍️Blog', position: 'left'},
-          {to: '/helloreact', label: '👑Author', position: 'left'},
-          {to: '/services', label: '🛠️Services', position: 'left'},
-          {to: '/contact', label: '📬Contact', position: 'left'},
+          { to: "/blog", label: "✍️Blog", position: "left" },
+          { to: "/helloreact", label: "👑Author", position: "left" },
+          { to: "/services", label: "🛠️Services", position: "left" },
+          { to: "/contact", label: "📬Contact", position: "left" },
           {
-            href: 'https://offensivesecuritylabs.com/',
-            target: '_self',
-            label: '➡️ Back to Offensive Security Labs',
-            position: 'right',
+            href: "https://offensivesecuritylabs.com/",
+            target: "_self",
+            label: "➡️ Back to Offensive Security Labs",
+            position: "right",
           },
         ],
       },
@@ -125,16 +124,16 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Offensive Security Labs. <br /> Made with ❤️`,
         links: [
           {
-            label: 'Stack Overflow',
-            href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+            label: "Stack Overflow",
+            href: "https://stackoverflow.com/questions/tagged/docusaurus",
           },
           {
-            label: 'Discord',
-            href: 'https://discordapp.com/invite/docusaurus',
+            label: "Discord",
+            href: "https://discordapp.com/invite/docusaurus",
           },
           {
-            label: 'X',
-            href: 'https://x.com/docusaurus',
+            label: "X",
+            href: "https://x.com/docusaurus",
           },
           {
             html: `<br/>
