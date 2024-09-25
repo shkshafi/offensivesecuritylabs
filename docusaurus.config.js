@@ -114,7 +114,7 @@ const config = {
           {to: '/services', label: '🛠️Services', position: 'left'},
           {to: '/contact', label: '📬Contact', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://offensivesecuritylabs.com/',
             label: '➡️ Back to Offensive Security Labs',
             position: 'right',
           },
