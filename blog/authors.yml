@@ -2,7 +2,8 @@ shafi:
   name: Shafi Ur Rahman
   title: Security Researcher
   url: https://github.com/shkshafi
-  image_url: https://avatars.githubusercontent.com/u/7412101?s=96&v=4
+  image_url:  https://media.licdn.com/dms/image/v2/D5603AQEFjmDrPmgjMw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1670779204183?e=1733356800&v=beta&t=vdfdVvIJLQ5ELWifvPFrb9MtrHhZAUiGGXDxJQ9OSfM
+
   page: 
   # customize the url of the author page at /blog/authors/<permalink>
     permalink: '/all-shafi-articles'

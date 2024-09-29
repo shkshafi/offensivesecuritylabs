@@ -109,7 +109,7 @@ const config = {
             label: "🏠 Docs",
           },
           { to: "/blog", label: "✍️ Blog", position: "left" },
-          { to: "/helloreact", label: "👑 Author", position: "left" },
+          { to: "/author", label: "👑 Author", position: "left" },
           { to: "/services", label: "🛠️ Services", position: "left" },
           { to: "/contact", label: "📬 Contact", position: "left" },
           {
