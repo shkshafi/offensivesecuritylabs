@@ -1,9 +1,3 @@
-// @ts-nocheck
-// `@type` JSDoc annotations allow editor autocompletion and type checking
-// (when paired with `@ts-check`).
-// There are various equivalent ways to declare your Docusaurus config.
-// See: https://docusaurus.io/docs/api/docusaurus-config
-
 import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
@@ -42,37 +36,8 @@ const config = {
         docs: {
           routeBasePath: "/", // Serve the docs at the site's root
           sidebarPath: "./sidebars.js",
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+
         },
-        // blog: {
-        //   // Simple blog config
-        //   routeBasePath: '/', // URL path for blog
-        //   path: './blog', // File path for blog posts
-        //   /**
-        //    * Optional blog config
-        //    */
-        //   // blogTitle: 'My Blog',
-        //   // blogDescription: 'Blog description',
-        //   // blogSidebarCount: 5,
-        //   // blogSidebarTitle: 'Recent Posts',
-        // },
-        // blog: false, // Optional: disable the blog plugin
-        // blog: {
-        //   showReadingTime: true,
-        //   feedOptions: {
-        //     type: ['rss', 'atom'],
-        //     xslt: true,
-        //   }},
-        //   // Please change this to your repo.
-        //   // Remove this to remove the "edit this page" links.
-        //   editUrl:
-        //     'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        //   // Useful options to enforce blogging best practices
-        //   onInlineTags: 'warn',
-        //   onInlineAuthors: 'warn',
-        //   onUntruncatedBlogPosts: 'warn',
-        // },
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -91,8 +56,6 @@ const config = {
           hideable: true,
         },
       },
-      // Replace with your project's social card
-      // image: "img/docusaurus-social-card.jpg",
       navbar: {
         title: "",
         logo: {

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkoff_sec_labs=self.webpackChunkoff_sec_labs||[]).push([[6767],{4972:e=>{e.exports=JSON.parse('{"tags":[{"label":"Hello","permalink":"/kb/blog/tags/hello","description":"Hello tag description","count":1}]}')}}]);
