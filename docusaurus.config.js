@@ -110,7 +110,7 @@ const config = {
           },
           { to: "/blog", label: "✍️ Blog", position: "left" },
           { to: "/author", label: "👑 Author", position: "left" },
-          { to: "/services", label: "🛠️ Services", position: "left" },
+          // { to: "/services", label: "🛠️ Services", position: "left" },
           { to: "/contact", label: "📬 Contact", position: "left" },
           {
             href: "https://offensivesecuritylabs.com/",
