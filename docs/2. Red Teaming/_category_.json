@@ -1,7 +1,8 @@
 {
   "label": "Red Teaming",
   "position": 4,
-  "link": {
-    "type": "generated-index"
+ "link": {
+    "type": "generated-index",
+    "description": "Red Teaming is a critical component of Offensive Security, simulating real-world attacks to test an organization's defenses. Here's an in-depth look at Red Teaming, covering key topics:"
   }
 }

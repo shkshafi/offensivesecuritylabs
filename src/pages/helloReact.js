@@ -13,7 +13,7 @@ export default function Hello() {
           fontSize: '20px',
         }}>
         <p>
-          Edit <code>pages/helloReact.js</code> and save to relkoad.
+          Edit <code>pages/helloReact.js</code> and save to reload.
         </p>
       </div>
     </Layout>
