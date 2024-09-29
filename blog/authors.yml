@@ -1,23 +1,14 @@
-yangshun:
-  name: Yangshun Tay
-  title: Front End Engineer @ Facebook
-  url: https://github.com/yangshun
-  image_url: https://github.com/yangshun.png
-  page: true
+shafi:
+  name: Shafi Ur Rahman
+  title: Security Researcher
+  url: https://github.com/shkshafi
+  image_url: https://avatars.githubusercontent.com/u/7412101?s=96&v=4
+  page: 
+  # customize the url of the author page at /blog/authors/<permalink>
+    permalink: '/all-shafi-articles'
   socials:
-    x: yangshunz
-    github: yangshun
+    x: shkshafi
+    linkedin: shkshafi
+    github: shkshafi
+    newsletter: https://offensivesecuritylabs.com/
 
-slorber:
-  name: Sébastien Lorber
-  title: Docusaurus maintainer
-  url: https://sebastienlorber.com
-  image_url: https://github.com/slorber.png
-  page:
-    # customize the url of the author page at /blog/authors/<permalink>
-    permalink: '/all-sebastien-lorber-articles'
-  socials:
-    x: sebastienlorber
-    linkedin: sebastienlorber
-    github: slorber
-    newsletter: https://thisweekinreact.com

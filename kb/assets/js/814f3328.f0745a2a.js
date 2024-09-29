@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkoff_sec_labs=self.webpackChunkoff_sec_labs||[]).push([[7472],{5513:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Welcome to Offensive Security Labs","permalink":"/kb/blog/welcome","unlisted":false,"date":"2024-09-29T00:00:00.000Z"}]}')}}]);
