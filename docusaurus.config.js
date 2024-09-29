@@ -124,20 +124,20 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Offensive Security Labs. <br /> Made with ❤️`,
         links: [
           {
-            label: "Stack Overflow",
-            href: "https://stackoverflow.com/questions/tagged/docusaurus",
+            label: "LinkedIn",
+            href: "https://www.linkedin.com/in/shkshafi",
           },
           {
-            label: "Discord",
-            href: "https://discordapp.com/invite/docusaurus",
+            label: "Github",
+            href: "https://github.com/shkshafi",
           },
           {
             label: "X",
-            href: "https://x.com/docusaurus",
+            href: "https://x.com/shkshafi",
           },
           {
             html: `<br/>
-                <a href="https://www.netlify.com" target="_blank" rel="noreferrer noopener" aria-label="Deploys by Netlify">
+                <a href="" target="_blank" rel="noreferrer noopener" aria-label="Deploys by Netlify">
                   <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt="Deploys by Netlify" width="114" height="51" />
                 </a>
               `,
