@@ -7,8 +7,8 @@ export default function TOCWrapper(props) {
       <TOC {...props} />
       <hr></hr>
       <br/>
-                <a href="" target="_blank" rel="noreferrer noopener" aria-label="Deploys by Netlify">
-                  <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt="Deploys by Netlify" width="114" height="51" />
+      <a aria-label="Deploys by ">
+                  <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt="Deploys by " width="114" height="51" />
                 </a>
     </>
     
