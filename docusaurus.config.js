@@ -75,6 +75,7 @@ const config = {
           { to: "/author", label: "👑 Author", position: "left" },
           // { to: "/services", label: "🛠️ Services", position: "left" },
           { to: "/contact", label: "📬 Contact", position: "left" },
+          { to: "/test", label: "Test", position: "left" },
           {
             href: "https://offensivesecuritylabs.com/",
             target: "_self",
