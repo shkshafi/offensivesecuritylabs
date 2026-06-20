@@ -44,34 +44,6 @@ const config = {
       }),
     ],
   ],
-
-  plugins: [
-    function rootHomepagePlugin(context, options) {
-      return {
-        name: 'root-homepage-plugin',
-        configureWebpack(config, isServer, utils) {
-          return {
-            devServer: {
-              setupMiddlewares: (middlewares, devServer) => {
-                devServer.app.get('/', (req, res, next) => {
-                  const fs = require('fs');
-                  const path = require('path');
-                  const htmlPath = path.resolve(__dirname, 'index.html');
-                  if (fs.existsSync(htmlPath)) {
-                    res.sendFile(htmlPath);
-                  } else {
-                    next();
-                  }
-                });
-                return middlewares;
-              },
-            },
-          };
-        },
-      };
-    },
-  ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
