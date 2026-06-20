@@ -10,7 +10,6 @@
 /package-lock.json.backup
 /public/hot
 /public/storage
-/public/build
 /storage/*.key
 
 # Docusaurus Specific
