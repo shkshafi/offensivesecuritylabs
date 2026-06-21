@@ -34,7 +34,7 @@
 
   /* Align page content with top navbar chrome (mx + inner padding) */
   .app-content-shell {
-    @apply mx-2 w-full sm:mx-3;
+    @apply w-full;
   }
 
   .app-page-title-gradient {
@@ -716,19 +716,21 @@ html[data-background-style="none"] .dark [data-sidebar="sidebar"].app-chrome-sur
   background-color: hsl(var(--background) / 0.65) !important;
 }
 
-/* Colourful sidebar & main backgrounds (user preference) */
+/* Colourful sidebar & main backgrounds (user preference) - Disabled/Solid background preferred */
 html[data-background-style="colourful"] [data-sidebar="sidebar"] {
-  background-image: linear-gradient(to bottom, hsl(var(--background) / 0.72), hsl(var(--background) / 0.88)), url('/images/sidebar_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-blend-mode: overlay;
+  background-image: none !important;
+  background-color: hsl(var(--background) / 0.75) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+html[data-background-style="colourful"] .dark [data-sidebar="sidebar"] {
+  background-color: hsl(var(--background) / 0.65) !important;
 }
 
 html[data-background-style="colourful"] body.has-common-bg {
-  background-image: linear-gradient(to bottom, hsl(var(--background) / 0.85), hsl(var(--background) / 0.95)), var(--common-bg-image, none);
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
+  background-image: none !important;
+  background-color: hsl(var(--background)) !important;
 }
 
 /* Premium Glowing Border-Beam Button */
@@ -816,4 +818,121 @@ html[data-background-style="colourful"] body.has-common-bg {
 .ntt-btn-glowing:active {
   transform: scale(0.97) translateY(0);
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Light Mode Overrides for Report Creator (Builder & Template Configuration)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border) / 0.8) !important;
+}
+
+html:not(.dark) #report-creator-root .bg-\[\#0f1424\],
+html:not(.dark) #report-creator-root .bg-\[\#0F1424\] {
+  background-color: hsl(var(--muted) / 0.5) !important;
+  border-color: hsl(var(--border) / 0.6) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html:not(.dark) #report-creator-root .bg-\[\#070913\] {
+  background-color: hsl(var(--muted) / 0.3) !important;
+  border-color: hsl(var(--border) / 0.6) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html:not(.dark) #report-creator-root .bg-\[\#090D14\] {
+  background-color: hsl(var(--muted) / 0.4) !important;
+  border-color: hsl(var(--border) / 0.6) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html:not(.dark) #report-creator-root .bg-\[\#131A2B\] {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border) / 0.8) !important;
+}
+
+html:not(.dark) #report-creator-root .bg-\[\#1C2438\] {
+  background-color: hsl(var(--muted) / 0.5) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border) / 0.4) !important;
+}
+
+/* Force dark text and clean background for inputs and textareas */
+html:not(.dark) #report-creator-root textarea,
+html:not(.dark) #report-creator-root input {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border) / 0.8) !important;
+}
+
+/* Inputs / select dropdown lists and option tags */
+html:not(.dark) #report-creator-root select,
+html:not(.dark) #report-creator-root option {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Overriding specific text colors inside dark background blocks */
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\].text-white,
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] .text-white,
+html:not(.dark) #report-creator-root .bg-\[\#090D14\].text-white,
+html:not(.dark) #report-creator-root .bg-\[\#090D14\] .text-white,
+html:not(.dark) #report-creator-root .bg-\[\#131A2B\].text-white,
+html:not(.dark) #report-creator-root .bg-\[\#131A2B\] .text-white,
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] .text-slate-100,
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] .text-slate-200,
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] .text-slate-300,
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] .text-slate-350,
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] .text-zinc-100,
+html:not(.dark) #report-creator-root .bg-\[\#0B101E\] .text-zinc-300,
+html:not(.dark) #report-creator-root .bg-\[\#090D14\] .text-slate-100,
+html:not(.dark) #report-creator-root .bg-\[\#090D14\] .text-slate-200,
+html:not(.dark) #report-creator-root .bg-\[\#090D14\] .text-slate-300,
+html:not(.dark) #report-creator-root .bg-\[\#090D14\] .text-slate-350,
+html:not(.dark) #report-creator-root .bg-\[\#131A2B\] .text-slate-100,
+html:not(.dark) #report-creator-root .bg-\[\#131A2B\] .text-slate-200,
+html:not(.dark) #report-creator-root .bg-\[\#131A2B\] .text-slate-300,
+html:not(.dark) #report-creator-root .bg-\[\#131A2B\] .text-slate-350,
+html:not(.dark) #report-creator-root .text-slate-200 {
+  color: hsl(var(--foreground)) !important;
+}
+
+html:not(.dark) #report-creator-root .text-slate-400 {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+html:not(.dark) #report-creator-root .hover\:text-white:hover {
+  color: hsl(var(--foreground)) !important;
+}
+
+html:not(.dark) #report-creator-root .hover\:bg-white\/\[0\.08\]:hover {
+  background-color: hsl(var(--muted)) !important;
+}
+
+html:not(.dark) #report-creator-root .hover\:bg-white\/\[0\.05\]:hover {
+  background-color: hsl(var(--muted) / 0.8) !important;
+}
+
+html:not(.dark) #report-creator-root .active\:bg-white\/\[0\.12\]:active {
+  background-color: hsl(var(--border)) !important;
+}
+
+/* Placeholders inside textboxes */
+html:not(.dark) #report-creator-root .placeholder-slate-600::placeholder,
+html:not(.dark) #report-creator-root textarea::placeholder,
+html:not(.dark) #report-creator-root input::placeholder {
+  color: hsl(var(--muted-foreground) / 0.6) !important;
+}
+
+/* Border overrides */
+html:not(.dark) #report-creator-root .border-white\/\[0\.03\] { border-color: hsl(var(--border) / 0.5) !important; }
+html:not(.dark) #report-creator-root .border-white\/\[0\.05\] { border-color: hsl(var(--border) / 0.6) !important; }
+html:not(.dark) #report-creator-root .border-white\/\[0\.06\] { border-color: hsl(var(--border) / 0.6) !important; }
+html:not(.dark) #report-creator-root .border-white\/\[0\.08\] { border-color: hsl(var(--border) / 0.7) !important; }
+html:not(.dark) #report-creator-root .border-white\/\[0\.1\]   { border-color: hsl(var(--border) / 0.8) !important; }
+html:not(.dark) #report-creator-root .border-white\/10       { border-color: hsl(var(--border)) !important; }
+html:not(.dark) #report-creator-root .border-white\/20       { border-color: hsl(var(--border) / 1.2) !important; }
+
 

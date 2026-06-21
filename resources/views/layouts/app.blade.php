@@ -42,7 +42,7 @@
         @viteReactRefresh
         @vite(array_merge(['resources/css/app.css', 'resources/js/app.js'], $viteScripts ?? []))
     </head>
-    <body class="font-sans antialiased has-common-bg min-h-screen bg-background text-foreground">
+    <body class="font-sans antialiased min-h-screen bg-background text-foreground">
         <div class="flex min-h-screen w-full bg-transparent"
              x-data="{
                  sidebarPinned: true,
@@ -74,10 +74,10 @@
                    @mouseleave="sidebarHovered = false">
 
                 <!-- Fixed panel itself -->
-                <div class="fixed inset-y-0 left-0 z-30 h-screen transition-[width] duration-200 ease-linear md:flex p-2 bg-transparent"
+                <div class="fixed inset-y-0 left-0 z-30 h-screen transition-[width] duration-200 ease-linear md:flex bg-transparent"
                      :class="sidebarPinned || sidebarHovered ? 'w-[13.5rem]' : 'w-[3.5rem]'">
                      
-                     <div data-sidebar="sidebar" class="app-chrome-surface relative flex h-full w-full flex-col overflow-hidden rounded-2xl">
+                     <div data-sidebar="sidebar" class="app-chrome-surface relative flex h-full w-full flex-col overflow-hidden rounded-none border-y-0 border-l-0 border-r border-border/40">
                           <!-- Ambient Glow -->
                           <div class="sidebar-ambient-glow pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
                               <div class="absolute -top-[20%] -left-[10%] h-[60%] w-[120%] rounded-full bg-gradient-to-br from-blue-200/20 via-indigo-100/10 to-transparent blur-2xl dark:from-blue-900/10 dark:via-indigo-900/5"></div>
@@ -304,8 +304,8 @@
             <!-- Main Inner Container -->
             <div class="flex-grow min-w-0 flex flex-col transition-all duration-200 ease-linear">
 
-                 <!-- Floating Glass Header/Navbar -->
-                 <header class="header-safe app-chrome-surface sticky top-0 z-20 mx-2 mt-2 flex flex-row items-center gap-1.5 overflow-hidden rounded-xl px-2.5 py-1.5 sm:mx-3 sm:px-3 md:h-12 md:min-h-12 md:max-h-12 md:flex-nowrap md:gap-2 md:py-0">
+                  <!-- Full-Width Header/Navbar -->
+                  <header class="header-safe app-chrome-surface sticky top-0 z-20 w-full flex flex-row items-center gap-1.5 overflow-hidden px-4 md:h-12 md:min-h-12 md:max-h-12 md:flex-nowrap md:gap-2 md:py-0 border-t-0 border-x-0 border-b border-border/40 rounded-none bg-background/80">
                      <!-- Mobile Sidebar Trigger -->
                      <button type="button" @click="mobileSidebarOpen = true" class="h-8 w-8 shrink-0 rounded-lg border border-border/40 bg-background/50 flex items-center justify-center md:hidden text-muted-foreground hover:text-foreground cursor-pointer">
                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v16" /></svg>
@@ -625,9 +625,9 @@
                  </header>
 
                  <!-- Page Content shell -->
-                 <main class="flex-grow min-w-0 app-content-shell p-3 sm:p-4">
+                 <main class="flex-grow min-w-0 w-full flex flex-col">
                      @isset($header)
-                         <div class="mb-6">
+                         <div class="mb-6 px-4 sm:px-6 md:px-8 pt-4">
                              {{ $header }}
                          </div>
                      @endisset

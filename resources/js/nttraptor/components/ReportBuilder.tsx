@@ -2359,7 +2359,7 @@ export default function ReportBuilder({
   ];
 
   return (
-    <div className="min-h-screen bg-[#070913] text-zinc-100 font-sans flex flex-col h-screen overflow-hidden">
+    <div className="min-h-screen bg-transparent text-zinc-800 dark:text-zinc-100 font-sans flex flex-col h-screen overflow-hidden">
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
           display: none;
@@ -2371,18 +2371,18 @@ export default function ReportBuilder({
       `}</style>
 
       {/* Top Action Bar */}
-      <header className="bg-[#0B101E] border-b border-white/[0.05] h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
-        <div className="flex items-center gap-4">
+      <header className="bg-slate-100 dark:bg-[#0B101E] border-b border-slate-200 dark:border-white/[0.05] h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
+        <div className="flex items-center gap-4 flex-1 min-w-0 max-w-xl lg:max-w-2xl xl:max-w-3xl">
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] flex items-center justify-center text-slate-300 hover:text-white transition-all"
+            className="w-10 h-10 rounded-full border border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 bg-slate-200/50 dark:bg-white/[0.02] hover:bg-slate-200 dark:hover:bg-white/[0.06] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all flex-shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <div>
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Report Builder</span>
-              <span className="text-[9px] px-1.5 py-0.5 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded font-semibold uppercase tracking-wider">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">Report Builder</span>
+              <span className="text-[9px] px-1.5 py-0.5 bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 rounded font-semibold uppercase tracking-wider flex-shrink-0">
                 {report.classification}
               </span>
             </div>
@@ -2390,7 +2390,7 @@ export default function ReportBuilder({
               type="text"
               value={report.name}
               onChange={(e) => updateReportField('name', e.target.value)}
-              className="bg-transparent border-none p-0 text-base font-extrabold text-white tracking-tight leading-tight mt-0.5 focus:outline-none focus:ring-0 focus:border-b focus:border-white/10 w-80 max-w-full"
+              className="bg-transparent border-none p-0 text-base font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight mt-0.5 focus:outline-none focus:ring-0 focus:border-b focus:border-slate-300 dark:focus:border-white/10 w-full"
             />
           </div>
         </div>
@@ -2503,11 +2503,11 @@ export default function ReportBuilder({
         {/* Column 2: Center Editor Panel (hidden in fullscreen preview) */}
         <div
           style={{ width: isFullscreen ? '0%' : `${leftWidth}%` }}
-          className={`flex flex-col bg-[#0B101E] h-full border-r border-white/[0.05] ${isFullscreen ? 'hidden' : ''}`}
+          className={`flex flex-col bg-white dark:bg-[#0B101E] h-full border-r border-slate-200 dark:border-white/[0.05] ${isFullscreen ? 'hidden' : ''}`}
         >
           {/* Chrome-style tabs */}
           {!isFullscreen && (
-            <div className="flex items-end bg-[#070913] px-2 pt-2 border-b border-white/[0.05] overflow-x-auto no-scrollbar flex-nowrap flex-shrink-0 select-none">
+            <div className="flex items-end bg-slate-200 dark:bg-[#070913] px-2 pt-2 border-b border-slate-300 dark:border-white/[0.05] overflow-x-auto no-scrollbar flex-nowrap flex-shrink-0 select-none">
               {sections.map((sec, idx) => {
                 const isActive = activeSection === sec.id;
                 const status = sectionsStatus[sec.id as keyof typeof sectionsStatus];
@@ -2525,14 +2525,14 @@ export default function ReportBuilder({
                     onClick={() => setActiveSection(sec.id as any)}
                     className={`flex items-center gap-2 px-4 py-3 text-xs font-bold rounded-t-xl transition-all relative z-10 flex-shrink-0 -mb-[1px] border-t-2 border-x ${
                       isActive 
-                        ? 'bg-[#0B101E] border-t-blue-500 border-x-white/[0.08] border-b-transparent text-blue-400 shadow-[0_-4px_12px_rgba(0,0,0,0.25)] z-20 scale-105 origin-bottom' 
-                        : 'bg-[#0B101E]/40 border-t-transparent border-x-transparent text-slate-400 hover:text-white hover:bg-[#0B101E]/70 border-b-white/[0.05] hover:scale-[1.02] origin-bottom'
+                        ? 'bg-white dark:bg-[#0B101E] border-t-blue-500 border-x-slate-300 dark:border-x-white/[0.08] border-b-transparent text-blue-600 dark:text-blue-400 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.25)] z-20 scale-105 origin-bottom' 
+                        : 'bg-slate-100/70 dark:bg-[#0B101E]/40 border-t-transparent border-x-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0B101E]/70 border-b-slate-200 dark:border-b-white/[0.05] hover:scale-[1.02] origin-bottom'
                     }`}
                     style={{
                       minWidth: '120px',
                     }}
                   >
-                    <span className="text-[9px] text-slate-500 font-mono">0{idx + 1}</span>
+                    <span className="text-[9px] text-slate-550 dark:text-slate-500 font-mono">0{idx + 1}</span>
                     <span className="truncate max-w-[90px]">{sec.label}</span>
                     <span className={`w-1.5 h-1.5 rounded-full ${dotColor} ${isActive ? 'ring-2 ring-blue-400/50 animate-pulse' : ''}`} />
                   </button>
@@ -2545,7 +2545,7 @@ export default function ReportBuilder({
                   addCustomSection();
                   setActiveSection('custom');
                 }}
-                className="p-1.5 mb-1.5 ml-1 bg-[#0B101E]/40 hover:bg-[#0B101E]/80 border border-white/[0.05] hover:border-white/20 text-slate-400 hover:text-white rounded-lg transition-all flex items-center justify-center flex-shrink-0 cursor-pointer"
+                className="p-1.5 mb-1.5 ml-1 bg-slate-100 dark:bg-[#0B101E]/40 hover:bg-slate-250 dark:hover:bg-[#0B101E]/80 border border-slate-300 dark:border-white/[0.05] hover:border-slate-400 dark:hover:border-white/20 text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg transition-all flex items-center justify-center flex-shrink-0 cursor-pointer"
                 title="Add Custom Section"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -2554,13 +2554,13 @@ export default function ReportBuilder({
           )}
 
           {/* Editor Header */}
-          <div className="p-6 pb-4 border-b border-white/[0.05] flex items-center justify-between flex-shrink-0">
+          <div className="p-6 pb-4 border-b border-slate-200 dark:border-white/[0.05] flex items-center justify-between flex-shrink-0">
             <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">{activeMeta.title}</h2>
-              <p className="text-xs text-slate-400 mt-1">{activeMeta.desc}</p>
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white tracking-tight">{activeMeta.title}</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{activeMeta.desc}</p>
             </div>
             
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-semibold">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>Auto-saved</span>
             </div>
@@ -2572,7 +2572,7 @@ export default function ReportBuilder({
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Client / Target */}
-                  <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors">
+                  <div className="border border-slate-200 dark:border-white/[0.05] bg-slate-50 dark:bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors">
                     <Building2 className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Client / Target</label>

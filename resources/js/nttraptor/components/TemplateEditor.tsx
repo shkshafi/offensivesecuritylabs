@@ -1041,7 +1041,7 @@ export default function TemplateEditor({
   };
 
   return (
-    <div className="min-h-screen bg-[#070913] text-slate-200 font-sans flex flex-col h-screen overflow-hidden">
+    <div className="min-h-screen bg-transparent text-slate-700 dark:text-slate-200 font-sans flex flex-col h-screen overflow-hidden">
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
           display: none;
@@ -1059,17 +1059,17 @@ export default function TemplateEditor({
       )}
 
       {/* Editor Header */}
-      <header className="bg-[#0B101E] border-b border-white/[0.05] h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
+      <header className="bg-slate-100 dark:bg-[#0B101E] border-b border-slate-200 dark:border-white/[0.05] h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
         <div className="flex items-center gap-4">
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/[0.05] rounded-lg text-slate-400 hover:text-white transition-colors"
+            className="p-2 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
             <span className="text-xs text-blue-500 font-bold uppercase tracking-wider block mb-0.5">Template Configuration</span>
-            <h2 className="text-sm font-semibold text-white leading-tight">Edit Report Template</h2>
+            <h2 className="text-sm font-semibold text-slate-850 dark:text-white leading-tight">Edit Report Template</h2>
           </div>
         </div>
 
@@ -1081,7 +1081,7 @@ export default function TemplateEditor({
                 onSaveTemplate(DEFAULT_TEMPLATE);
               }
             }}
-            className="flex items-center gap-2 bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] text-slate-300 hover:text-white px-4 py-2 text-xs font-semibold rounded-lg transition-all"
+            className="flex items-center gap-2 bg-slate-200/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-4 py-2 text-xs font-semibold rounded-lg transition-all"
           >
             <RotateCcw className="w-4 h-4 text-slate-400" />
             <span>Reset Default</span>
@@ -1102,9 +1102,9 @@ export default function TemplateEditor({
         {/* Column 1: Available Placeholders */}
         <div
           style={{ width: `${col1Width}%`, flexShrink: 0 }}
-          className="bg-[#0B101E] border-r border-white/[0.05] flex flex-col h-full overflow-y-auto p-5"
+          className="bg-white dark:bg-[#0B101E] border-r border-slate-200 dark:border-white/[0.05] flex flex-col h-full overflow-y-auto p-5"
         >
-          <h3 className="text-xs text-slate-400 uppercase tracking-widest font-bold mb-5 flex items-center gap-2">
+          <h3 className="text-xs text-slate-555 dark:text-slate-400 uppercase tracking-widest font-bold mb-5 flex items-center gap-2">
             <Info className="w-4 h-4" />
             <span>Placeholders</span>
           </h3>
