@@ -1,6 +1,27 @@
 {
+  "node_modules/canvg/lib/index.es.js": {
+    "file": "assets/index.es-xLkIt3n2.js",
+    "name": "index.es",
+    "src": "node_modules/canvg/lib/index.es.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/report-creator.tsx"
+    ]
+  },
+  "node_modules/dompurify/dist/purify.es.mjs": {
+    "file": "assets/purify.es-Csrj9YNg.js",
+    "name": "purify.es",
+    "src": "node_modules/dompurify/dist/purify.es.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/html2canvas/dist/html2canvas.esm.js": {
+    "file": "assets/html2canvas.esm-CBrSDip1.js",
+    "name": "html2canvas.esm",
+    "src": "node_modules/html2canvas/dist/html2canvas.esm.js",
+    "isDynamicEntry": true
+  },
   "resources/css/app.css": {
-    "file": "assets/app-LvMYj1E_.css",
+    "file": "assets/app-PZiEgpio.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -9,5 +30,16 @@
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
+  },
+  "resources/js/report-creator.tsx": {
+    "file": "assets/report-creator-BPVLDfXN.js",
+    "name": "report-creator",
+    "src": "resources/js/report-creator.tsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "node_modules/html2canvas/dist/html2canvas.esm.js",
+      "node_modules/dompurify/dist/purify.es.mjs",
+      "node_modules/canvg/lib/index.es.js"
+    ]
   }
 }

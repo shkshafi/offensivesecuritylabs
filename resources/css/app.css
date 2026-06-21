@@ -1,5 +1,819 @@
 @import './landing.css';
 
+:root {
+  --font-brand: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   iOS / PWA safe-area inset utilities
+   Requires viewport-fit=cover in <meta name="viewport"> (already set).
+   env(safe-area-inset-*) resolves to 0px on desktop and non-PWA browsers,
+   so these utilities are completely transparent outside of installed PWAs.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@layer utilities {
+  .pt-safe { padding-top:    env(safe-area-inset-top,    0px); }
+  .pr-safe { padding-right:  env(safe-area-inset-right,  0px); }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pl-safe { padding-left:   env(safe-area-inset-left,   0px); }
+}
+
+/* Shared glass surface for sidebar card + top bar (matched opacity & blur) */
+@layer components {
+  .app-chrome-surface {
+    @apply border border-border/50 bg-background/75 text-foreground shadow-[0_4px_24px_-10px_rgba(0,0,0,0.12)] backdrop-blur-xl;
+  }
+
+  .dark .app-chrome-surface {
+    @apply border-white/[0.08] bg-background/65 shadow-[0_4px_28px_-8px_rgba(0,0,0,0.45)];
+  }
+
+  /* Align page content with top navbar chrome (mx + inner padding) */
+  .app-content-shell {
+    @apply mx-2 w-full sm:mx-3;
+  }
+
+  .app-page-title-gradient {
+    @apply bg-gradient-to-br from-blue-600 via-violet-500 to-cyan-500 bg-clip-text text-transparent dark:from-blue-400 dark:via-violet-400 dark:to-cyan-400;
+  }
+
+  /* Scrollbar visible only while scrolling or hovering (Cursor-style) */
+  .overlay-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .overlay-scrollbar:hover {
+    scrollbar-color: hsl(var(--border) / 0.55) transparent;
+  }
+
+  .overlay-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .overlay-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .overlay-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+  }
+
+  .overlay-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border) / 0.55);
+  }
+
+  .overlay-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.35);
+  }
+}
+
+/*
+ * .header-safe — sticky app header that must clear the iPhone status bar /
+ * Dynamic Island / camera housing when running as an installed PWA.
+ *
+ * Strategy: max(baseline-mobile-padding, env(safe-area-inset-top))
+ *   • Desktop (env = 0px always):       padding-top: 0   min-height: 4rem  (unchanged)
+ *   • Mobile browser (env = 0px):        padding-top: 8px min-height: 4rem  (unchanged)
+ *   • iPhone SE / old notch (env ≈ 20px): padding-top: 20px                 (clears status bar)
+ *   • iPhone notch / DI (env ≈ 44-59px): padding-top: 44-59px               (clears Dynamic Island)
+ */
+.header-safe {
+  /* keep at least 0.5rem so non-PWA mobile still has breathing room */
+  padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+  min-height: calc(4rem + env(safe-area-inset-top, 0px));
+}
+
+/* Desktop: safe-area is always 0px on desktops; reset to original layout */
+@media (min-width: 640px) {
+  .header-safe {
+    padding-top: 0;
+    min-height: 3rem;
+  }
+}
+
+@keyframes waveform-bounce {
+  from { transform: scaleY(0.35); }
+  to   { transform: scaleY(1); }
+}
+@layer base {
+  :root {
+    /* Soft Teal + Graphite + Gold — 2026 */
+    --background: 210 14% 96%;
+    --foreground: 220 25% 15%;
+
+    --card: 210 14% 99%;
+    --card-foreground: 220 25% 15%;
+
+    --popover: 210 14% 99%;
+    --popover-foreground: 220 25% 15%;
+
+    --primary: 188 75% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 15% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 16% 92%;
+    --muted-foreground: 210 15% 45%;
+
+    --accent: 190 40% 92%;
+    --accent-foreground: 188 80% 30%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 16% 86%;
+    --input: 210 16% 86%;
+    --ring: 188 75% 40%;
+
+    --premium: 42 85% 50%;
+    --premium-foreground: 220 25% 10%;
+
+    --chart-1: 188 75% 45%;
+    --chart-2: 200 75% 50%;
+    --chart-3: 142 60% 45%;
+    --chart-4: 42 85% 50%;
+    --chart-5: 12 75% 55%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 210 14% 94%;
+    --sidebar-foreground: 220 25% 15%;
+    --sidebar-primary: 188 75% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 190 40% 92%;
+    --sidebar-accent-foreground: 188 80% 30%;
+    --sidebar-border: 210 16% 86%;
+    --sidebar-ring: 188 75% 40%;
+  }
+
+  /* Target the entire scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  /* Target the scrollbar track (the background of the scrollbar) */
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 5px;
+  }
+
+  /* Target the scrollbar thumb (the draggable part) */
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 5px;
+  }
+
+  /* Style the thumb on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.4);
+  }
+
+  /* Target the corner where scrollbars meet (if both exist) */
+  ::-webkit-scrollbar-corner {
+    background: hsl(var(--muted));
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply overflow-x-hidden;
+  }
+
+  body {
+    @apply min-h-svh w-full text-foreground;
+    background-color: hsl(var(--background));
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Keep monospace only where semantically correct */
+  .font-mono, code, pre, .timer, kbd {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Use Plus Jakarta Sans for display headings */
+  h1, h2, .font-display {
+    font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+  }
+
+  .dark {
+    /* Deep Oceanic Blue-Teal Dashboard — Dark Mode */
+    --background: 205 35% 5%;
+    --foreground: 205 20% 96%;
+
+    --card: 205 30% 10%;
+    --card-foreground: 205 20% 96%;
+
+    --popover: 205 30% 10%;
+    --popover-foreground: 205 20% 96%;
+
+    --primary: 195 85% 52%;
+    --primary-foreground: 205 40% 6%;
+
+    --secondary: 205 25% 25%;
+    --secondary-foreground: 205 20% 96%;
+
+    --muted: 205 30% 16%;
+    --muted-foreground: 205 20% 65%;
+
+    --accent: 195 40% 16%;
+    --accent-foreground: 195 85% 65%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 205 30% 20%;
+    --input: 205 30% 20%;
+    --ring: 195 85% 52%;
+
+    --premium: 42 85% 55%;
+    --premium-foreground: 205 40% 6%;
+
+    --chart-1: 195 85% 52%;
+    --chart-2: 210 85% 58%;
+    --chart-3: 150 70% 50%;
+    --chart-4: 42 85% 55%;
+    --chart-5: 12 75% 60%;
+
+    --sidebar-background: 205 35% 6%;
+    --sidebar-foreground: 205 20% 96%;
+    --sidebar-primary: 195 85% 52%;
+    --sidebar-primary-foreground: 205 40% 6%;
+    --sidebar-accent: 195 40% 16%;
+    --sidebar-accent-foreground: 195 85% 65%;
+    --sidebar-border: 205 30% 20%;
+    --sidebar-ring: 195 85% 52%;
+  }
+
+  /* Sidebar glassmorphism — matches the navbar floating glass style */
+  /* Background is handled via Tailwind classes on the element directly */
+
+
+  .CollapsibleContent {
+    overflow: hidden;
+  }
+
+  .CollapsibleContent[data-state='open'] {
+    animation: slideDown 300ms ease-out;
+  }
+
+  .CollapsibleContent[data-state='closed'] {
+    animation: slideUp 300ms ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      height: var(--radix-collapsible-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  /* Prevent focus zoom on mobile devices */
+  @media screen and (max-width: 767px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+  .theme {
+    --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+    --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+
+  }
+
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .faded-bottom {
+    @apply after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:hidden after:h-32 after:w-full after:md:block;
+  }
+}
+
+/* Schedule-X Calendar Light Mode Overrides */
+.sx__calendar-wrapper {
+  background: transparent;
+}
+
+.sx__week-grid,
+.sx__month-grid-wrapper,
+.sx__day-grid {
+  background: hsl(var(--card) / 0.5);
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border) / 0.4);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.sx__month-grid-day--is-today {
+  background: hsl(var(--primary) / 0.08);
+  border: 1px solid hsl(var(--primary) / 0.3);
+}
+
+/* Schedule-X Calendar Dark Mode Overrides: Colorful Modern Dashboard */
+.dark .sx__calendar-wrapper {
+  background: transparent; /* Let the main background show */
+}
+
+.dark .sx__week-grid,
+.dark .sx__month-grid-wrapper,
+.dark .sx__day-grid {
+  background: hsl(var(--card) / 0.5);
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border) / 0.4);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.dark .sx__date-grid-day,
+.dark .sx__month-grid-day {
+  background: transparent;
+  border: 1px solid hsl(var(--border) / 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.dark .sx__date-grid-day:hover,
+.dark .sx__month-grid-day:hover {
+  background: hsl(var(--secondary) / 0.6);
+  box-shadow: inset 0 0 16px hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+.dark .sx__time-grid-day {
+  border-color: hsl(var(--border) / 0.3);
+}
+
+.dark .sx__time-grid-hour {
+  border-color: hsl(var(--border) / 0.15);
+  color: hsl(var(--muted-foreground));
+}
+
+.dark .sx__header,
+.dark .sx__week-grid-header {
+  background: transparent;
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border) / 0.5);
+}
+
+.dark .sx__month-grid-day--is-leading,
+.dark .sx__month-grid-day--is-trailing {
+  color: hsl(var(--muted-foreground) / 0.5);
+  background: rgba(0,0,0,0.2);
+}
+
+.dark .sx__month-grid-day--is-today {
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.1), transparent);
+  border: 1px solid hsl(var(--primary) / 0.5);
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.15);
+}
+
+.dark .sx__forward-backward-navigation button {
+  color: hsl(var(--foreground));
+  transition: all 0.2s ease;
+}
+
+.dark .sx__forward-backward-navigation button:hover {
+  background: hsl(var(--accent));
+  color: hsl(var(--primary));
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.2);
+}
+
+.dark .sx__view-selection-item {
+  color: hsl(var(--foreground));
+  transition: all 0.2s ease;
+}
+
+.dark .sx__view-selection-item:hover {
+  background: hsl(var(--accent));
+  color: hsl(var(--primary));
+}
+
+.dark .sx__view-selection-item--is-selected {
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  border-bottom: 2px solid hsl(var(--secondary-foreground));
+  box-shadow: 0 4px 10px -4px hsl(var(--secondary-foreground) / 0.4);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+
+  }
+  body {
+    @apply bg-background text-foreground;
+
+  }
+
+  /* Prevent iOS Safari from auto-zooming into inputs smaller than 16px */
+  input, textarea, select {
+    font-size: max(16px, 1em);
+  }
+
+}
+
+@theme inline {
+  @keyframes shimmer-slide {
+  to {
+    transform: translate(calc(100cqw - 100%), 0);
+
+    }
+
+  }
+  @keyframes spin-around {
+  0% {
+    transform: translateZ(0) rotate(0);
+
+    }
+  15%, 35% {
+    transform: translateZ(0) rotate(90deg);
+
+    }
+  65%, 85% {
+    transform: translateZ(0) rotate(270deg);
+
+    }
+  100% {
+    transform: translateZ(0) rotate(360deg);
+
+    }
+
+  }
+
+}
+
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+
+}
+
+/* Safari and iOS specific fixes */
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  /* Safari backdrop-filter support */
+  .safari-backdrop-blur {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Safari transform fixes */
+@supports (-webkit-appearance: none) {
+  .safari-transform-fix {
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+}
+
+/* iOS Safari input fixes */
+@supports (-webkit-touch-callout: none) {
+  input, textarea, select {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Safari flexbox fixes */
+@supports (display: -webkit-box) {
+  .safari-flex-fix {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+  }
+}
+
+/* Safari z-index stacking context fix */
+.safari-z-index-fix {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Safari animation performance */
+.safari-will-change {
+  will-change: transform, opacity;
+}
+
+/* Safari border-radius with overflow fix */
+.safari-overflow-fix {
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+/* Safari viewport height fix for mobile */
+@supports (-webkit-touch-callout: none) {
+  .safari-viewport-fix {
+    height: -webkit-fill-available;
+  }
+}
+
+/* utility animation for animated gradient text fallback */
+@keyframes gradient-x {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s linear infinite;
+}
+
+/* Chat message styles */
+.chat-message h3 {
+  font-weight: 600;
+  margin-top: 1rem;
+}
+.chat-message h4 {
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+.chat-message h5 {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+.chat-message h6 {
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+.chat-message ul {
+  padding-left: 1.2rem;
+}
+.chat-message li {
+  margin-bottom: 0.4rem;
+}
+.chat-message pre {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  padding: 12px;
+  border-radius: calc(var(--radius) - 2px);
+  overflow-x: auto;
+  border: 1px solid hsl(var(--border) / 0.5);
+}
+.chat-message code {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  padding: 2px 6px;
+  border-radius: calc(var(--radius) - 4px);
+  border: 1px solid hsl(var(--border) / 0.4);
+}
+
+/* ── Kanban card redesign ── */
+.kanban-list {
+  /* column wrapper – no counter needed; numbering via data-rank */
+}
+
+.kanban-card {
+  position: relative;
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0,0,0,0.06);
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease, border-color 180ms ease;
+  will-change: transform, box-shadow;
+}
+
+/* content above any pseudo-elements */
+.kanban-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Removed large ghost number — order shown inline */
+.kanban-card::before {
+  display: none;
+}
+
+/* Subtle shimmer on hover */
+.kanban-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(158,122,255,0.04), rgba(254,139,187,0.03), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+  z-index: 0;
+}
+
+.kanban-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.1);
+}
+
+.kanban-card:hover::after {
+  opacity: 1;
+}
+
+/* Dark mode */
+.dark .kanban-card {
+  border-color: rgba(255,255,255,0.06);
+}
+
+.dark .kanban-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  border-color: rgba(255,255,255,0.12);
+}
+
+/* Legacy overlay variant (unused, kept for compat) */
+.kanban-card.kanban-card--overlay::before { display: none; }
+.kanban-card.kanban-card--overlay { position: relative; z-index: 1; }
+
+/* ============================================
+   Global Search Highlight Animation
+   ============================================ */
+@keyframes search-highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.7);
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+  50% {
+    box-shadow: 0 0 20px 4px hsl(var(--primary) / 0.3);
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+}
+
+.search-highlight {
+  animation: search-highlight-pulse 1.5s ease-in-out 2;
+  border-radius: var(--radius, 0.5rem);
+  position: relative;
+  z-index: 10;
+}
+/* Plain appearance: sidebar matches top navbar chrome exactly */
+html[data-background-style="none"] [data-sidebar="sidebar"] {
+  background-image: none !important;
+  background-color: hsl(var(--background) / 0.75) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+html[data-background-style="none"] .dark [data-sidebar="sidebar"] {
+  background-color: hsl(var(--background) / 0.65) !important;
+}
+
+html[data-background-style="none"] [data-sidebar="sidebar"] .sidebar-ambient-glow {
+  display: none;
+}
+
+html[data-background-style="none"] header.app-chrome-surface,
+html[data-background-style="none"] [data-sidebar="sidebar"].app-chrome-surface {
+  background-color: hsl(var(--background) / 0.75) !important;
+  background-image: none !important;
+}
+
+html[data-background-style="none"] .dark header.app-chrome-surface,
+html[data-background-style="none"] .dark [data-sidebar="sidebar"].app-chrome-surface {
+  background-color: hsl(var(--background) / 0.65) !important;
+}
+
+/* Colourful sidebar & main backgrounds (user preference) */
+html[data-background-style="colourful"] [data-sidebar="sidebar"] {
+  background-image: linear-gradient(to bottom, hsl(var(--background) / 0.72), hsl(var(--background) / 0.88)), url('https://i.pinimg.com/736x/fc/2f/1d/fc2f1d9e4141ba6be9256f6f86bf7d5d.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-blend-mode: overlay;
+}
+
+html[data-background-style="colourful"] body.has-common-bg {
+  background-image: linear-gradient(to bottom, hsl(var(--background) / 0.85), hsl(var(--background) / 0.95)), var(--common-bg-image, none);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+/* Premium Glowing Border-Beam Button */
+@keyframes ntt-beam-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ntt-beam-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2), 0 0 30px rgba(99, 102, 241, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), 0 0 45px rgba(99, 102, 241, 0.3);
+  }
+}
+
+.ntt-btn-glowing {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 1.5px; /* Border thickness */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: ntt-beam-pulse 4s infinite ease-in-out;
+  cursor: pointer;
+  border: none;
+}
+
+/* Conic gradient that rotates to create the light loop slowly */
+.ntt-btn-glowing::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 120deg,
+    #3b82f6 180deg,
+    #8b5cf6 240deg,
+    #3b82f6 300deg,
+    transparent 360deg
+  );
+  animation: ntt-beam-spin 6s linear infinite;
+}
+
+/* Inner content background container: White bg with dark text */
+.ntt-btn-glowing-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  background: #ffffff; /* White background */
+  color: #0B101E; /* Black / Dark text */
+  border-radius: 9px; /* Slightly smaller than outer border-radius */
+  padding: 10px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  z-index: 1;
+}
+
+.ntt-btn-glowing:hover {
+  transform: translateY(-1px);
+}
+
+.ntt-btn-glowing:hover .ntt-btn-glowing-inner {
+  background-color: #f1f5f9; /* Light off-white on hover */
+}
+
+.ntt-btn-glowing:active {
+  transform: scale(0.97) translateY(0);
+}
+
