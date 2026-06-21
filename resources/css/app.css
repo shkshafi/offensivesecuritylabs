@@ -716,21 +716,23 @@ html[data-background-style="none"] .dark [data-sidebar="sidebar"].app-chrome-sur
   background-color: hsl(var(--background) / 0.65) !important;
 }
 
-/* Colourful sidebar & main backgrounds (user preference) - Disabled/Solid background preferred */
+/* Colourful sidebar & main backgrounds (user preference) */
 html[data-background-style="colourful"] [data-sidebar="sidebar"] {
-  background-image: none !important;
-  background-color: hsl(var(--background) / 0.75) !important;
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background-image: linear-gradient(to bottom, hsl(var(--background) / 0.72), hsl(var(--background) / 0.88)), url('https://i.pinimg.com/736x/fc/2f/1d/fc2f1d9e4141ba6be9256f6f86bf7d5d.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-blend-mode: overlay;
 }
 
 html[data-background-style="colourful"] .dark [data-sidebar="sidebar"] {
-  background-color: hsl(var(--background) / 0.65) !important;
+  background-image: linear-gradient(to bottom, hsl(var(--background) / 0.65), hsl(var(--background) / 0.85)), url('https://i.pinimg.com/736x/fc/2f/1d/fc2f1d9e4141ba6be9256f6f86bf7d5d.jpg') !important;
 }
 
 html[data-background-style="colourful"] body.has-common-bg {
-  background-image: none !important;
-  background-color: hsl(var(--background)) !important;
+  background-image: linear-gradient(to bottom, hsl(var(--background) / 0.85), hsl(var(--background) / 0.95)), var(--common-bg-image, none);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 /* Premium Glowing Border-Beam Button */

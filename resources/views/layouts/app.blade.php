@@ -97,12 +97,12 @@
                                   <!-- Expanded Full Logo -->
                                   <div x-show="sidebarPinned || sidebarHovered" class="flex items-center">
                                       <img src="{{ asset('images/offsec_light.png') }}" class="h-8 w-auto max-w-[140px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
-                                      <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain" alt="Logo">
+                                      <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain mix-blend-screen" alt="Logo">
                                   </div>
                                   <!-- Collapsed Icon Logo -->
                                   <div x-show="!sidebarPinned && !sidebarHovered" style="display: none;" class="flex items-center">
                                       <img src="{{ asset('images/icon_light.png') }}" class="h-8 w-8 object-contain dark:hidden mix-blend-multiply" alt="Icon">
-                                      <img src="{{ asset('images/icon_dark.png') }}" class="hidden dark:block h-8 w-8 object-contain" alt="Icon">
+                                      <img src="{{ asset('images/icon_dark.png') }}" class="hidden dark:block h-8 w-8 object-contain mix-blend-screen" alt="Icon">
                                   </div>
                               </a>
                               
@@ -241,7 +241,7 @@
                              <!-- Logo -->
                              <a href="{{ route('dashboard') }}" class="flex items-center text-decoration-none select-none">
                                  <img src="{{ asset('images/offsec_light.png') }}" class="h-8 w-auto max-w-[140px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
-                                 <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain" alt="Logo">
+                                 <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain mix-blend-screen" alt="Logo">
                              </a>
                              
                              <!-- Close Button -->
@@ -324,7 +324,7 @@
             <div class="flex-grow min-w-0 flex flex-col transition-all duration-200 ease-linear">
 
                   <!-- Full-Width Header/Navbar -->
-                  <header class="header-safe app-chrome-surface sticky top-0 z-20 w-full flex flex-row items-center gap-1.5 overflow-hidden px-4 md:h-12 md:min-h-12 md:max-h-12 md:flex-nowrap md:gap-2 md:py-0 border-t-0 border-x-0 border-b border-border/40 rounded-none bg-background/80">
+                  <header class="header-safe app-chrome-surface sticky top-0 z-40 w-full flex flex-row items-center gap-1.5 px-4 md:h-12 md:min-h-12 md:max-h-12 md:flex-nowrap md:gap-2 md:py-0 border-t-0 border-x-0 border-b border-border/40 rounded-none bg-background/80">
                      <!-- Mobile Sidebar Trigger -->
                      <button type="button" @click="mobileSidebarOpen = true" class="h-8 w-8 shrink-0 rounded-lg border border-border/40 bg-background/50 flex items-center justify-center md:hidden text-muted-foreground hover:text-foreground cursor-pointer">
                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v16" /></svg>
@@ -333,7 +333,7 @@
                      <!-- Mobile Brand Logo -->
                      <div class="flex items-center md:hidden">
                          <img src="{{ asset('images/offsec_light.png') }}" class="h-[26px] w-auto max-w-[110px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
-                         <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-[26px] w-auto max-w-[110px] object-contain" alt="Logo">
+                         <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-[26px] w-auto max-w-[110px] object-contain mix-blend-screen" alt="Logo">
                      </div>
 
                      <!-- Desktop Left: Search bar, App switcher and Clock -->
@@ -343,7 +343,14 @@
                              <button @click.stop="open = !open" class="h-8 w-8 shrink-0 rounded-lg text-muted-foreground hover:bg-muted/50 flex items-center justify-center cursor-pointer border-0 bg-transparent">
                                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
                              </button>
-                             <div x-show="open" @click.away="open = false" class="absolute left-0 mt-1.5 w-56 rounded-xl border border-border/50 bg-popover text-popover-foreground p-1.5 shadow-xl z-50 space-y-0.5" style="display: none;">
+                             <div x-show="open" @click.outside="open = false"
+                                  x-transition:enter="transition ease-out duration-150"
+                                  x-transition:enter-start="opacity-0 translate-y-[-6px]"
+                                  x-transition:enter-end="opacity-100 translate-y-0"
+                                  x-transition:leave="transition ease-in duration-100"
+                                  x-transition:leave-start="opacity-100 translate-y-0"
+                                  x-transition:leave-end="opacity-0 translate-y-[-6px]"
+                                  class="absolute left-0 top-full mt-1.5 w-56 rounded-xl border border-border/50 bg-popover text-popover-foreground p-1.5 shadow-xl z-[100] space-y-0.5" style="display: none;">
                                  <div class="px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground/75 uppercase tracking-wider">Launch Module</div>
                                  <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs hover:bg-muted/40 transition-colors text-decoration-none text-foreground">
                                      <svg class="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard
@@ -361,11 +368,23 @@
                          </div>
                          
                          <!-- Search bar -->
-                         <div class="relative max-w-sm w-64 min-w-0">
+                         <div class="relative max-w-sm w-64 min-w-0" x-data="{
+                             focusSearch(e) {
+                                 if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                                     e.preventDefault();
+                                     this.$refs.searchInput.focus();
+                                 }
+                             }
+                         }" @keydown.window="focusSearch">
                              <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-muted-foreground/60">
                                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                              </span>
-                             <input type="text" placeholder="Search anything..." class="w-full h-8 pl-8 pr-3 rounded-lg border-0 bg-muted/25 text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/40 transition-colors focus:ring-1 focus:ring-primary/20">
+                             <input x-ref="searchInput" type="text" placeholder="Search..." class="w-full h-8 pl-8 pr-10 rounded-lg border-0 bg-muted/30 text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/50 transition-colors focus:ring-1 focus:ring-primary/20">
+                             <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                                 <kbd class="inline-flex h-4 items-center rounded border border-border/40 bg-muted/50 px-1 font-mono text-[10px] font-medium text-muted-foreground/70">
+                                     <span class="text-[9px] mr-0.5">⌘</span>K
+                                 </kbd>
+                             </div>
                          </div>
 
                          <!-- Clock / DateTime Component (Desktop) -->
@@ -516,7 +535,14 @@
                                  </template>
                              </button>
 
-                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-1.5 w-80 rounded-xl border border-border/50 bg-popover text-popover-foreground shadow-xl z-50 p-0 overflow-hidden" style="display: none;">
+                             <div x-show="open" @click.outside="open = false"
+                                  x-transition:enter="transition ease-out duration-150"
+                                  x-transition:enter-start="opacity-0 translate-y-[-6px]"
+                                  x-transition:enter-end="opacity-100 translate-y-0"
+                                  x-transition:leave="transition ease-in duration-100"
+                                  x-transition:leave-start="opacity-100 translate-y-0"
+                                  x-transition:leave-end="opacity-0 translate-y-[-6px]"
+                                  class="absolute right-0 top-full mt-1.5 w-80 rounded-xl border border-border/50 bg-popover text-popover-foreground shadow-xl z-[100] p-0 overflow-hidden" style="display: none;">
                                  <div class="flex items-center justify-between border-b border-border/40 px-4 py-2.5">
                                      <h4 class="text-xs font-semibold text-foreground">Notifications</h4>
                                      <template x-if="unreadCount > 0">
@@ -588,7 +614,14 @@
                                      {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                                  </div>
                              </button>
-                             <div x-show="navDropdownOpen" @click.away="navDropdownOpen = false" class="absolute right-0 mt-1.5 w-48 rounded-xl border border-border/50 bg-popover text-popover-foreground p-1.5 shadow-xl z-50 space-y-0.5" style="display: none;">
+                             <div x-show="navDropdownOpen" @click.outside="navDropdownOpen = false"
+                                  x-transition:enter="transition ease-out duration-150"
+                                  x-transition:enter-start="opacity-0 translate-y-[-6px]"
+                                  x-transition:enter-end="opacity-100 translate-y-0"
+                                  x-transition:leave="transition ease-in duration-100"
+                                  x-transition:leave-start="opacity-100 translate-y-0"
+                                  x-transition:leave-end="opacity-0 translate-y-[-6px]"
+                                  class="absolute right-0 top-full mt-1.5 w-48 rounded-xl border border-border/50 bg-popover text-popover-foreground p-1.5 shadow-xl z-[100] space-y-0.5" style="display: none;">
                                  <!-- User info header -->
                                  <div class="flex items-center gap-2 px-2.5 py-1.5 border-b border-border/40 select-none">
                                      <div class="h-7 w-7 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs shrink-0">
