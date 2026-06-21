@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Offensive Security Labs</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon_light.png') }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon_dark.png') }}" media="(prefers-color-scheme: dark)">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,17 +46,8 @@
                 x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 12 }, { passive: true })"
                 :class="{ 'is-scrolled': scrolled }">
             <div class="landing-nav-inner landing-shell">
-                <a href="/" class="group relative z-10 shrink-0 flex items-center gap-2.5 select-none text-decoration-none">
-                    <span class="flex shrink-0 items-center justify-center rounded-[10px] w-8 h-8 bg-gradient-to-br from-[#8b5cf6] to-[#3b82f6] shadow-[0_2px_8px_-2px_rgba(139,92,246,0.55)] transition-transform duration-200 group-hover:scale-105">
-                        <!-- Terminal Icon -->
-                        <svg class="size-4.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="4 17 10 11 4 5" />
-                            <line x1="12" y1="19" x2="20" y2="19" />
-                        </svg>
-                    </span>
-                    <span class="text-white font-[700] tracking-[-0.03em] leading-none text-lg" style="font-family: var(--font-brand);">
-                        offensivesecuritylabs
-                    </span>
+                <a href="/" class="group relative z-10 shrink-0 flex items-center select-none text-decoration-none">
+                    <img src="{{ asset('images/offsec_dark.png') }}" class="h-11 w-auto max-w-[180px] object-contain transition-transform duration-200 group-hover:scale-105" alt="Logo">
                 </a>
 
                 <!-- Nav links removed per user request -->
@@ -119,7 +114,11 @@
                                                     <span></span>
                                                 </div>
                                                 <div class="landing-app-mockup-titlebar-center">
-                                                    <svg class="size-3.5 text-[#8b5cf6]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" /></svg>
+                                                    <svg class="size-3.5 text-[#8b5cf6]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 10.5l2.5 2.5L9 15.5" />
+                                                        <line x1="12.5" y1="15.5" x2="15.5" y2="15.5" stroke-linecap="round" />
+                                                    </svg>
                                                     <span>OffSec Command Console</span>
                                                 </div>
                                                 <div class="landing-app-mockup-titlebar-actions">
@@ -578,16 +577,8 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-10 md:mb-16">
                     <div class="col-span-2 md:col-span-1">
-                        <a href="/" class="group relative z-10 shrink-0 flex items-center gap-2.5 select-none text-decoration-none mb-5">
-                            <span class="flex shrink-0 items-center justify-center rounded-[10px] w-8 h-8 bg-gradient-to-br from-[#8b5cf6] to-[#3b82f6] shadow-[0_2px_8px_-2px_rgba(139,92,246,0.55)]">
-                                <svg class="size-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="4 17 10 11 4 5" />
-                                    <line x1="12" y1="19" x2="20" y2="19" />
-                                </svg>
-                            </span>
-                            <span class="text-white font-[700] tracking-[-0.03em] leading-none text-lg" style="font-family: var(--font-brand);">
-                                offensivesecuritylabs
-                            </span>
+                        <a href="/" class="group relative z-10 shrink-0 flex items-center select-none text-decoration-none mb-5">
+                             <img src="{{ asset('images/offsec_dark.png') }}" class="h-11 w-auto max-w-[180px] object-contain" alt="Logo">
                         </a>
                         <p class="text-sm text-[var(--text-secondary)] max-w-xs leading-relaxed mb-6">
                             A unified, comprehensive knowledge base and command console hosting modular offensive security tools.

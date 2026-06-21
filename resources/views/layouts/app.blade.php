@@ -8,10 +8,14 @@
 
         <title>{{ config('app.name', 'OffSec Labs') }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon_light.png') }}" media="(prefers-color-scheme: light)">
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon_dark.png') }}" media="(prefers-color-scheme: dark)">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
 
         <!-- Theme Script to avoid flicker -->
         <script>
@@ -35,6 +39,7 @@
         <style>
             :root {
                 --common-bg-image: url("{{ asset('images/task_bg.jpg') }}");
+                --font-brand: 'Outfit', 'Plus Jakarta Sans', sans-serif;
             }
         </style>
 
@@ -86,14 +91,19 @@
                           <!-- Header -->
                           <div class="flex items-center p-3 border-b border-border/40"
                                :class="sidebarPinned || sidebarHovered ? 'justify-between' : 'justify-center'">
-                              <!-- Logo + Title -->
-                              <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-decoration-none select-none min-w-0">
-                                  <span class="flex shrink-0 items-center justify-center rounded-[8px] w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-500 shadow-sm text-white">
-                                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" /></svg>
-                                  </span>
-                                  <span class="text-foreground font-bold tracking-tight text-sm truncate" x-show="sidebarPinned || sidebarHovered" style="font-family: var(--font-brand);">
-                                      OffSec Labs
-                                  </span>
+                              <a href="{{ route('dashboard') }}" 
+                                 class="flex items-center text-decoration-none select-none min-w-0 w-full"
+                                 :class="sidebarPinned || sidebarHovered ? '' : 'justify-center'">
+                                  <!-- Expanded Full Logo -->
+                                  <div x-show="sidebarPinned || sidebarHovered" class="flex items-center">
+                                      <img src="{{ asset('images/offsec_light.png') }}" class="h-8 w-auto max-w-[140px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
+                                      <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain" alt="Logo">
+                                  </div>
+                                  <!-- Collapsed Icon Logo -->
+                                  <div x-show="!sidebarPinned && !sidebarHovered" style="display: none;" class="flex items-center">
+                                      <img src="{{ asset('images/icon_light.png') }}" class="h-8 w-8 object-contain dark:hidden mix-blend-multiply" alt="Icon">
+                                      <img src="{{ asset('images/icon_dark.png') }}" class="hidden dark:block h-8 w-8 object-contain" alt="Icon">
+                                  </div>
                               </a>
                               
                               <!-- Pin Button -->
@@ -113,30 +123,39 @@
 
                           <!-- Navigation Items -->
                           <div class="flex-1 overflow-y-auto px-1.5 py-3 space-y-1">
-                              <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                              <!-- Dashboard Link -->
+                              <a href="{{ route('dashboard') }}" 
+                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-                                  <span>Dashboard</span>
+                                  <span x-show="sidebarPinned || sidebarHovered">Dashboard</span>
                               </a>
 
                               <div class="h-px bg-border/40 my-2"></div>
-                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Apps</div>
+                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Apps</div>
 
                               <!-- Report Creator -->
-                              <a href="{{ route('report-creator') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('report-creator') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                              <a href="{{ route('report-creator') }}" 
+                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('report-creator') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                                  <span>Report Creator</span>
+                                  <span x-show="sidebarPinned || sidebarHovered">Report Creator</span>
                               </a>
 
                               <!-- Recon Agent -->
-                              <a href="{{ route('recon-agent') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('recon-agent') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                              <a href="{{ route('recon-agent') }}" 
+                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('recon-agent') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                  <span>Recon Agent</span>
+                                  <span x-show="sidebarPinned || sidebarHovered">Recon Agent</span>
                               </a>
 
                               <!-- Utilities -->
                               <div class="space-y-0.5">
-                                  <button type="button" @click="toggleUtilities()" class="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors text-decoration-none border-0 bg-transparent cursor-pointer {{ request()->routeIs('utilities*') ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
-                                      <div class="flex items-center gap-2.5">
+                                  <button type="button" @click="toggleUtilities()" 
+                                          class="w-full flex items-center justify-between rounded-lg text-xs font-medium transition-colors text-decoration-none border-0 bg-transparent cursor-pointer {{ request()->routeIs('utilities*') ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                          :class="sidebarPinned || sidebarHovered ? 'px-2.5 py-2' : 'justify-center p-2'">
+                                      <div class="flex items-center" :class="sidebarPinned || sidebarHovered ? 'gap-2.5' : 'justify-center'">
                                           <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
                                           <span x-show="sidebarPinned || sidebarHovered">Utilities</span>
                                       </div>
@@ -157,18 +176,22 @@
                               </div>
 
                               <div class="h-px bg-border/40 my-2"></div>
-                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Settings</div>
+                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Settings</div>
 
                               <!-- Profile Link -->
-                              <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('profile.edit') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                              <a href="{{ route('profile.edit') }}" 
+                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('profile.edit') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                  <span>Profile</span>
+                                  <span x-show="sidebarPinned || sidebarHovered">Profile</span>
                               </a>
 
                               <!-- Appearance Link -->
-                              <a href="{{ route('settings.appearance.edit') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('settings.appearance.edit') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                              <a href="{{ route('settings.appearance.edit') }}" 
+                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('settings.appearance.edit') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-3"/></svg>
-                                  <span>Appearance</span>
+                                  <span x-show="sidebarPinned || sidebarHovered">Appearance</span>
                               </a>
                           </div>
 
@@ -216,13 +239,9 @@
                          <!-- Header -->
                          <div class="flex items-center justify-between p-3 border-b border-border/40">
                              <!-- Logo -->
-                             <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-decoration-none select-none">
-                                 <span class="flex shrink-0 items-center justify-center rounded-[8px] w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-500 text-white">
-                                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" /></svg>
-                                 </span>
-                                 <span class="text-foreground font-bold tracking-tight text-sm" style="font-family: var(--font-brand);">
-                                     OffSec Labs
-                                 </span>
+                             <a href="{{ route('dashboard') }}" class="flex items-center text-decoration-none select-none">
+                                 <img src="{{ asset('images/offsec_light.png') }}" class="h-8 w-auto max-w-[140px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
+                                 <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain" alt="Logo">
                              </a>
                              
                              <!-- Close Button -->
@@ -312,13 +331,9 @@
                      </button>
                      
                      <!-- Mobile Brand Logo -->
-                     <div class="flex items-center gap-1.5 md:hidden">
-                         <span class="flex shrink-0 items-center justify-center rounded-[8px] w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-500 text-white">
-                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" /></svg>
-                         </span>
-                         <span class="text-foreground font-bold tracking-tight text-xs" style="font-family: var(--font-brand);">
-                             OffSec Labs
-                         </span>
+                     <div class="flex items-center md:hidden">
+                         <img src="{{ asset('images/offsec_light.png') }}" class="h-[26px] w-auto max-w-[110px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
+                         <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-[26px] w-auto max-w-[110px] object-contain" alt="Logo">
                      </div>
 
                      <!-- Desktop Left: Search bar, App switcher and Clock -->

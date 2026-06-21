@@ -7,6 +7,10 @@
 
     <title>{{ config('app.name', 'OffSec Labs') }}</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon_light.png') }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon_dark.png') }}" media="(prefers-color-scheme: dark)">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -118,16 +122,8 @@
         <!-- Header -->
         <header class="w-full bg-[#0a0a0a]/50 backdrop-blur-xl border-b border-white/[0.06] transition-all duration-300" style="padding-top: env(safe-area-inset-top, 0px);">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 min-h-14 sm:min-h-20 flex items-center justify-between">
-                <a href="/" class="group flex items-center gap-2.5 select-none text-decoration-none">
-                    <span class="flex shrink-0 items-center justify-center rounded-[10px] w-8 h-8 bg-gradient-to-br from-[#8b5cf6] to-[#3b82f6] shadow-[0_2px_8px_-2px_rgba(139,92,246,0.55)] transition-transform duration-200 group-hover:scale-105">
-                        <svg class="size-4.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="4 17 10 11 4 5" />
-                            <line x1="12" y1="19" x2="20" y2="19" />
-                        </svg>
-                    </span>
-                    <span class="text-white font-[700] tracking-[-0.03em] leading-none text-lg" style="font-family: var(--font-brand);">
-                        offensivesecuritylabs
-                    </span>
+                <a href="/" class="group flex items-center select-none text-decoration-none">
+                    <img src="{{ asset('images/offsec_dark.png') }}" class="h-11 w-auto max-w-[180px] object-contain transition-transform duration-200 group-hover:scale-105" alt="Logo">
                 </a>
             </div>
         </header>
