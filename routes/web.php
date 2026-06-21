@@ -37,6 +37,11 @@ Route::middleware('auth')->group(function () {
         return view('report-creator');
     })->name('report-creator');
 
+    Route::prefix('admin/groqai')->name('admin.groqai.')->group(function () {
+        Route::post('/query', [\App\Http\Controllers\Admin\GroqAIController::class, 'query'])->name('query');
+        Route::get('/models', [\App\Http\Controllers\Admin\GroqAIController::class, 'models'])->name('models');
+    });
+
     Route::post('/api/reports/export-pdf', [\App\Http\Controllers\ReportExportController::class, 'exportPdf'])->name('reports.export-pdf');
 
     Route::get('/recon-agent', function () {
