@@ -121,7 +121,7 @@ const SAMPLE_REPORT: Report = {
   version: '1.0',
   classification: 'CONFIDENTIAL',
   status: 'Draft',
-  executiveSummary: 'NTTRaptor performed an external security evaluation of Omni Consumer Products exposure. The assessment revealed several serious entry points, including unauthenticated console exposure and weak parameter handling that allowed direct data extraction.',
+  executiveSummary: 'Report Creator performed an external security evaluation of Omni Consumer Products exposure. The assessment revealed several serious entry points, including unauthenticated console exposure and weak parameter handling that allowed direct data extraction.',
   scope: 'Primary Web Gateway: gateway.ocp.com\nAuthentication APIs: api.ocp.com/v1\nSubnets: 198.51.100.0/24',
   strategicRecommendations: 'Establish robust identity perimeter defenses, disable weak credential caching, patch serialization endpoints, and strictly segregate corporate/guest networks.',
   usingThisReport: 'This report is structured chronologically, outlining our findings and strategic recommendations for remediation based on criticality.',
@@ -187,7 +187,7 @@ const SAMPLE_REPORT: Report = {
     methodologyMoreDetails: 'Further details on the specific exploitation toolsets used (Metasploit, BurpSuite, Nmap) are archived in our internal assessment logs.',
     methodologyDetailed: 'A detailed walkthrough of red-teaming methodologies is standardized across all security assessments.',
     assessmentTeam: [
-      { id: 'tm-1', name: 'Analyst Delta-4', role: 'Lead Red Team Operator', org: 'NTTRaptor' }
+      { id: 'tm-1', name: 'Analyst Delta-4', role: 'Lead Red Team Operator', org: 'Report Creator' }
     ]
   },
   createdAt: '2026-05-30T10:00:00.000Z',
@@ -195,7 +195,7 @@ const SAMPLE_REPORT: Report = {
 };
 
 
-export default function NTTRaptorIndex() {
+export default function ReportCreatorIndex() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [page, setPage] = useState<'login' | 'dashboard' | 'builder' | 'template_editor'>('dashboard');
   const [reports, setReports] = useState<Report[]>([]);
@@ -217,26 +217,26 @@ export default function NTTRaptorIndex() {
       }
 
       // 2. Load Reports
-      const savedReports = localStorage.getItem('nttraptor_reports');
+      const savedReports = localStorage.getItem('report_creator_reports');
       if (savedReports) {
         setReports(JSON.parse(savedReports));
       } else {
         // Prepopulate with a beautiful sample
         setReports([SAMPLE_REPORT]);
-        localStorage.setItem('nttraptor_reports', JSON.stringify([SAMPLE_REPORT]));
+        localStorage.setItem('report_creator_reports', JSON.stringify([SAMPLE_REPORT]));
       }
 
       // 3. Load HTML Template
-      const savedTemplate = localStorage.getItem('nttraptor_template');
+      const savedTemplate = localStorage.getItem('report_creator_template');
       const CURRENT_VERSION = '<!-- TEMPLATE_VERSION: 1.27 -->';
       if (savedTemplate && savedTemplate.includes('<!-- FINDING_TEMPLATE_START -->') && savedTemplate.includes(CURRENT_VERSION)) {
         setHtmlTemplate(savedTemplate);
       } else {
         setHtmlTemplate(DEFAULT_TEMPLATE);
-        localStorage.setItem('nttraptor_template', DEFAULT_TEMPLATE);
+        localStorage.setItem('report_creator_template', DEFAULT_TEMPLATE);
       }
     } catch (err) {
-      console.error('Failed to load NTTRaptor state from local storage:', err);
+      console.error('Failed to load Report Creator state from local storage:', err);
     } finally {
       setIsLoading(false);
     }
@@ -245,15 +245,15 @@ export default function NTTRaptorIndex() {
   const handleLoginSuccess = (usr: string) => {
     setIsLoggedIn(true);
     setUsername(usr);
-    localStorage.setItem('nttraptor_auth', 'true');
-    localStorage.setItem('nttraptor_username', usr);
+    localStorage.setItem('report_creator_auth', 'true');
+    localStorage.setItem('report_creator_username', usr);
     setPage('dashboard');
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem('nttraptor_auth');
-    localStorage.removeItem('nttraptor_username');
+    localStorage.removeItem('report_creator_auth');
+    localStorage.removeItem('report_creator_username');
     setPage('login');
   };
 
@@ -280,7 +280,7 @@ export default function NTTRaptorIndex() {
 
     const updatedReports = [newReport, ...reports];
     setReports(updatedReports);
-    localStorage.setItem('nttraptor_reports', JSON.stringify(updatedReports));
+    localStorage.setItem('report_creator_reports', JSON.stringify(updatedReports));
     setActiveReportId(newReport.id);
     setPage('builder');
   };
@@ -293,19 +293,19 @@ export default function NTTRaptorIndex() {
     };
     const updatedReports = reports.map(r => (r.id === updatedReport.id ? updatedWithTimestamp : r));
     setReports(updatedReports);
-    localStorage.setItem('nttraptor_reports', JSON.stringify(updatedReports));
+    localStorage.setItem('report_creator_reports', JSON.stringify(updatedReports));
   };
 
   const handleDeleteReport = (id: string) => {
     const updatedReports = reports.filter(r => r.id !== id);
     setReports(updatedReports);
-    localStorage.setItem('nttraptor_reports', JSON.stringify(updatedReports));
+    localStorage.setItem('report_creator_reports', JSON.stringify(updatedReports));
     if (activeReportId === id) setActiveReportId(null);
   };
 
   const handleSaveTemplate = (newTemplate: string) => {
     setHtmlTemplate(newTemplate);
-    localStorage.setItem('nttraptor_template', newTemplate);
+    localStorage.setItem('report_creator_template', newTemplate);
   };
 
   // Export database backup
@@ -321,7 +321,7 @@ export default function NTTRaptorIndex() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `nttraptor-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `report-creator-backup-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -335,8 +335,8 @@ export default function NTTRaptorIndex() {
       if (Array.isArray(parsed.reports) && typeof parsed.htmlTemplate === 'string') {
         setReports(parsed.reports);
         setHtmlTemplate(parsed.htmlTemplate);
-        localStorage.setItem('nttraptor_reports', JSON.stringify(parsed.reports));
-        localStorage.setItem('nttraptor_template', parsed.htmlTemplate);
+        localStorage.setItem('report_creator_reports', JSON.stringify(parsed.reports));
+        localStorage.setItem('report_creator_template', parsed.htmlTemplate);
         return true;
       }
       return false;

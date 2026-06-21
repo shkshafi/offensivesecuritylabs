@@ -1004,7 +1004,7 @@ export default function ReportBuilder({
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       const data = event.data;
-      if (!data || data.source !== 'nttraptor-report') return;
+      if (!data || data.source !== 'report-creator-report') return;
       if (data.type === 'toc-nav' && typeof data.targetId === 'string') {
         scrollPreviewToId(data.targetId);
       } else if (data.type === 'wheel') {

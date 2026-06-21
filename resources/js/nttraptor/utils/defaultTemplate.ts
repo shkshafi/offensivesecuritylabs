@@ -1754,7 +1754,7 @@ export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
       // Allow native behavior in print/PDF; intercept only on interactive viewing.
       e.preventDefault();
       try {
-        window.parent.postMessage({ source: 'nttraptor-report', type: 'toc-nav', targetId: id }, '*');
+        window.parent.postMessage({ source: 'report-creator-report', type: 'toc-nav', targetId: id }, '*');
       } catch (err) {}
     }, true);
 
@@ -1762,7 +1762,7 @@ export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
     // even though the iframe needs pointer-events:auto for click handling.
     window.addEventListener('wheel', function(e){
       try {
-        window.parent.postMessage({ source: 'nttraptor-report', type: 'wheel', deltaY: e.deltaY, deltaX: e.deltaX, deltaMode: e.deltaMode }, '*');
+        window.parent.postMessage({ source: 'report-creator-report', type: 'wheel', deltaY: e.deltaY, deltaX: e.deltaX, deltaMode: e.deltaMode }, '*');
       } catch (err) {}
     }, { passive: true });
   }

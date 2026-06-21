@@ -32,6 +32,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
     });
 
+    Route::get('/coming-soon', function () {
+        return view('coming-soon');
+    })->name('coming-soon');
+
     // Custom Apps
     Route::get('/report-creator', function () {
         return view('report-creator');
@@ -51,6 +55,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/utilities', function () {
         return view('utilities');
     })->name('utilities');
+
+    Route::get('/utilities/testcases', function () {
+        return view('utilities.testcases');
+    })->name('utilities.testcases');
+
+    Route::get('/utilities/clickjacking', function () {
+        return view('utilities.clickjacking');
+    })->name('utilities.clickjacking');
 });
 
 require __DIR__.'/auth.php';

@@ -34,12 +34,13 @@
 
         <style>
             :root {
-                --common-bg-image: url('/images/task_bg.jpg');
+                --common-bg-image: url("{{ asset('images/task_bg.jpg') }}");
             }
         </style>
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @viteReactRefresh
+        @vite(array_merge(['resources/css/app.css', 'resources/js/app.js'], $viteScripts ?? []))
     </head>
     <body class="font-sans antialiased has-common-bg min-h-screen bg-background text-foreground">
         <div class="flex min-h-screen w-full bg-transparent"
@@ -47,13 +48,22 @@
                  sidebarPinned: true,
                  sidebarHovered: false,
                  mobileSidebarOpen: false,
+                 utilitiesExpanded: {{ request()->routeIs('utilities*') ? 'true' : 'false' }},
                  init() {
                      let storedPinned = localStorage.getItem('sidebar_pinned');
                      this.sidebarPinned = (storedPinned === null || storedPinned === 'true');
+                     let storedUtilities = localStorage.getItem('utilities_expanded');
+                     if (storedUtilities !== null) {
+                         this.utilitiesExpanded = storedUtilities === 'true';
+                     }
                  },
                  togglePinned() {
                      this.sidebarPinned = !this.sidebarPinned;
                      localStorage.setItem('sidebar_pinned', this.sidebarPinned);
+                 },
+                 toggleUtilities() {
+                     this.utilitiesExpanded = !this.utilitiesExpanded;
+                     localStorage.setItem('utilities_expanded', this.utilitiesExpanded);
                  }
              }">
 
@@ -124,10 +134,27 @@
                               </a>
 
                               <!-- Utilities -->
-                              <a href="{{ route('utilities') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('utilities') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
-                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-                                  <span>Utilities</span>
-                              </a>
+                              <div class="space-y-0.5">
+                                  <button type="button" @click="toggleUtilities()" class="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors text-decoration-none border-0 bg-transparent cursor-pointer {{ request()->routeIs('utilities*') ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                                      <div class="flex items-center gap-2.5">
+                                          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+                                          <span x-show="sidebarPinned || sidebarHovered">Utilities</span>
+                                      </div>
+                                      <svg x-show="sidebarPinned || sidebarHovered" class="w-3 h-3 transition-transform duration-200" :class="utilitiesExpanded ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                  </button>
+                                  
+                                  <div x-show="utilitiesExpanded && (sidebarPinned || sidebarHovered)" class="pl-5 space-y-1 mt-0.5 border-l border-border/30 ml-4">
+                                      <a href="{{ route('utilities') }}" class="block px-2 py-1 rounded-md text-xs transition-colors text-decoration-none {{ request()->routeIs('utilities') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
+                                          Overview
+                                      </a>
+                                      <a href="{{ route('utilities.testcases') }}" class="block px-2 py-1 rounded-md text-xs transition-colors text-decoration-none {{ request()->routeIs('utilities.testcases') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
+                                          Testcases
+                                      </a>
+                                      <a href="{{ route('utilities.clickjacking') }}" class="block px-2 py-1 rounded-md text-xs transition-colors text-decoration-none {{ request()->routeIs('utilities.clickjacking') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
+                                          Clickjacking
+                                      </a>
+                                  </div>
+                              </div>
 
                               <div class="h-px bg-border/40 my-2"></div>
                               <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Settings</div>
@@ -227,10 +254,27 @@
                              </a>
 
                              <!-- Utilities -->
-                             <a href="{{ route('utilities') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors text-decoration-none {{ request()->routeIs('utilities') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
-                                 <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-                                 <span>Utilities</span>
-                             </a>
+                             <div class="space-y-0.5">
+                                 <button type="button" @click="toggleUtilities()" class="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors text-decoration-none border-0 bg-transparent cursor-pointer {{ request()->routeIs('utilities*') ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                                     <div class="flex items-center gap-2.5">
+                                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+                                         <span>Utilities</span>
+                                     </div>
+                                     <svg class="w-3 h-3 transition-transform duration-200" :class="utilitiesExpanded ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                 </button>
+                                 
+                                 <div x-show="utilitiesExpanded" class="pl-5 space-y-1 mt-0.5 border-l border-border/30 ml-4">
+                                     <a href="{{ route('utilities') }}" class="block px-2 py-1 rounded-md text-[11px] transition-colors text-decoration-none {{ request()->routeIs('utilities') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
+                                         Overview
+                                     </a>
+                                     <a href="{{ route('utilities.testcases') }}" class="block px-2 py-1 rounded-md text-[11px] transition-colors text-decoration-none {{ request()->routeIs('utilities.testcases') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
+                                         Testcases
+                                     </a>
+                                     <a href="{{ route('utilities.clickjacking') }}" class="block px-2 py-1 rounded-md text-[11px] transition-colors text-decoration-none {{ request()->routeIs('utilities.clickjacking') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
+                                         Clickjacking
+                                     </a>
+                                 </div>
+                             </div>
 
                              <div class="h-px bg-border/40 my-2"></div>
                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Settings</div>
