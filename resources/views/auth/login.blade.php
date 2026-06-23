@@ -78,13 +78,6 @@
 
     <!-- Footer Links -->
     <div class="mt-6 pt-5 border-t border-white/[0.06] text-center">
-        @if (config('auth.registration_enabled'))
-            <span class="text-xs text-zinc-500">Don't have an account? </span>
-            <a href="{{ route('register') }}" class="text-xs text-[#3b82f6] hover:underline font-medium">
-                Create account
-            </a>
-        @else
-            <span class="text-xs text-zinc-500">Registration is temporarily disabled.</span>
-        @endif
+        <span class="text-xs text-zinc-500">Registration is managed by system administrators.</span>
     </div>
 </x-guest-layout>

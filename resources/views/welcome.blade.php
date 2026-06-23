@@ -35,7 +35,7 @@
     </style>
 </head>
 <body class="antialiased text-[#e0e0e0] bg-[#0a0a0f]">
-    <div class="landing-page overflow-x-hidden scroll-smooth min-h-screen" x-data="{ mobileOpen: false }">
+    <div class="landing-page overflow-x-hidden scroll-smooth min-h-screen" x-data="{ mobileOpen: false, showWaitlist: false, email: '', success: false, error: '', loading: false }">
         <!-- Canvas Particles Background -->
         <div class="landing-particles-layer" aria-hidden="true">
             <canvas id="particles-canvas" class="absolute inset-0 w-full h-full"></canvas>
@@ -59,10 +59,8 @@
                             <a href="{{ url('/dashboard') }}" class="landing-nav-cta text-decoration-none">Dashboard</a>
                         @else
                             <a href="{{ route('login') }}" class="landing-nav-signin text-decoration-none">Sign in</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="landing-nav-cta hidden sm:inline-flex text-decoration-none">Get Started</a>
-                                <a href="{{ route('register') }}" class="landing-nav-cta landing-nav-cta--sm sm:hidden text-decoration-none">Get Started</a>
-                            @endif
+                            <a href="javascript:void(0)" @click="showWaitlist = true" class="landing-nav-cta hidden sm:inline-flex text-decoration-none">Join Waitlist</a>
+                            <a href="javascript:void(0)" @click="showWaitlist = true" class="landing-nav-cta landing-nav-cta--sm sm:hidden text-decoration-none">Join Waitlist</a>
                         @endauth
                     @endif
                 </div>
@@ -89,8 +87,8 @@
                                 Dashboard <svg class="size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                             </a>
                         @else
-                            <a href="/register" class="landing-btn-primary text-decoration-none font-sans">
-                                Start Free <svg class="size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            <a href="javascript:void(0)" @click="showWaitlist = true" class="landing-btn-primary text-decoration-none font-sans">
+                                Join Waitlist <svg class="size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                             </a>
                         @endauth
                         <a href="#apps" class="landing-btn-ghost text-decoration-none font-sans">
@@ -562,8 +560,8 @@
                             Join other security operators using our modular console as a single, consolidated launchpad.
                         </p>
                         
-                        <a href="/register" class="landing-btn-primary landing-shimmer-btn w-full max-w-md mx-auto text-decoration-none">
-                            Consolidate Console Free <svg class="size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        <a href="javascript:void(0)" @click="showWaitlist = true" class="landing-btn-primary landing-shimmer-btn w-full max-w-md mx-auto text-decoration-none">
+                            Join Waitlist <svg class="size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                         </a>
                     </div>
                 </div>
@@ -627,6 +625,117 @@
                 <div class="landing-footer-giant-text">offsec labs</div>
             </div>
         </footer>
+        <!-- Waitlist Modal -->
+        <div x-show="showWaitlist" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="fixed inset-0 z-50 flex items-center justify-center p-4"
+             style="display: none;">
+            
+            <!-- Backdrop -->
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-md" @click="showWaitlist = false"></div>
+
+            <!-- Modal Content Card -->
+            <div class="relative w-full max-w-md bg-[#0a0a0f]/90 border border-white/10 rounded-2xl p-6 shadow-2xl overflow-hidden">
+                <!-- Glowing background effect inside the card -->
+                <div class="absolute -top-24 -left-24 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Close Button -->
+                <button @click="showWaitlist = false" class="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <div class="relative z-10 text-center">
+                    <!-- Icon -->
+                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 mb-4">
+                        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-2 font-brand">Join the Waitlist</h3>
+                    <p class="text-xs text-zinc-400 mb-6 font-sans">Consolidate your security workflows. Be the first to get access when public spots open.</p>
+
+                    <!-- Form / Success message -->
+                    <div x-show="!success">
+                        <form @submit.prevent="
+                            if (!email) return;
+                            loading = true;
+                            error = '';
+                            fetch('/waitlist', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({ email: email })
+                            })
+                            .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                            .then(res => {
+                                loading = false;
+                                if (res.status === 200 || res.status === 201) {
+                                    success = true;
+                                    error = '';
+                                } else {
+                                    error = res.body.message || (res.body.errors && res.body.errors.email ? res.body.errors.email[0] : 'Something went wrong. Please try again.');
+                                }
+                            })
+                            .catch(err => {
+                                loading = false;
+                                error = 'Connection error. Please try again.';
+                            })
+                        " class="space-y-4">
+                            <div>
+                                <input type="email" 
+                                       x-model="email" 
+                                       required 
+                                       placeholder="Enter your security email" 
+                                       class="w-full px-4 py-3 bg-zinc-950/50 border border-white/10 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-purple-500 transition-all font-sans"
+                                       :disabled="loading">
+                            </div>
+                            
+                            <div x-show="error" x-text="error" class="text-xs text-red-400 text-left pt-1 font-sans"></div>
+
+                            <button type="submit" 
+                                    class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 hover:brightness-110 text-white font-semibold text-sm transition-all shadow-[0_4px_12px_-4px_rgba(139,92,246,0.5)] cursor-pointer flex items-center justify-center border-none"
+                                    :disabled="loading">
+                                <span x-show="!loading">Join Waitlist</span>
+                                <span x-show="loading" class="flex items-center gap-2">
+                                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Adding to list...
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Success State -->
+                    <div x-show="success" x-transition class="space-y-4 py-4" style="display: none;">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mx-auto">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white font-brand">You're on the list!</h4>
+                        <p class="text-xs text-zinc-400 max-w-xs mx-auto font-sans">
+                            Thank you for your interest. We have registered <span class="text-purple-400 font-medium" x-text="email"></span> and will contact you as soon as early access spots become available.
+                        </p>
+                        <button @click="showWaitlist = false; success = false; email = '';" class="mt-4 px-6 py-2 rounded-xl bg-zinc-900 border border-white/5 hover:bg-zinc-800 text-xs text-zinc-300 transition-all cursor-pointer font-sans">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Particles Animation Logic -->
