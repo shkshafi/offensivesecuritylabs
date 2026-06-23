@@ -180,12 +180,22 @@
 
                               <!-- User Management Link -->
                               <a href="{{ route('admin.users.index') }}" 
-                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.users.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
-                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
+                                  class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.users.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                  :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                   </svg>
                                   <span x-show="sidebarPinned || sidebarHovered">User Management</span>
+                              </a>
+
+                              <!-- Waitlist Link -->
+                              <a href="{{ route('admin.waitlist.index') }}" 
+                                  class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.waitlist.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                  :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
+                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  <span x-show="sidebarPinned || sidebarHovered">Waitlist</span>
                               </a>
                               @endif
 
@@ -319,6 +329,14 @@
                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                  </svg>
                                  <span>User Management</span>
+                             </a>
+
+                             <!-- Waitlist Link -->
+                             <a href="{{ route('admin.waitlist.index') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.waitlist.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                                 <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                 </svg>
+                                 <span>Waitlist</span>
                              </a>
                              @endif
 

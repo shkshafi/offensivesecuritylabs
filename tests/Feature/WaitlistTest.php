@@ -59,4 +59,27 @@ class WaitlistTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
     }
+
+    /**
+     * Test that XSS and HTML injection payloads are blocked.
+     */
+    public function test_cannot_join_waitlist_with_xss_payload(): void
+    {
+        $payloads = [
+            '<script>alert(1)</script>@example.com',
+            'email+<img src=x onerror=alert(1)>@example.com',
+            'javascript:alert(1)@example.com',
+            'email"onload="alert(1)"@example.com',
+            'email;select*from;@example.com',
+        ];
+
+        foreach ($payloads as $payload) {
+            $response = $this->postJson('/waitlist', [
+                'email' => $payload,
+            ]);
+
+            $response->assertStatus(422)
+                ->assertJsonValidationErrors(['email']);
+        }
+    }
 }
