@@ -571,6 +571,11 @@ export default function ReportBuilder({
   const [customZoom, setCustomZoom] = useState(100);
   const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
 
+  // Search states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
+  const [totalMatches, setTotalMatches] = useState(0);
+
   const isSummaryComplete = useMemo(() => {
     return !!(
       report.executiveSummary?.trim() &&
@@ -2229,7 +2234,200 @@ export default function ReportBuilder({
     }
   }, [totalPages, currentPage]);
 
+  const scrollPreviewToElement = (element: HTMLElement) => {
+    const container = previewContainerRef.current;
+    if (!container || !element) return;
 
+    let topUnscaled = 0;
+    let el: HTMLElement | null = element;
+    while (el) {
+      topUnscaled += el.offsetTop || 0;
+      el = el.offsetParent as HTMLElement | null;
+    }
+
+    const containerHeight = container.clientHeight;
+    const scrollTop = Math.max(0, (topUnscaled * calculatedZoom) - (containerHeight / 2) + 20);
+
+    isProgrammaticScroll.current = true;
+
+    const iframe = shadowContainerRef.current;
+    if (iframe) {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (doc) {
+        const allPages = doc.querySelectorAll('.page');
+        let idx = 0;
+        let landingPage = 1;
+        allPages.forEach(p => {
+          const parent = p.parentElement;
+          if (parent && !parent.classList.contains('page')) {
+            idx++;
+            const elPage = p as HTMLElement;
+            if (elPage.offsetTop <= topUnscaled + A4_BASE_HEIGHT / 2) {
+              landingPage = idx;
+            }
+          }
+        });
+        targetPage.current = landingPage;
+        setCurrentPage(Math.max(1, Math.min(totalPages, landingPage)));
+      }
+    }
+
+    container.scrollTo({
+      top: scrollTop,
+      behavior: 'smooth'
+    });
+
+    window.setTimeout(() => {
+      isProgrammaticScroll.current = false;
+      targetPage.current = null;
+    }, 800);
+  };
+
+  const removeHighlights = (doc: Document) => {
+    const highlights = doc.querySelectorAll('.search-highlight');
+    highlights.forEach(span => {
+      const parent = span.parentNode;
+      if (parent) {
+        const textNode = doc.createTextNode(span.textContent || '');
+        parent.replaceChild(textNode, span);
+      }
+    });
+    if (doc.body) {
+      doc.body.normalize();
+    }
+  };
+
+  const highlightSearchTerm = (doc: Document, query: string, activeIndex: number): number => {
+    removeHighlights(doc);
+
+    if (!query || query.trim() === '') {
+      return 0;
+    }
+
+    const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const regex = new RegExp(`(${escapedQuery})`, 'gi');
+
+    const textNodes: Node[] = [];
+    const walk = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null);
+    let node: Node | null;
+    while ((node = walk.nextNode())) {
+      const parent = node.parentNode as HTMLElement | null;
+      if (
+        parent &&
+        (parent.tagName === 'SCRIPT' ||
+          parent.tagName === 'STYLE' ||
+          (parent.classList && parent.classList.contains('search-highlight')))
+      ) {
+        continue;
+      }
+      textNodes.push(node);
+    }
+
+    let matchCount = 0;
+    for (let i = textNodes.length - 1; i >= 0; i--) {
+      const textNode = textNodes[i];
+      const parent = textNode.parentNode;
+      if (!parent || !textNode.nodeValue) continue;
+
+      const matches = textNode.nodeValue.match(regex);
+      if (matches) {
+        const fragment = doc.createDocumentFragment();
+        let lastLastIndex = 0;
+        
+        textNode.nodeValue.replace(regex, (match, p1, offset) => {
+          if (offset > lastLastIndex) {
+            fragment.appendChild(doc.createTextNode((textNode.nodeValue || '').substring(lastLastIndex, offset)));
+          }
+          const span = doc.createElement('span');
+          span.className = 'search-highlight';
+          span.textContent = match;
+          
+          span.style.font = 'inherit';
+          span.style.color = 'inherit';
+          span.style.backgroundColor = 'rgba(253, 224, 71, 0.6)';
+          span.style.borderRadius = '2px';
+          span.style.padding = '0';
+          span.style.margin = '0';
+          span.style.display = 'inline';
+          span.style.transition = 'all 0.2s';
+          
+          fragment.appendChild(span);
+          lastLastIndex = offset + match.length;
+          matchCount++;
+          return match;
+        });
+
+        if (lastLastIndex < textNode.nodeValue.length) {
+          fragment.appendChild(doc.createTextNode(textNode.nodeValue.substring(lastLastIndex)));
+        }
+        parent.replaceChild(fragment, textNode);
+      }
+    }
+
+    const highlights = doc.querySelectorAll('.search-highlight');
+    highlights.forEach((span, idx) => {
+      const htmlSpan = span as HTMLElement;
+      htmlSpan.setAttribute('data-search-index', idx.toString());
+      if (idx === activeIndex) {
+        htmlSpan.classList.add('search-active');
+        htmlSpan.style.backgroundColor = '#f97316';
+        htmlSpan.style.color = 'inherit';
+        htmlSpan.style.boxShadow = '0 0 0 2px #f97316';
+      } else {
+        htmlSpan.classList.remove('search-active');
+        htmlSpan.style.backgroundColor = 'rgba(253, 224, 71, 0.6)';
+        htmlSpan.style.color = 'inherit';
+        htmlSpan.style.boxShadow = 'none';
+      }
+    });
+
+    return highlights.length;
+  };
+
+  const applySearchHighlighting = () => {
+    const iframe = shadowContainerRef.current;
+    if (!iframe) return;
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+
+    const count = highlightSearchTerm(doc, searchQuery, currentMatchIndex);
+    setTotalMatches(count);
+
+    if (count > 0) {
+      const activeEl = doc.querySelector('.search-highlight.search-active') as HTMLElement | null;
+      if (activeEl) {
+        scrollPreviewToElement(activeEl);
+      }
+    }
+  };
+
+  useEffect(() => {
+    applySearchHighlighting();
+  }, [searchQuery, compiledHtml]);
+
+  useEffect(() => {
+    const iframe = shadowContainerRef.current;
+    if (!iframe) return;
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+
+    const highlights = doc.querySelectorAll('.search-highlight');
+    highlights.forEach((span, idx) => {
+      const htmlSpan = span as HTMLElement;
+      if (idx === currentMatchIndex) {
+        htmlSpan.classList.add('search-active');
+        htmlSpan.style.backgroundColor = '#f97316';
+        htmlSpan.style.color = 'inherit';
+        htmlSpan.style.boxShadow = '0 0 0 2px #f97316';
+        scrollPreviewToElement(htmlSpan);
+      } else {
+        htmlSpan.classList.remove('search-active');
+        htmlSpan.style.backgroundColor = 'rgba(253, 224, 71, 0.6)';
+        htmlSpan.style.color = 'inherit';
+        htmlSpan.style.boxShadow = 'none';
+      }
+    });
+  }, [currentMatchIndex]);
 
   const handleExportPlaywrightPDF = async () => {
     const iframe = shadowContainerRef.current;
@@ -2255,6 +2453,9 @@ export default function ReportBuilder({
 
     try {
       setIsGeneratingPlaywrightPDF(true);
+
+      // Temporarily remove search highlights so they don't appear in the PDF export
+      removeHighlights(doc);
 
       // Reset zoom to 100% (1.0) so html2canvas renders letter-spacing and layout accurately
       setZoomMode('custom');
@@ -2330,6 +2531,8 @@ export default function ReportBuilder({
       console.error('PDF generation failed:', error);
       alert('Failed to generate PDF. Please try again.');
     } finally {
+      // Restore highlights inside the preview pane
+      applySearchHighlighting();
       // Restore previous zoom settings
       setZoomMode(prevZoomMode);
       setCustomZoom(prevCustomZoom);
@@ -3808,8 +4011,78 @@ export default function ReportBuilder({
             </div>
           </div>
 
-          {/* Pagination Controls Overlay - Relocated to Bottom Left */}
-          <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 bg-[#131A2B]/90 backdrop-blur-md border border-white/[0.1] rounded-full px-4 py-2 shadow-2xl">
+          {/* Search Box Overlay */}
+          <div className="absolute top-6 right-16 z-20 flex items-center gap-3 bg-[#131A2B]/90 backdrop-blur-md border border-white/[0.1] rounded-full px-4 py-1.5 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex items-center gap-2 pl-2">
+              <Search className="w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search report..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentMatchIndex(0);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (totalMatches > 0) {
+                      setCurrentMatchIndex(prev => (prev + 1) % totalMatches);
+                    }
+                  }
+                }}
+                className="bg-transparent border-none text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-0 w-36 py-0.5"
+              />
+            </div>
+            
+            {searchQuery && (
+              <>
+                <div className="w-px h-5 bg-white/10" />
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => {
+                      if (totalMatches > 0) {
+                        setCurrentMatchIndex(prev => (prev - 1 + totalMatches) % totalMatches);
+                      }
+                    }}
+                    disabled={totalMatches === 0}
+                    className="p-1 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
+                    title="Previous match"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-[10px] font-bold text-white tracking-wider min-w-[50px] text-center">
+                    {totalMatches > 0 ? `${currentMatchIndex + 1} OF ${totalMatches}` : '0 OF 0'}
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (totalMatches > 0) {
+                        setCurrentMatchIndex(prev => (prev + 1) % totalMatches);
+                      }
+                    }}
+                    disabled={totalMatches === 0}
+                    className="p-1 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
+                    title="Next match"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setCurrentMatchIndex(0);
+                    }}
+                    className="p-1 hover:bg-white/[0.1] rounded-full text-slate-400 hover:text-white transition-colors"
+                    title="Clear search"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Pagination Controls Overlay - Relocated to Bottom Right */}
+          <div className="absolute bottom-6 right-16 z-20 flex items-center gap-3 bg-[#131A2B]/90 backdrop-blur-md border border-white/[0.1] rounded-full px-4 py-2 shadow-2xl">
             <button
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
