@@ -56,7 +56,7 @@
                 <div class="landing-nav-actions relative z-10">
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ url('/dashboard') }}" class="landing-nav-cta text-decoration-none">Console</a>
+                            <a href="{{ url('/dashboard') }}" class="landing-nav-cta text-decoration-none">Dashboard</a>
                         @else
                             <a href="{{ route('login') }}" class="landing-nav-signin text-decoration-none">Sign in</a>
                             @if (Route::has('register'))
@@ -85,8 +85,8 @@
 
                     <div class="landing-hero-actions">
                         @auth
-                            <a href="/dashboard" class="landing-btn-primary text-decoration-none">
-                                Enter App Console <svg class="size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            <a href="{{ url('/dashboard') }}" class="landing-btn-primary text-decoration-none">
+                                Dashboard <svg class="size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                             </a>
                         @else
                             <a href="/register" class="landing-btn-primary text-decoration-none font-sans">

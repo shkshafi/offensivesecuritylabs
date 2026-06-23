@@ -2,7 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import ReportBuilder from './components/ReportBuilder';
 import TemplateEditor from './components/TemplateEditor';
+import TemplateList from './components/TemplateList';
 import { DEFAULT_TEMPLATE } from './utils/defaultTemplate';
+
+interface Template {
+  id: string;
+  name: string;
+  html: string;
+  isDefault: boolean;
+}
+
 
 
 interface FindingScreenshot {
@@ -112,6 +121,7 @@ interface Report {
   appendices?: Appendices;
   createdAt?: string;
   updatedAt?: string;
+  templateId?: string;
 }
 
 const SAMPLE_REPORT: Report = {
@@ -201,12 +211,15 @@ const SAMPLE_REPORT: Report = {
 
 export default function ReportCreatorIndex() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [page, setPage] = useState<'login' | 'dashboard' | 'builder' | 'template_editor'>('dashboard');
+  const [page, setPage] = useState<'login' | 'dashboard' | 'builder' | 'template_list' | 'template_editor'>('dashboard');
   const [reports, setReports] = useState<Report[]>([]);
   const [activeReportId, setActiveReportId] = useState<string | null>(null);
-  const [htmlTemplate, setHtmlTemplate] = useState('');
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [activeTemplateId, setActiveTemplateId] = useState<string>('default');
   const [isLoading, setIsLoading] = useState(true);
   const [username, setUsername] = useState('shafi@admin.com');
+
+  const reportsKey = `report_creator_reports_${username}`;
 
   // Initialize and load from LocalStorage
   useEffect(() => {
@@ -215,30 +228,64 @@ export default function ReportCreatorIndex() {
       setIsLoggedIn(true);
       setPage('dashboard');
       const container = document.getElementById('report-creator-root');
-      const email = container?.getAttribute('data-username');
-      if (email) {
-        setUsername(email);
-      }
+      const email = container?.getAttribute('data-username') || 'shafi@admin.com';
+      setUsername(email);
+
+      const userReportsKey = `report_creator_reports_${email}`;
+      const templatesKey = `report_creator_templates_${email}`;
+      const userTemplateKey = `report_creator_template_${email}`;
 
       // 2. Load Reports
-      const savedReports = localStorage.getItem('report_creator_reports');
+      const savedReports = localStorage.getItem(userReportsKey);
       if (savedReports) {
         setReports(JSON.parse(savedReports));
       } else {
         // Prepopulate with a beautiful sample
         setReports([SAMPLE_REPORT]);
-        localStorage.setItem('report_creator_reports', JSON.stringify([SAMPLE_REPORT]));
+        localStorage.setItem(userReportsKey, JSON.stringify([SAMPLE_REPORT]));
       }
 
-      // 3. Load HTML Template
-      const savedTemplate = localStorage.getItem('report_creator_template');
+      // 3. Load HTML Templates
+      const savedTemplates = localStorage.getItem(templatesKey);
+      const savedSingleTemplate = localStorage.getItem(userTemplateKey);
       const CURRENT_VERSION = '<!-- TEMPLATE_VERSION: 1.29 -->';
-      if (savedTemplate && savedTemplate.includes('<!-- FINDING_TEMPLATE_START -->') && savedTemplate.includes(CURRENT_VERSION)) {
-        setHtmlTemplate(savedTemplate);
-      } else {
-        setHtmlTemplate(DEFAULT_TEMPLATE);
-        localStorage.setItem('report_creator_template', DEFAULT_TEMPLATE);
+      let defaultTemplateHtml = DEFAULT_TEMPLATE;
+      if (savedSingleTemplate && savedSingleTemplate.includes('<!-- FINDING_TEMPLATE_START -->') && savedSingleTemplate.includes(CURRENT_VERSION)) {
+        defaultTemplateHtml = savedSingleTemplate;
       }
+
+      let loadedTemplates: Template[] = [];
+      if (savedTemplates) {
+        try {
+          loadedTemplates = JSON.parse(savedTemplates);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (loadedTemplates.length === 0) {
+        loadedTemplates = [
+          {
+            id: 'default',
+            name: 'Default Template',
+            html: defaultTemplateHtml,
+            isDefault: true
+          }
+        ];
+        localStorage.setItem(templatesKey, JSON.stringify(loadedTemplates));
+      } else {
+        const hasDefault = loadedTemplates.some(t => t.isDefault || t.id === 'default');
+        if (!hasDefault) {
+          loadedTemplates.unshift({
+            id: 'default',
+            name: 'Default Template',
+            html: defaultTemplateHtml,
+            isDefault: true
+          });
+          localStorage.setItem(templatesKey, JSON.stringify(loadedTemplates));
+        }
+      }
+      setTemplates(loadedTemplates);
     } catch (err) {
       console.error('Failed to load Report Creator state from local storage:', err);
     } finally {
@@ -261,7 +308,7 @@ export default function ReportCreatorIndex() {
     setPage('login');
   };
 
-  const handleCreateReport = (name: string, client: string) => {
+  const handleCreateReport = (name: string, client: string, templateId?: string) => {
     const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
     const finalClient = client || 'Internal';
@@ -281,12 +328,13 @@ export default function ReportCreatorIndex() {
       findings: [],
       goalsAndScenarios: [],
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      templateId: templateId || 'default'
     };
 
     const updatedReports = [newReport, ...reports];
     setReports(updatedReports);
-    localStorage.setItem('report_creator_reports', JSON.stringify(updatedReports));
+    localStorage.setItem(reportsKey, JSON.stringify(updatedReports));
     setActiveReportId(newReport.id);
     setPage('builder');
   };
@@ -299,27 +347,60 @@ export default function ReportCreatorIndex() {
     };
     const updatedReports = reports.map(r => (r.id === updatedReport.id ? updatedWithTimestamp : r));
     setReports(updatedReports);
-    localStorage.setItem('report_creator_reports', JSON.stringify(updatedReports));
+    localStorage.setItem(reportsKey, JSON.stringify(updatedReports));
   };
 
   const handleDeleteReport = (id: string) => {
     const updatedReports = reports.filter(r => r.id !== id);
     setReports(updatedReports);
-    localStorage.setItem('report_creator_reports', JSON.stringify(updatedReports));
+    localStorage.setItem(reportsKey, JSON.stringify(updatedReports));
     if (activeReportId === id) setActiveReportId(null);
   };
 
-  const handleSaveTemplate = (newTemplate: string) => {
-    setHtmlTemplate(newTemplate);
-    localStorage.setItem('report_creator_template', newTemplate);
+  const handleCreateTemplate = (name: string) => {
+    const defaultTemplate = templates.find(t => t.isDefault) || { html: DEFAULT_TEMPLATE };
+    const newTemplate: Template = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: name,
+      html: defaultTemplate.html,
+      isDefault: false
+    };
+
+    const updated = [...templates, newTemplate];
+    setTemplates(updated);
+    const templatesKey = `report_creator_templates_${username}`;
+    localStorage.setItem(templatesKey, JSON.stringify(updated));
+    return newTemplate.id;
+  };
+
+  const handleSaveTemplate = (templateId: string, newHtml: string) => {
+    const updated = templates.map(t => t.id === templateId ? { ...t, html: newHtml } : t);
+    setTemplates(updated);
+    const templatesKey = `report_creator_templates_${username}`;
+    localStorage.setItem(templatesKey, JSON.stringify(updated));
+
+    if (templateId === 'default') {
+      const userTemplateKey = `report_creator_template_${username}`;
+      localStorage.setItem(userTemplateKey, newHtml);
+    }
+  };
+
+  const handleDeleteTemplate = (templateId: string) => {
+    const templateToDelete = templates.find(t => t.id === templateId);
+    if (!templateToDelete || templateToDelete.isDefault) return;
+
+    const updated = templates.filter(t => t.id !== templateId);
+    setTemplates(updated);
+    const templatesKey = `report_creator_templates_${username}`;
+    localStorage.setItem(templatesKey, JSON.stringify(updated));
   };
 
   // Export database backup
   const handleExportData = () => {
     const dataStr = JSON.stringify({
       reports,
-      htmlTemplate,
-      version: '1.0',
+      templates,
+      version: '1.1',
       exportedAt: new Date().toISOString()
     }, null, 2);
     
@@ -338,11 +419,19 @@ export default function ReportCreatorIndex() {
   const handleImportData = (jsonData: string): boolean => {
     try {
       const parsed = JSON.parse(jsonData);
-      if (Array.isArray(parsed.reports) && typeof parsed.htmlTemplate === 'string') {
+      if (Array.isArray(parsed.reports)) {
         setReports(parsed.reports);
-        setHtmlTemplate(parsed.htmlTemplate);
-        localStorage.setItem('report_creator_reports', JSON.stringify(parsed.reports));
-        localStorage.setItem('report_creator_template', parsed.htmlTemplate);
+        localStorage.setItem(reportsKey, JSON.stringify(parsed.reports));
+
+        if (Array.isArray(parsed.templates)) {
+          setTemplates(parsed.templates);
+          const templatesKey = `report_creator_templates_${username}`;
+          localStorage.setItem(templatesKey, JSON.stringify(parsed.templates));
+          const defaultTemplate = parsed.templates.find((t: any) => t.isDefault)?.html;
+          if (defaultTemplate) {
+            localStorage.setItem(`report_creator_template_${username}`, defaultTemplate);
+          }
+        }
         return true;
       }
       return false;
@@ -361,28 +450,48 @@ export default function ReportCreatorIndex() {
   }
 
   const activeReport = reports.find(r => r.id === activeReportId);
+  const activeReportTemplateHtml = templates.find(t => t.id === (activeReport?.templateId || 'default'))?.html || templates.find(t => t.isDefault)?.html || DEFAULT_TEMPLATE;
+  const editingTemplateHtml = templates.find(t => t.id === activeTemplateId)?.html || DEFAULT_TEMPLATE;
 
   return (
     <>
       {page === 'dashboard' && (
         <Dashboard
           reports={reports}
+          templates={templates}
           onCreateReport={handleCreateReport}
           onSelectReport={(id) => {
             setActiveReportId(id);
             setPage('builder');
           }}
           onDeleteReport={handleDeleteReport}
-          onEditTemplate={() => setPage('template_editor')}
+          onEditTemplate={() => setPage('template_list')}
           onLogout={() => {}}
           username={username}
+        />
+      )}
+
+      {page === 'template_list' && (
+        <TemplateList
+          templates={templates}
+          onCreateTemplate={(name) => {
+            const newId = handleCreateTemplate(name);
+            setActiveTemplateId(newId);
+            setPage('template_editor');
+          }}
+          onEditTemplate={(id) => {
+            setActiveTemplateId(id);
+            setPage('template_editor');
+          }}
+          onDeleteTemplate={handleDeleteTemplate}
+          onClose={() => setPage('dashboard')}
         />
       )}
 
       {page === 'builder' && activeReport && (
         <ReportBuilder
           report={activeReport}
-          htmlTemplate={htmlTemplate}
+          htmlTemplate={activeReportTemplateHtml}
           onSaveReport={handleSaveReport}
           onClose={() => {
             setActiveReportId(null);
@@ -393,9 +502,9 @@ export default function ReportCreatorIndex() {
 
       {page === 'template_editor' && (
         <TemplateEditor
-          currentTemplate={htmlTemplate}
-          onSaveTemplate={handleSaveTemplate}
-          onClose={() => setPage('dashboard')}
+          currentTemplate={editingTemplateHtml}
+          onSaveTemplate={(newHtml) => handleSaveTemplate(activeTemplateId, newHtml)}
+          onClose={() => setPage('template_list')}
         />
       )}
     </>

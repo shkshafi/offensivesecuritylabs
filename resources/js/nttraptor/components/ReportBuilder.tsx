@@ -180,6 +180,7 @@ interface Report {
   appendices?: Appendices;
   createdAt?: string;
   updatedAt?: string;
+  templateId?: string;
 }
 
 interface ReportBuilderProps {

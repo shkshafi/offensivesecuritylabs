@@ -100,9 +100,8 @@
                                       <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain mix-blend-screen" alt="Logo">
                                   </div>
                                   <!-- Collapsed Icon Logo -->
-                                  <div x-show="!sidebarPinned && !sidebarHovered" style="display: none;" class="flex items-center">
-                                      <img src="{{ asset('images/icon_light.png') }}" class="h-8 w-8 object-contain dark:hidden mix-blend-multiply" alt="Icon">
-                                      <img src="{{ asset('images/icon_dark.png') }}" class="hidden dark:block h-8 w-8 object-contain mix-blend-screen" alt="Icon">
+                                  <div x-show="!sidebarPinned && !sidebarHovered" style="display: none;" class="flex items-center justify-center w-full">
+                                      <span class="text-sm font-extrabold tracking-wider text-foreground font-display">OSL</span>
                                   </div>
                               </a>
                               
@@ -174,6 +173,21 @@
                                       </a>
                                   </div>
                               </div>
+
+                              @if(Auth::user()->role === 'admin')
+                              <div class="h-px bg-border/40 my-2"></div>
+                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Administration</div>
+
+                              <!-- User Management Link -->
+                              <a href="{{ route('admin.users.index') }}" 
+                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.users.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
+                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
+                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                  </svg>
+                                  <span x-show="sidebarPinned || sidebarHovered">User Management</span>
+                              </a>
+                              @endif
 
                               <div class="h-px bg-border/40 my-2"></div>
                               <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Settings</div>
@@ -294,6 +308,19 @@
                                      </a>
                                  </div>
                              </div>
+
+                             @if(Auth::user()->role === 'admin')
+                             <div class="h-px bg-border/40 my-2"></div>
+                             <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Administration</div>
+
+                             <!-- User Management Link -->
+                             <a href="{{ route('admin.users.index') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.users.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}">
+                                 <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                 </svg>
+                                 <span>User Management</span>
+                             </a>
+                             @endif
 
                              <div class="h-px bg-border/40 my-2"></div>
                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Settings</div>

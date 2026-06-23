@@ -46,6 +46,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/models', [\App\Http\Controllers\Admin\GroqAIController::class, 'models'])->name('models');
     });
 
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
+        Route::post('/admin/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.users.store');
+        Route::patch('/admin/users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.update-role');
+        Route::patch('/admin/users/{user}/password', [\App\Http\Controllers\Admin\UserController::class, 'changePassword'])->name('admin.users.change-password');
+        Route::delete('/admin/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
+    });
+
     Route::post('/api/reports/export-pdf', [\App\Http\Controllers\ReportExportController::class, 'exportPdf'])->name('reports.export-pdf');
 
     Route::get('/recon-agent', function () {
