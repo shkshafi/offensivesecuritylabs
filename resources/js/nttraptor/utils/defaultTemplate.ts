@@ -1,5 +1,5 @@
 export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
-<!-- TEMPLATE_VERSION: 1.27 -->
+<!-- TEMPLATE_VERSION: 1.29 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -682,7 +682,7 @@ export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
           <div class="cover-meta-divider"></div>
           <div class="cover-meta-text">
             <label>VERSION</label>
-            <span>Version {{version}}</span>
+            <span>{{version}}</span>
           </div>
         </div>
 
@@ -718,7 +718,7 @@ export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
           <div class="cover-meta-divider"></div>
           <div class="cover-meta-text">
             <label>REPORT DATE</label>
-            <span>{{date}}</span>
+            <span>{{report_date}}</span>
           </div>
         </div>
 
@@ -776,7 +776,7 @@ export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
       <tr><td class="mid">Client Organisation</td><td>{{client}}</td></tr>
       <tr><td class="mid">Engagement Type</td><td>Red Team / Simulated Attack Assessment</td></tr>
       <tr><td class="mid">Assessment Period</td><td>{{date}}</td></tr>
-      <tr><td class="mid">Report Date</td><td>{{date}}</td></tr>
+      <tr><td class="mid">Report Date</td><td>{{report_date}}</td></tr>
       <tr><td class="mid">Report Version</td><td>{{version}}</td></tr>
       <tr><td class="mid">Classification</td><td><span class="confid-stamp">{{classification}}</span></td></tr>
     </table>

@@ -46,6 +46,7 @@ interface DummyReport {
   name: string;
   client: string;
   date: string;
+  reportDate?: string;
   author: string;
   version: string;
   classification: string;
@@ -59,6 +60,7 @@ const dummyReport: DummyReport = {
   name: 'TACTICAL EXERCISE PHANTOM RAPTOR',
   client: 'Aether Cybernetics Ltd',
   date: '2026-05-30',
+  reportDate: '2026-05-30',
   author: 'Operative Alpha-9',
   version: '2.14',
   classification: 'CONFIDENTIAL',
@@ -551,6 +553,7 @@ export default function TemplateEditor({
     html = html.replace(/{{title}}/g, escapeHtml(dummyReport.name));
     html = html.replace(/{{client}}/g, escapeHtml(dummyReport.client));
     html = html.replace(/{{date}}/g, escapeHtml(dummyReport.date));
+    html = html.replace(/{{report_date}}/g, escapeHtml(dummyReport.reportDate || dummyReport.date));
     html = html.replace(/{{author}}/g, escapeHtml(dummyReport.author));
     html = html.replace(/{{version}}/g, escapeHtml(dummyReport.version));
     html = html.replace(/{{classification}}/g, escapeHtml(dummyReport.classification));
@@ -1115,6 +1118,7 @@ export default function TemplateEditor({
               {renderPlaceholderButton('Report Title', '{{title}}')}
               {renderPlaceholderButton('Client Name', '{{client}}')}
               {renderPlaceholderButton('Assessment Date', '{{date}}')}
+              {renderPlaceholderButton('Report Date', '{{report_date}}')}
               {renderPlaceholderButton('Lead Analyst', '{{author}}')}
               {renderPlaceholderButton('Document Version', '{{version}}')}
               {renderPlaceholderButton('Classification', '{{classification}}')}

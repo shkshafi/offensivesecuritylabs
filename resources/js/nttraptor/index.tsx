@@ -91,6 +91,8 @@ interface Report {
   name: string;
   client: string;
   date: string;
+  dateEnd?: string;
+  reportDate?: string;
   author: string;
   version: string;
   classification: string;
@@ -116,7 +118,9 @@ const SAMPLE_REPORT: Report = {
   id: 'sample-report-id-1',
   name: 'OMNI CONSU-PORTAL EXTERNAL PENETRATION REPORT',
   client: 'Omni Consumer Products',
-  date: '2026-05-30',
+  date: '2026-05-01',
+  dateEnd: '2026-05-30',
+  reportDate: '2026-05-30',
   author: 'Analyst Delta-4',
   version: '1.0',
   classification: 'CONFIDENTIAL',
@@ -228,7 +232,7 @@ export default function ReportCreatorIndex() {
 
       // 3. Load HTML Template
       const savedTemplate = localStorage.getItem('report_creator_template');
-      const CURRENT_VERSION = '<!-- TEMPLATE_VERSION: 1.27 -->';
+      const CURRENT_VERSION = '<!-- TEMPLATE_VERSION: 1.29 -->';
       if (savedTemplate && savedTemplate.includes('<!-- FINDING_TEMPLATE_START -->') && savedTemplate.includes(CURRENT_VERSION)) {
         setHtmlTemplate(savedTemplate);
       } else {
@@ -266,6 +270,8 @@ export default function ReportCreatorIndex() {
       name: name.toUpperCase(),
       client: finalClient,
       date: today,
+      dateEnd: today,
+      reportDate: today,
       author: 'Tactical Operator',
       version: '1.0',
       classification: 'CONFIDENTIAL',

@@ -19,6 +19,8 @@ interface Report {
   name: string;
   client: string;
   date: string;
+  dateEnd?: string;
+  reportDate?: string;
   author: string;
   version: string;
   classification: string;

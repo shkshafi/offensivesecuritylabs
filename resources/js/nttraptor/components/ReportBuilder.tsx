@@ -40,7 +40,8 @@ import {
   AlertCircle,
   X,
   Copy,
-  Eye
+  Eye,
+  Check
 } from 'lucide-react';
 
 interface FindingScreenshot {
@@ -159,6 +160,7 @@ interface Report {
   name: string;
   client: string;
   date: string;
+  dateEnd?: string;
   author: string;
   version: string;
   classification: string;
@@ -560,6 +562,7 @@ export default function ReportBuilder({
   // Collapsable panel states (Report Details selected on load)
   const [activeSection, setActiveSection] = useState<'info' | 'summary' | 'goals_scenarios' | 'findings' | 'supplemental' | 'appendices' | 'custom'>('info');
   const [expandedCustomSection, setExpandedCustomSection] = useState<string | null>(null);
+  const [isCustomSaved, setIsCustomSaved] = useState(false);
 
   // Pagination & Zooming states
   const [totalPages, setTotalPages] = useState(1);
@@ -627,7 +630,7 @@ export default function ReportBuilder({
     return {
       info: 'Complete',
       summary: isSummaryComplete ? 'Complete' : (report.executiveSummary?.trim() || report.scope?.trim() || report.caveats?.trim() || report.cleanup?.trim() || report.strategicRecommendations?.trim() || report.usingThisReport?.trim()) ? 'In Progress' : 'Incomplete',
-      goals: isGoalsComplete ? 'Complete' : (report.goalsAndScenarios && report.goalsAndScenarios.length > 0) ? 'In Progress' : 'Incomplete',
+      goals_scenarios: isGoalsComplete ? 'Complete' : (report.goalsAndScenarios && report.goalsAndScenarios.length > 0) ? 'In Progress' : 'Incomplete',
       findings: isFindingsComplete ? 'Complete' : (report.findings && report.findings.length > 0) ? 'In Progress' : 'Incomplete',
       supplemental: isSupplementalComplete ? 'Complete' : (report.supplementalSections && report.supplementalSections.length > 0) ? 'In Progress' : 'Incomplete',
       appendices: isAppendicesComplete ? 'Complete' : (report.appendices?.methodologyKeyInfo?.trim() || report.appendices?.methodologyHighlights?.trim() || (report.appendices?.assessmentTeam && report.appendices.assessmentTeam.length > 0)) ? 'In Progress' : 'Incomplete',
@@ -902,6 +905,10 @@ export default function ReportBuilder({
       setReport({ ...initialReport });
     }
   }, [initialReport]);
+
+  useEffect(() => {
+    setIsCustomSaved(false);
+  }, [activeSection]);
 
   // Observe container size to compute auto-zoom factors
   useEffect(() => {
@@ -1582,9 +1589,15 @@ export default function ReportBuilder({
     // Helper: apply all simple token replacements
     const applySimpleReplacements = (inputHtml: string): string => {
       let temp = inputHtml;
+      // Build date range string: "start – end" or just start if no end date
+      const dateRangeStr = report.dateEnd && report.dateEnd !== report.date
+        ? `${report.date} – ${report.dateEnd}`
+        : report.date;
+      const reportDateStr = report.reportDate || report.date;
       temp = temp.replace(/{{title}}/g, () => escapeHtml(report.name));
       temp = temp.replace(/{{client}}/g, () => escapeHtml(report.client));
-      temp = temp.replace(/{{date}}/g, () => escapeHtml(report.date));
+      temp = temp.replace(/{{date}}/g, () => escapeHtml(dateRangeStr));
+      temp = temp.replace(/{{report_date}}/g, () => escapeHtml(reportDateStr));
       temp = temp.replace(/{{author}}/g, () => escapeHtml(report.author));
       temp = temp.replace(/{{version}}/g, () => escapeHtml(report.version));
       temp = temp.replace(/{{classification}}/g, () => escapeHtml((report.classification || '').toUpperCase()));
@@ -2538,18 +2551,6 @@ export default function ReportBuilder({
                   </button>
                 );
               })}
-              
-              <button
-                type="button"
-                onClick={() => {
-                  addCustomSection();
-                  setActiveSection('custom');
-                }}
-                className="p-1.5 mb-1.5 ml-1 bg-slate-100 dark:bg-[#0B101E]/40 hover:bg-slate-250 dark:hover:bg-[#0B101E]/80 border border-slate-300 dark:border-white/[0.05] hover:border-slate-400 dark:hover:border-white/20 text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg transition-all flex items-center justify-center flex-shrink-0 cursor-pointer"
-                title="Add Custom Section"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
             </div>
           )}
 
@@ -2601,15 +2602,44 @@ export default function ReportBuilder({
                     </div>
                   </div>
 
-                  {/* Assessment Date */}
+                  {/* Assessment Date Range */}
+                  <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-start gap-3 focus-within:border-blue-500/50 transition-colors">
+                    <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0 mt-1" />
+                    <div className="flex-1 min-w-0">
+                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Assessment Date Range</label>
+                      <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] text-slate-500 uppercase tracking-wider w-8 flex-shrink-0">From</span>
+                          <input
+                            type="date"
+                            value={report.date}
+                            onChange={(e) => updateReportField('date', e.target.value)}
+                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 [color-scheme:dark]"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] text-slate-500 uppercase tracking-wider w-8 flex-shrink-0">To</span>
+                          <input
+                            type="date"
+                            value={report.dateEnd || report.date}
+                            min={report.date}
+                            onChange={(e) => updateReportField('dateEnd', e.target.value)}
+                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 [color-scheme:dark]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Report Date */}
                   <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors">
                     <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Assessment Date</label>
+                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Report Date</label>
                       <input
                         type="date"
-                        value={report.date}
-                        onChange={(e) => updateReportField('date', e.target.value)}
+                        value={report.reportDate || report.date}
+                        onChange={(e) => updateReportField('reportDate', e.target.value)}
                         className="w-full bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 [color-scheme:dark]"
                       />
                     </div>
@@ -3715,15 +3745,33 @@ export default function ReportBuilder({
             )}
           </div>
 
-          {/* Sticky Editor Footer with Save & Continue */}
-          <div className="p-4 border-t border-white/[0.05] flex justify-end bg-[#0B101E] flex-shrink-0">
-            <button
-              onClick={handleSaveAndContinue}
-              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.4)] text-white text-xs font-bold rounded-lg transition-all"
-            >
-              <span>Save & Continue</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
+          {/* Sticky Editor Footer with Save & Continue or Finish */}
+          <div className="p-4 border-t border-white/[0.05] flex justify-end items-center gap-3 bg-[#0B101E] flex-shrink-0">
+            {activeSection === 'custom' ? (
+              <button
+                onClick={() => {
+                  onSaveReport(report);
+                  setIsCustomSaved(true);
+                  setTimeout(() => setIsCustomSaved(false), 3000);
+                }}
+                className={`flex items-center gap-2 px-5 py-2.5 text-white text-xs font-bold rounded-lg transition-all ${
+                  isCustomSaved 
+                    ? 'bg-emerald-600 hover:bg-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]' 
+                    : 'bg-blue-600 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]'
+                }`}
+              >
+                <span>{isCustomSaved ? 'Saved' : 'Save'}</span>
+                {isCustomSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+              </button>
+            ) : (
+              <button
+                onClick={handleSaveAndContinue}
+                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.4)] text-white text-xs font-bold rounded-lg transition-all"
+              >
+                <span>Save & Continue</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
 
