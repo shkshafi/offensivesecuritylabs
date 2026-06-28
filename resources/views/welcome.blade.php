@@ -78,7 +78,7 @@
                     </h1>
 
                     <p class="landing-hero-sub">
-                        OffSec Labs hosts critical security apps—including reconnaissance suites, AD auditors, and report builders—unified under a single login. Execute actions, audit infrastructures, and generate reports from one calm, powerful console.
+                        OffSec Labs hosts critical security apps—including professional report builders and AD auditing suites—unified under a single login. Design templates, manage vulnerability findings, and generate compliance reports from one calm, powerful console.
                     </p>
 
                     <div class="landing-hero-actions">
@@ -127,8 +127,7 @@
                                             <div class="landing-app-mockup-body flex" style="min-height: 260px;">
                                                 <aside class="landing-app-mockup-sidebar">
                                                     <div class="landing-app-mockup-nav-item is-active">Apps Hub</div>
-                                                    <div class="landing-app-mockup-nav-item">Recon Engine</div>
-                                                    <div class="landing-app-mockup-nav-item">Report Builder</div>
+                                                    <div class="landing-app-mockup-nav-item">Report Creator</div>
                                                     <div class="landing-app-mockup-nav-item">AD Auditor</div>
                                                 </aside>
                                                 <div class="landing-app-mockup-main p-5 text-left w-full overflow-y-auto">
@@ -138,12 +137,12 @@
                                                     </div>
                                                     <div class="grid grid-cols-2 gap-3">
                                                         <div class="p-3 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
-                                                            <div class="text-[11px] font-bold text-white mb-1">🔍 Recon Suite</div>
-                                                            <p class="text-[10px] text-zinc-400 leading-normal">Subdomain scanners, crawler engines, and DNS monitors.</p>
-                                                        </div>
-                                                        <div class="p-3 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
                                                             <div class="text-[11px] font-bold text-white mb-1">📝 OffSec Reporting</div>
                                                             <p class="text-[10px] text-zinc-400 leading-normal">Professional pentesting reporting system with CVSS calculators.</p>
+                                                        </div>
+                                                        <div class="p-3 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                                                            <div class="text-[11px] font-bold text-white mb-1">🛡️ AD Auditor</div>
+                                                            <p class="text-[10px] text-zinc-400 leading-normal">Audit domain controllers, check group delegations, and trust structures.</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -178,36 +177,23 @@
                 </div>
 
                 <div class="landing-bento landing-reveal">
-                    <!-- 1. Recon Tool (Tasks slot) -->
+                    <!-- 1. Finding Templates (Tasks slot) -->
                     <article class="landing-glass landing-bento-card landing-bento-slot-tasks">
                         <div class="size-10 rounded-xl flex items-center justify-center mb-4" style="background: rgba(139, 92, 246, 0.12); box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);">
                             <svg class="size-5 text-[#a78bfa]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="9" y1="3" x2="9" y2="21"/>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Reconnaissance Suite</h3>
+                        <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-2 tracking-tight">Vulnerability Database</h3>
                         <p class="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
-                            Automate passive subdomain enumeration, DNS mappings, port discovery, and host cataloging.
+                            Deploy pre-configured finding templates for SQL Injection, XSS, and credential leaks directly into drafts.
                         </p>
-                        <!-- Recon visual: mini target columns -->
-                        <div class="landing-bento-visual p-3 flex gap-2">
-                            @foreach(['Active', 'Discovered', 'Flagged'] as $i => $col)
-                                <div class="flex-1 space-y-1.5">
-                                    <div class="text-[9px] uppercase tracking-wider text-[var(--text-secondary)] opacity-60 font-mono">
-                                        {{ $col }}
-                                    </div>
-                                    @for($j = 0; $j < ($i == 1 ? 2 : 1); $j++)
-                                        <div class="h-8 rounded-md bg-white/[0.04] border border-white/[0.06] flex items-center p-1.5 text-[9px] text-zinc-400 font-mono truncate">
-                                            @if($i == 0) api.offsec.local
-                                            @elseif($i == 1 && $j == 0) dev.offsec.local
-                                            @elseif($i == 1 && $j == 1) test-dc.local
-                                            @else admin.offsec.local
-                                            @endif
-                                        </div>
-                                    @endfor
-                                </div>
-                            @endforeach
+                        <!-- Findings visual: mini severity badges -->
+                        <div class="landing-bento-visual p-3 flex flex-wrap gap-2 content-center justify-center">
+                            <span class="text-[9px] px-2.5 py-1 rounded border border-red-500/20 bg-red-500/10 text-red-400 font-mono font-semibold">CRITICAL</span>
+                            <span class="text-[9px] px-2.5 py-1 rounded border border-orange-500/20 bg-orange-500/10 text-orange-400 font-mono font-semibold">HIGH</span>
+                            <span class="text-[9px] px-2.5 py-1 rounded border border-amber-500/20 bg-amber-500/10 text-amber-400 font-mono font-semibold">MEDIUM</span>
                         </div>
                     </article>
 
@@ -392,17 +378,17 @@
                 <div class="landing-spotlight-wrap">
                     <!-- Left side controls -->
                     <div class="landing-spotlight-sticky space-y-2">
-                        <!-- Card 0: Recon Tool -->
+                        <!-- Card 0: Custom Templates -->
                         <div class="landing-spotlight-item cursor-pointer" 
                              :class="{ 'is-active': activeSpotlight === 0 }"
                              @click="activeSpotlight = 0">
                             <div class="flex items-center gap-2 mb-2">
-                                <svg class="size-4 text-[#a78bfa]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                                <span class="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Recon Tool</span>
+                                <svg class="size-4 text-[#a78bfa]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                                <span class="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Custom Templates</span>
                             </div>
-                            <h3 class="text-xl md:text-2xl font-bold tracking-tight mb-2">Subdomain & service mapping.</h3>
+                            <h3 class="text-xl md:text-2xl font-bold tracking-tight mb-2">HTML layout & style design.</h3>
                             <p class="text-sm text-[var(--text-secondary)] leading-relaxed max-w-md">
-                                Perform automated recon sweeps, resolve hosts, run passive DNS queries, and detect open ports across entire organizations.
+                                Design and customize report layout structures, CSS styles, typography variables, and classification headers to match your brand.
                             </p>
                         </div>
 
@@ -452,7 +438,7 @@
                     <!-- Right side mockups (sync'd to active state) -->
                     <div class="landing-spotlight-sticky">
                         <div class="landing-spotlight-panel">
-                            <!-- Mockup 0: Recon Tool -->
+                            <!-- Mockup 0: Custom Templates -->
                             <div class="landing-spotlight-panel-inner" :class="{ 'is-active': activeSpotlight === 0 }">
                                 <div class="landing-mock-chrome landing-glass">
                                     <div class="landing-mock-toolbar">
@@ -462,19 +448,20 @@
                                     </div>
                                     <div class="p-4 font-sans text-xs text-left text-zinc-300">
                                         <div class="border-b border-zinc-800 pb-2 mb-3 flex justify-between items-center">
-                                            <span class="font-bold text-white text-sm">🔍 Recon Sweep Console</span>
-                                            <span class="text-[10px] text-purple-400 font-mono">Status: idle</span>
+                                            <span class="font-bold text-white text-sm">🎨 Layout Template Editor</span>
+                                            <span class="text-[10px] text-indigo-400 font-mono">default.html</span>
                                         </div>
                                         <div class="space-y-3 font-mono text-[10px]">
-                                            <div class="flex gap-2">
-                                                <input type="text" value="offsec.local" class="flex-grow bg-zinc-900 border border-zinc-800 rounded px-2 text-white" disabled>
-                                                <button class="bg-purple-600 text-white rounded px-2.5 py-0.5 border-0">Run</button>
+                                            <div class="text-zinc-500">&lt;!-- CSS Stylesheet --&gt;</div>
+                                            <div class="text-indigo-400">
+                                                body { font-family: 'Outfit'; }<br>
+                                                .report-header { color: #8b5cf6; }
                                             </div>
-                                            <div class="text-zinc-500"># Resolved Subdomains:</div>
-                                            <div class="text-zinc-400">
-                                                - [OK] dc01.offsec.local (10.10.11.1)<br>
-                                                - [OK] portal.offsec.local (10.10.11.2)<br>
-                                                - [OK] git.offsec.local (10.10.11.45)
+                                            <div class="text-zinc-500">&lt;!-- Report Document Header --&gt;</div>
+                                            <div class="text-zinc-300">
+                                                &lt;div class="header"&gt;<br>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;[CLASSIFICATION] - [CLIENT]<br>
+                                                &lt;/div&gt;
                                             </div>
                                         </div>
                                     </div>
@@ -588,8 +575,8 @@
                             Console Modules
                         </h6>
                         <ul class="space-y-3 list-none p-0">
-                            <li><a href="/login" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-decoration-none">Recon Tool</a></li>
-                            <li><a href="/login" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-decoration-none">OffSec Reporting</a></li>
+                            <li><a href="/login" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-decoration-none">Report Creator</a></li>
+                            <li><a href="/login" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-decoration-none">Custom Templates</a></li>
                             <li><a href="/login" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-decoration-none">AD Auditor</a></li>
                             <li><a href="/login" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-decoration-none">Payload Console</a></li>
                         </ul>

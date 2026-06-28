@@ -19,75 +19,114 @@
         </header>
 
         <div class="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_280px] xl:gap-5 2xl:grid-cols-[1fr_300px]">
-            <!-- Left Column: Applications Section -->
-            <section class="min-w-0 space-y-4">
-                <div class="flex items-center justify-between gap-3 border-b border-border/30 pb-3">
-                    <h2 class="text-xs font-semibold tracking-wide uppercase text-muted-foreground/60">Applications</h2>
+            <!-- Left Column: Report Creator Workspace -->
+            <section class="min-w-0 space-y-5">
+                <!-- Workspace Hero Banner -->
+                <div class="relative overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-br from-indigo-950/40 via-slate-900/50 to-slate-900/40 p-6 md:p-8 backdrop-blur-md shadow-xl">
+                    <!-- Subtle Ambient Light -->
+                    <div class="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-indigo-500/10 blur-3xl"></div>
+                    <div class="absolute -left-20 -bottom-20 h-60 w-60 rounded-full bg-blue-500/10 blur-3xl"></div>
+                    
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                        <div class="space-y-3 max-w-xl">
+                            <div class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
+                                Active Module
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground font-brand">
+                                Report Creator Workspace
+                            </h2>
+                            <p class="text-sm md:text-base text-muted-foreground leading-relaxed">
+                                Professional penetration testing reporting system. Write comprehensive security findings, calculate CVSS scores, and generate client-ready PDF deliverables inside a structured, state-of-the-art console.
+                            </p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+                            <a href="{{ route('report-creator') }}" class="inline-flex items-center justify-center rounded-xl bg-primary px-4.5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-primary/15 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 text-decoration-none">
+                                <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                Launch Reports
+                            </a>
+                            <a href="{{ route('report-creator.templates') }}" class="inline-flex items-center justify-center rounded-xl border border-border/80 bg-background/50 px-4.5 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-ring text-decoration-none">
+                                <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                                Manage Templates
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 2xl:grid-cols-3">
-                    <!-- App 1: Recon Agent -->
-                    <a href="{{ route('recon-agent') }}" class="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                        <div class="relative flex h-full flex-col gap-3 rounded-xl border border-border/40 bg-card/50 p-4 backdrop-blur-sm transition-all duration-200 hover:border-border/70 hover:bg-card/70 min-h-[120px]">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="flex min-w-0 items-center gap-2.5">
-                                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-50/60 dark:bg-purple-950/20 text-purple-600 dark:text-purple-400">
-                                        <svg class="h-4.5 w-4.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                                    </div>
-                                    <h3 class="truncate text-sm font-medium text-foreground">Recon Agent</h3>
-                                </div>
-                                <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground/30 transition-colors group-hover:text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                <!-- Sub-grid: Stats & Activities -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Report Creator Overview -->
+                    <div class="rounded-xl border border-border/40 bg-card/40 p-5 backdrop-blur-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-border/20 pb-3">
+                            <h3 class="text-sm font-bold text-foreground flex items-center gap-2">
+                                <svg class="h-4.5 w-4.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                                Reports Dashboard
+                            </h3>
+                            <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-semibold">Active</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 text-center">
+                            <div class="rounded-lg bg-muted/20 p-2.5 border border-border/10">
+                                <div class="text-xl font-bold text-foreground">5</div>
+                                <div class="text-[10px] text-muted-foreground uppercase font-medium">Drafts</div>
                             </div>
-                            <div class="mt-auto flex min-w-0 flex-col gap-0.5">
-                                <p class="truncate text-sm font-semibold tracking-tight text-foreground">8 active targets</p>
-                                <div class="truncate text-xs text-muted-foreground">
-                                    <span class="text-purple-400 font-semibold">2 scans running</span>
+                            <div class="rounded-lg bg-muted/20 p-2.5 border border-border/10">
+                                <div class="text-xl font-bold text-amber-500">1</div>
+                                <div class="text-[10px] text-muted-foreground uppercase font-medium">In Review</div>
+                            </div>
+                            <div class="rounded-lg bg-muted/20 p-2.5 border border-border/10">
+                                <div class="text-xl font-bold text-emerald-500">3</div>
+                                <div class="text-[10px] text-muted-foreground uppercase font-medium">Finalised</div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="text-xs font-semibold text-muted-foreground/60 uppercase tracking-wider">Recent Reports</div>
+                            <div class="space-y-1.5">
+                                <div class="flex items-center justify-between text-xs p-2 rounded bg-muted/10 hover:bg-muted/20 transition-colors">
+                                    <span class="text-foreground font-medium truncate max-w-[200px]">Omni Consu-Portal Ext Pentest</span>
+                                    <span class="text-muted-foreground/70 shrink-0 font-mono">1.0 • Draft</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs p-2 rounded bg-muted/10 hover:bg-muted/20 transition-colors">
+                                    <span class="text-foreground font-medium truncate max-w-[200px]">Active Directory Infrastructure Audit</span>
+                                    <span class="text-muted-foreground/70 shrink-0 font-mono">0.8 • In Review</span>
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
-                    <!-- App 2: Report Creator -->
-                    <a href="{{ route('report-creator') }}" class="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                        <div class="relative flex h-full flex-col gap-3 rounded-xl border border-border/40 bg-card/50 p-4 backdrop-blur-sm transition-all duration-200 hover:border-border/70 hover:bg-card/70 min-h-[120px]">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="flex min-w-0 items-center gap-2.5">
-                                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50/60 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400">
-                                        <svg class="h-4.5 w-4.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-                                    </div>
-                                    <h3 class="truncate text-sm font-medium text-foreground">Report Creator</h3>
+                    <!-- Template Management -->
+                    <div class="rounded-xl border border-border/40 bg-card/40 p-5 backdrop-blur-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-border/20 pb-3">
+                            <h3 class="text-sm font-bold text-foreground flex items-center gap-2">
+                                <svg class="h-4.5 w-4.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                                Templates & Styles
+                            </h3>
+                            <span class="text-[10px] font-mono bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20 font-semibold">Standardized</span>
+                        </div>
+                        <div class="space-y-3.5">
+                            <div class="flex items-start gap-2.5 text-xs">
+                                <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-blue-50/60 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 mt-0.5">
+                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 </div>
-                                <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground/30 transition-colors group-hover:text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                <div>
+                                    <div class="font-semibold text-foreground">Default HTML Template Active</div>
+                                    <div class="text-muted-foreground text-[11px] leading-relaxed">Integrated Executive Summary, Technical Details, and CVSS finding layout.</div>
+                                </div>
                             </div>
-                            <div class="mt-auto flex min-w-0 flex-col gap-0.5">
-                                <p class="truncate text-sm font-semibold tracking-tight text-foreground">5 drafts generated</p>
-                                <div class="truncate text-xs text-muted-foreground">
-                                    <span class="text-emerald-500 font-semibold">Vite asset bundling enabled</span>
+                            <div class="flex items-start gap-2.5 text-xs">
+                                <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-blue-50/60 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 mt-0.5">
+                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-foreground">PDF Exporter Loaded</div>
+                                    <div class="text-muted-foreground text-[11px] leading-relaxed">Puppeteer asset bundling active with page numbering and margins configured.</div>
                                 </div>
                             </div>
                         </div>
-                    </a>
-
-                    <!-- App 3: Utilities -->
-                    <a href="{{ route('utilities') }}" class="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                        <div class="relative flex h-full flex-col gap-3 rounded-xl border border-border/40 bg-card/50 p-4 backdrop-blur-sm transition-all duration-200 hover:border-border/70 hover:bg-card/70 min-h-[120px]">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="flex min-w-0 items-center gap-2.5">
-                                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50/60 dark:bg-cyan-950/20 text-cyan-600 dark:text-cyan-400">
-                                        <svg class="h-4.5 w-4.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    </div>
-                                    <h3 class="truncate text-sm font-medium text-foreground">Utilities</h3>
-                                </div>
-                                <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground/30 transition-colors group-hover:text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                            </div>
-                            <div class="mt-auto flex min-w-0 flex-col gap-0.5">
-                                <p class="truncate text-sm font-semibold tracking-tight text-foreground">12 custom tools</p>
-                                <div class="truncate text-xs text-muted-foreground">
-                                    <span class="text-cyan-400 font-semibold">Payload encoder/decoder</span>
-                                </div>
-                            </div>
+                        <div class="pt-1">
+                            <a href="{{ route('report-creator.templates') }}" class="inline-flex w-full items-center justify-center rounded-lg bg-muted/30 px-3 py-2 text-xs font-semibold text-foreground border border-border/30 hover:bg-muted/50 transition-colors text-decoration-none">
+                                Open Template Editor <svg class="ml-1 h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </a>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </section>
 
@@ -110,7 +149,7 @@
                         </div>
                         <div class="flex flex-col gap-1 rounded-lg bg-muted/20 p-2.5 border border-border/10">
                             <span class="text-emerald-400 font-semibold">[12:10:45]</span>
-                            <span class="text-muted-foreground leading-relaxed">Recon sweep completed for target: <strong class="text-foreground">internal-dc.local</strong></span>
+                            <span class="text-muted-foreground leading-relaxed">Draft report created for target: <strong class="text-foreground">internal-dc.local</strong></span>
                         </div>
                         <div class="flex flex-col gap-1 rounded-lg bg-muted/20 p-2.5 border border-border/10">
                             <span class="text-blue-400 font-semibold">[09:05:12]</span>

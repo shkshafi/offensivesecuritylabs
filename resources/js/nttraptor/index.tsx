@@ -226,7 +226,11 @@ export default function ReportCreatorIndex() {
     try {
       // Set Auth Status
       setIsLoggedIn(true);
-      setPage('dashboard');
+      if (window.location.pathname.includes('/templates')) {
+        setPage('template_list');
+      } else {
+        setPage('dashboard');
+      }
       const container = document.getElementById('report-creator-root');
       const email = container?.getAttribute('data-username') || 'shafi@admin.com';
       setUsername(email);
@@ -291,6 +295,19 @@ export default function ReportCreatorIndex() {
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  // Listen to popstate event for back/forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      if (window.location.pathname.includes('/templates')) {
+        setPage('template_list');
+      } else {
+        setPage('dashboard');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleLoginSuccess = (usr: string) => {
@@ -465,7 +482,10 @@ export default function ReportCreatorIndex() {
             setPage('builder');
           }}
           onDeleteReport={handleDeleteReport}
-          onEditTemplate={() => setPage('template_list')}
+          onEditTemplate={() => {
+            setPage('template_list');
+            window.history.pushState(null, '', '/report-creator/templates');
+          }}
           onLogout={() => {}}
           username={username}
         />
@@ -484,7 +504,10 @@ export default function ReportCreatorIndex() {
             setPage('template_editor');
           }}
           onDeleteTemplate={handleDeleteTemplate}
-          onClose={() => setPage('dashboard')}
+          onClose={() => {
+            setPage('dashboard');
+            window.history.pushState(null, '', '/report-creator');
+          }}
         />
       )}
 
