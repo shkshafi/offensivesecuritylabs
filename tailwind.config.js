@@ -26,9 +26,23 @@ export default {
                 mono: ['JetBrains Mono', 'monospace'],
             },
             borderRadius: {
-                lg: 'var(--radius)',
-                md: 'calc(var(--radius) - 2px)',
-                sm: 'calc(var(--radius) - 4px)'
+                lg: '8px',
+                md: '6px',
+                sm: '4px',
+                xl: '8px',
+                '2xl': '8px',
+                '3xl': '8px',
+                full: '9999px',
+            },
+            boxShadow: {
+                sm: '0 1px 2px rgba(0,0,0,.05)',
+                DEFAULT: '0 1px 2px rgba(0,0,0,.06)',
+                md: '0 1px 2px rgba(0,0,0,.06)',
+                lg: '0 1px 2px rgba(0,0,0,.06)',
+                xl: '0 1px 2px rgba(0,0,0,.06)',
+                '2xl': '0 1px 2px rgba(0,0,0,.06)',
+                inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+                none: 'none',
             },
             colors: {
                 background: 'hsl(var(--background))',

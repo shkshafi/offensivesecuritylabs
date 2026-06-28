@@ -15,7 +15,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 
         <!-- Theme Script to avoid flicker -->
         <script>
@@ -28,18 +28,14 @@
                 } else {
                     document.documentElement.classList.remove('dark');
                 }
-                
-                const userBg = "{{ Auth::user()->getBackgroundStyle() }}";
-                const localBg = localStorage.getItem('background_style');
-                const bgStyle = userBg || localBg || 'colourful';
-                document.documentElement.setAttribute('data-background-style', bgStyle);
+                const userBgStyle = "{{ Auth::user()->getBackgroundStyle() }}";
+                document.documentElement.setAttribute('data-background-style', userBgStyle || 'none');
             })();
         </script>
 
         <style>
             :root {
-                --common-bg-image: url("{{ asset('images/task_bg.jpg') }}");
-                --font-brand: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+                --font-brand: 'Inter', 'Segoe UI', sans-serif;
             }
         </style>
 
@@ -48,7 +44,54 @@
         @vite(array_merge(['resources/css/app.css', 'resources/js/app.js'], $viteScripts ?? []))
     </head>
     <body class="font-sans antialiased min-h-screen bg-background text-foreground">
-        <div class="flex min-h-screen w-full bg-transparent"
+        @php
+            $routeName = request()->route() ? request()->route()->getName() : '';
+            $breadcrumbs = [['label' => 'Home', 'url' => route('dashboard')]];
+            
+            $hour = date('H');
+            $greeting = 'Good morning';
+            if ($hour >= 12 && $hour < 17) {
+                $greeting = 'Good afternoon';
+            } elseif ($hour >= 17) {
+                $greeting = 'Good evening';
+            }
+            
+            $pageTitle = 'Console';
+
+            if ($routeName === 'dashboard') {
+                $breadcrumbs[] = ['label' => 'Dashboard', 'url' => null];
+                $pageTitle = $greeting . ', ' . explode(' ', Auth::user()->name)[0];
+            } elseif (str_starts_with($routeName, 'admin.users.')) {
+                $breadcrumbs[] = ['label' => 'Administration', 'url' => null];
+                $breadcrumbs[] = ['label' => 'User Management', 'url' => null];
+                $pageTitle = 'User Management';
+            } elseif (str_starts_with($routeName, 'admin.waitlist.')) {
+                $breadcrumbs[] = ['label' => 'Administration', 'url' => null];
+                $breadcrumbs[] = ['label' => 'Waitlist', 'url' => null];
+                $pageTitle = 'Waitlist Management';
+            } elseif ($routeName === 'profile.edit') {
+                $breadcrumbs[] = ['label' => 'Settings', 'url' => null];
+                $breadcrumbs[] = ['label' => 'Profile', 'url' => null];
+                $pageTitle = 'Profile';
+            } elseif ($routeName === 'settings.appearance.edit') {
+                $breadcrumbs[] = ['label' => 'Settings', 'url' => null];
+                $breadcrumbs[] = ['label' => 'Appearance', 'url' => null];
+                $pageTitle = 'Appearance Settings';
+            } elseif ($routeName === 'report-creator') {
+                $breadcrumbs[] = ['label' => 'Apps', 'url' => null];
+                $breadcrumbs[] = ['label' => 'Report Creator', 'url' => null];
+                $pageTitle = 'Report Creator - Workspace';
+            } elseif ($routeName === 'report-creator.templates') {
+                $breadcrumbs[] = ['label' => 'Apps', 'url' => route('report-creator')];
+                $breadcrumbs[] = ['label' => 'Templates', 'url' => null];
+                $pageTitle = 'Report Creator - Templates';
+            } elseif (str_contains($routeName, 'notifications')) {
+                $breadcrumbs[] = ['label' => 'Notifications', 'url' => null];
+                $pageTitle = 'Notifications';
+            }
+        @endphp
+
+        <div class="flex min-h-screen w-full bg-background text-foreground"
              x-data="{
                  sidebarPinned: true,
                  sidebarHovered: false,
@@ -64,40 +107,36 @@
              }">
 
             <!-- Desktop Sidebar -->
-            <aside class="group peer hidden md:block shrink-0 z-30 transition-[width] duration-200 ease-linear"
+            <aside class="group peer hidden md:block shrink-0 z-30 transition-[width] duration-150 ease-in-out"
                    :class="sidebarPinned || sidebarHovered ? 'w-[13.5rem]' : 'w-[3.5rem]'"
                    @mouseenter="if(!sidebarPinned) sidebarHovered = true"
                    @mouseleave="sidebarHovered = false">
 
                 <!-- Fixed panel itself -->
-                <div class="fixed inset-y-0 left-0 z-30 h-screen transition-[width] duration-200 ease-linear md:flex bg-transparent"
+                <div class="fixed inset-y-0 left-0 z-30 h-screen transition-[width] duration-150 ease-in-out md:flex bg-card"
                      :class="sidebarPinned || sidebarHovered ? 'w-[13.5rem]' : 'w-[3.5rem]'">
                      
-                     <div data-sidebar="sidebar" class="app-chrome-surface relative flex h-full w-full flex-col overflow-hidden rounded-none border-y-0 border-l-0 border-r border-border/40">
-                          <!-- Ambient Glow -->
-                          <div class="sidebar-ambient-glow pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-                              <div class="absolute -top-[20%] -left-[10%] h-[60%] w-[120%] rounded-full bg-gradient-to-br from-blue-200/20 via-indigo-100/10 to-transparent blur-2xl dark:from-blue-900/10 dark:via-indigo-900/5"></div>
-                          </div>
+                     <div data-sidebar="sidebar" class="relative flex h-full w-full flex-col overflow-hidden rounded-none border-y-0 border-l-0 border-r border-border bg-card">
                           
                           <!-- Header -->
-                          <div class="flex items-center p-3 border-b border-border/40"
+                          <div class="flex items-center p-3 border-b border-border"
                                :class="sidebarPinned || sidebarHovered ? 'justify-between' : 'justify-center'">
                               <a href="{{ route('dashboard') }}" 
                                  class="flex items-center text-decoration-none select-none min-w-0 w-full"
                                  :class="sidebarPinned || sidebarHovered ? '' : 'justify-center'">
                                   <!-- Expanded Full Logo -->
                                   <div x-show="sidebarPinned || sidebarHovered" class="flex items-center">
-                                      <img src="{{ asset('images/offsec_light.png') }}" class="h-8 w-auto max-w-[140px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
-                                      <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-8 w-auto max-w-[140px] object-contain mix-blend-screen" alt="Logo">
+                                      <img src="{{ asset('images/offsec_light.png') }}" class="h-7 w-auto max-w-[140px] object-contain dark:hidden mix-blend-multiply" alt="Logo">
+                                      <img src="{{ asset('images/offsec_dark.png') }}" class="hidden dark:block h-7 w-auto max-w-[140px] object-contain mix-blend-screen" alt="Logo">
                                   </div>
                                   <!-- Collapsed Icon Logo -->
                                   <div x-show="!sidebarPinned && !sidebarHovered" style="display: none;" class="flex items-center justify-center w-full">
-                                      <span class="text-sm font-extrabold tracking-wider text-foreground font-display">OSL</span>
+                                      <span class="text-xs font-bold tracking-wider text-primary font-sans">OSL</span>
                                   </div>
                               </a>
                               
                               <!-- Pin Button -->
-                              <button type="button" @click="togglePinned()" class="h-6 w-6 shrink-0 rounded-md text-muted-foreground hover:bg-muted/50 hover:text-foreground flex items-center justify-center cursor-pointer border-0 bg-transparent" x-show="sidebarPinned || sidebarHovered">
+                              <button type="button" @click="togglePinned()" class="h-6 w-6 shrink-0 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground flex items-center justify-center cursor-pointer border-0 bg-transparent" x-show="sidebarPinned || sidebarHovered">
                                   <svg x-show="sidebarPinned" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                                       <rect width="18" height="18" x="3" y="3" rx="2" />
                                       <path d="M9 3v16" />
@@ -111,88 +150,88 @@
                               </button>
                           </div>
 
-                          <!-- Navigation Items -->
-                          <div class="flex-1 overflow-y-auto px-1.5 py-3 space-y-1">
-                              <!-- Dashboard Link -->
-                              <a href="{{ route('dashboard') }}" 
-                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
-                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
-                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-                                  <span x-show="sidebarPinned || sidebarHovered">Dashboard</span>
-                              </a>
+                           <!-- Navigation Items -->
+                           <div class="flex-1 overflow-y-auto px-1.5 py-3 space-y-1">
+                               <!-- Dashboard Link -->
+                               <a href="{{ route('dashboard') }}" 
+                                  class="flex items-center text-[13px] font-medium transition-colors text-decoration-none border-l-4 {{ request()->routeIs('dashboard') ? 'bg-accent text-primary font-semibold border-l-primary' : 'text-muted-foreground hover:bg-muted/45 hover:text-foreground border-l-transparent' }}"
+                                  :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 pl-2 pr-2.5 py-2 rounded-r-md' : 'justify-center py-2 rounded-none'">
+                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                                   <span x-show="sidebarPinned || sidebarHovered">Dashboard</span>
+                                </a>
 
-                              <div class="h-px bg-border/40 my-2"></div>
-                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Apps</div>
+                               <div class="h-px bg-border my-2"></div>
+                               <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Apps</div>
 
-                              <!-- Report Creator -->
-                              <div class="space-y-0.5" x-data="{ reportCreatorExpanded: {{ request()->routeIs('report-creator*') ? 'true' : 'false' }} }">
-                                  <button type="button" @click="reportCreatorExpanded = !reportCreatorExpanded" 
-                                          class="w-full flex items-center justify-between rounded-lg text-[13px] font-medium transition-colors text-decoration-none border-0 bg-transparent cursor-pointer {{ request()->routeIs('report-creator*') ? 'text-primary bg-primary/10 font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
-                                          :class="sidebarPinned || sidebarHovered ? 'px-2.5 py-2' : 'justify-center p-2'">
-                                      <div class="flex items-center" :class="sidebarPinned || sidebarHovered ? 'gap-2.5' : 'justify-center'">
-                                          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                                          <span x-show="sidebarPinned || sidebarHovered">Report Creator</span>
-                                      </div>
-                                      <svg x-show="sidebarPinned || sidebarHovered" class="w-3 h-3 transition-transform duration-200" :class="reportCreatorExpanded ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                                  </button>
-                                  
-                                  <div x-show="reportCreatorExpanded && (sidebarPinned || sidebarHovered)" class="pl-5 space-y-1 mt-0.5 border-l border-border/30 ml-4">
-                                      <a href="{{ route('report-creator') }}" class="block px-2 py-1 rounded-md text-xs transition-colors text-decoration-none {{ request()->routeIs('report-creator') && !request()->routeIs('report-creator.templates') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
-                                          Reports
-                                      </a>
-                                      <a href="{{ route('report-creator.templates') }}" class="block px-2 py-1 rounded-md text-xs transition-colors text-decoration-none {{ request()->routeIs('report-creator.templates') ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground' }}">
-                                          Templates
-                                      </a>
-                                  </div>
-                              </div>
+                               <!-- Report Creator -->
+                               <div class="space-y-0.5" x-data="{ reportCreatorExpanded: {{ request()->routeIs('report-creator*') ? 'true' : 'false' }} }">
+                                   <button type="button" @click="reportCreatorExpanded = !reportCreatorExpanded" 
+                                           class="w-full flex items-center justify-between text-[13px] font-medium transition-colors text-decoration-none border-0 bg-transparent cursor-pointer border-l-4 {{ request()->routeIs('report-creator*') ? 'text-primary bg-accent font-semibold border-l-primary' : 'text-muted-foreground hover:bg-muted/45 hover:text-foreground border-l-transparent' }}"
+                                           :class="sidebarPinned || sidebarHovered ? 'pl-2 pr-2.5 py-2 rounded-r-md' : 'justify-center py-2 rounded-none'">
+                                       <div class="flex items-center" :class="sidebarPinned || sidebarHovered ? 'gap-2.5' : 'justify-center'">
+                                           <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                           <span x-show="sidebarPinned || sidebarHovered">Report Creator</span>
+                                       </div>
+                                       <svg x-show="sidebarPinned || sidebarHovered" class="w-3 h-3 transition-transform duration-200" :class="reportCreatorExpanded ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                   </button>
+                                   
+                                   <div x-show="reportCreatorExpanded && (sidebarPinned || sidebarHovered)" class="pl-4 space-y-1 mt-0.5 border-l border-border ml-4">
+                                       <a href="{{ route('report-creator') }}" class="block pl-3 py-1 rounded-md text-xs transition-colors text-decoration-none border-l-2 {{ request()->routeIs('report-creator') && !request()->routeIs('report-creator.templates') ? 'text-primary font-semibold border-l-primary bg-accent/50' : 'text-muted-foreground border-l-transparent hover:text-foreground hover:bg-muted/30' }}">
+                                           Reports
+                                       </a>
+                                       <a href="{{ route('report-creator.templates') }}" class="block pl-3 py-1 rounded-md text-xs transition-colors text-decoration-none border-l-2 {{ request()->routeIs('report-creator.templates') ? 'text-primary font-semibold border-l-primary bg-accent/50' : 'text-muted-foreground border-l-transparent hover:text-foreground hover:bg-muted/30' }}">
+                                           Templates
+                                       </a>
+                                   </div>
+                               </div>
 
-                              @if(Auth::user()->role === 'admin')
-                              <div class="h-px bg-border/40 my-2"></div>
-                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Administration</div>
+                               @if(Auth::user()->role === 'admin')
+                               <div class="h-px bg-border my-2"></div>
+                               <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Administration</div>
 
-                              <!-- User Management Link -->
-                              <a href="{{ route('admin.users.index') }}" 
-                                  class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.users.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
-                                  :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
-                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                  </svg>
-                                  <span x-show="sidebarPinned || sidebarHovered">User Management</span>
-                              </a>
+                               <!-- User Management Link -->
+                               <a href="{{ route('admin.users.index') }}" 
+                                   class="flex items-center text-[13px] font-medium transition-colors text-decoration-none border-l-4 {{ request()->routeIs('admin.users.index') ? 'bg-accent text-primary font-semibold border-l-primary' : 'text-muted-foreground hover:bg-muted/45 hover:text-foreground border-l-transparent' }}"
+                                   :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 pl-2 pr-2.5 py-2 rounded-r-md' : 'justify-center py-2 rounded-none'">
+                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                   </svg>
+                                   <span x-show="sidebarPinned || sidebarHovered">User Management</span>
+                               </a>
 
-                              <!-- Waitlist Link -->
-                              <a href="{{ route('admin.waitlist.index') }}" 
-                                  class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('admin.waitlist.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
-                                  :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
-                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  <span x-show="sidebarPinned || sidebarHovered">Waitlist</span>
-                              </a>
-                              @endif
+                               <!-- Waitlist Link -->
+                               <a href="{{ route('admin.waitlist.index') }}" 
+                                   class="flex items-center text-[13px] font-medium transition-colors text-decoration-none border-l-4 {{ request()->routeIs('admin.waitlist.index') ? 'bg-accent text-primary font-semibold border-l-primary' : 'text-muted-foreground hover:bg-muted/45 hover:text-foreground border-l-transparent' }}"
+                                   :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 pl-2 pr-2.5 py-2 rounded-r-md' : 'justify-center py-2 rounded-none'">
+                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                   </svg>
+                                   <span x-show="sidebarPinned || sidebarHovered">Waitlist</span>
+                               </a>
+                               @endif
 
-                              <div class="h-px bg-border/40 my-2"></div>
-                              <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Settings</div>
+                               <div class="h-px bg-border my-2"></div>
+                               <div class="px-2 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1" x-show="sidebarPinned || sidebarHovered">Settings</div>
 
-                              <!-- Profile Link -->
-                              <a href="{{ route('profile.edit') }}" 
-                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('profile.edit') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
-                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
-                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                  <span x-show="sidebarPinned || sidebarHovered">Profile</span>
-                              </a>
+                               <!-- Profile Link -->
+                               <a href="{{ route('profile.edit') }}" 
+                                  class="flex items-center text-[13px] font-medium transition-colors text-decoration-none border-l-4 {{ request()->routeIs('profile.edit') ? 'bg-accent text-primary font-semibold border-l-primary' : 'text-muted-foreground hover:bg-muted/45 hover:text-foreground border-l-transparent' }}"
+                                  :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 pl-2 pr-2.5 py-2 rounded-r-md' : 'justify-center py-2 rounded-none'">
+                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                   <span x-show="sidebarPinned || sidebarHovered">Profile</span>
+                               </a>
 
-                              <!-- Appearance Link -->
-                              <a href="{{ route('settings.appearance.edit') }}" 
-                                 class="flex items-center rounded-lg text-[13px] font-medium transition-colors text-decoration-none {{ request()->routeIs('settings.appearance.edit') ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground' }}"
-                                 :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 px-2.5 py-2' : 'justify-center p-2'">
-                                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-3"/></svg>
-                                  <span x-show="sidebarPinned || sidebarHovered">Appearance</span>
-                              </a>
-                          </div>
+                               <!-- Appearance Link -->
+                               <a href="{{ route('settings.appearance.edit') }}" 
+                                  class="flex items-center text-[13px] font-medium transition-colors text-decoration-none border-l-4 {{ request()->routeIs('settings.appearance.edit') ? 'bg-accent text-primary font-semibold border-l-primary' : 'text-muted-foreground hover:bg-muted/45 hover:text-foreground border-l-transparent' }}"
+                                  :class="sidebarPinned || sidebarHovered ? 'justify-start gap-2.5 pl-2 pr-2.5 py-2 rounded-r-md' : 'justify-center py-2 rounded-none'">
+                                   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-3"/></svg>
+                                   <span x-show="sidebarPinned || sidebarHovered">Appearance</span>
+                               </a>
+                           </div>
 
                           <!-- Footer (Theme/Settings links) -->
-                          <div class="p-1.5 border-t border-border/40" x-show="sidebarPinned || sidebarHovered">
+                          <div class="p-1.5 border-t border-border" x-show="sidebarPinned || sidebarHovered">
                               <!-- Version label and pin toggle -->
                               <div class="flex items-center justify-between px-2.5 py-1 text-[10px] text-muted-foreground/30 font-mono select-none">
                                   <span>v1.106</span>
@@ -366,45 +405,45 @@
                              </div>
                          </div>
                          
-                         <!-- Search bar -->
-                         <div class="relative max-w-sm w-64 min-w-0" x-data="{
-                             focusSearch(e) {
-                                 if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                                     e.preventDefault();
-                                     this.$refs.searchInput.focus();
-                                 }
-                             }
-                         }" @keydown.window="focusSearch">
-                             <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-muted-foreground/60">
-                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                             </span>
-                             <input x-ref="searchInput" type="text" placeholder="Search..." class="w-full h-8 pl-8 pr-10 rounded-lg border-0 bg-muted/30 text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/50 transition-colors focus:ring-1 focus:ring-primary/20">
-                             <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
-                                 <kbd class="inline-flex h-4 items-center rounded border border-border/40 bg-muted/50 px-1 font-mono text-[10px] font-medium text-muted-foreground/70">
-                                     <span class="text-[9px] mr-0.5">⌘</span>K
-                                 </kbd>
-                             </div>
-                         </div>
-
-                         <!-- Clock / DateTime Component (Desktop) -->
-                         <div class="hidden md:flex min-w-0 shrink-0 items-center gap-2 rounded-lg bg-muted/25 px-2 py-1 select-none"
-                              x-data="{
-                                  now: new Date(),
-                                  init() {
-                                      setInterval(() => { this.now = new Date() }, 1000);
-                                  },
-                                  getDayName() {
-                                      return this.now.toLocaleDateString('en-US', { weekday: 'long' });
-                                  },
-                                  getDate() {
-                                      return this.now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                                  },
-                                  getTimeParts() {
-                                      let time = this.now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
-                                      let parts = time.match(/^(\d{1,2}:\d{2}):(\d{2})\s*(AM|PM)$/i);
-                                      return parts ? { main: parts[1], sec: parts[2], period: parts[3] } : { main: time, sec: '', period: '' };
+                          <!-- Search bar -->
+                          <div class="relative max-w-sm w-64 min-w-0" x-data="{
+                              focusSearch(e) {
+                                  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                                      e.preventDefault();
+                                      this.$refs.searchInput.focus();
                                   }
-                              }">
+                              }
+                          }" @keydown.window="focusSearch">
+                              <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-muted-foreground/60">
+                                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                              </span>
+                              <input x-ref="searchInput" type="text" placeholder="Search resources..." class="w-full h-8 pl-7 pr-10 rounded-[6px] border border-border bg-background/50 text-[11px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-background focus:border-primary transition-colors focus:ring-1 focus:ring-primary/20">
+                              <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                                  <kbd class="inline-flex h-4.5 items-center rounded border border-border bg-muted px-1 font-mono text-[9px] font-medium text-muted-foreground/60">
+                                      <span class="text-[8px] mr-0.5">⌘</span>K
+                                  </kbd>
+                              </div>
+                          </div>
+ 
+                          <!-- Clock / DateTime Component (Desktop) -->
+                          <div class="hidden md:flex min-w-0 shrink-0 items-center gap-2 rounded-[6px] border border-border bg-muted/20 px-2 py-1 select-none"
+                               x-data="{
+                                   now: new Date(),
+                                   init() {
+                                       setInterval(() => { this.now = new Date() }, 1000);
+                                   },
+                                   getDayName() {
+                                       return this.now.toLocaleDateString('en-US', { weekday: 'long' });
+                                   },
+                                   getDate() {
+                                       return this.now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                                   },
+                                   getTimeParts() {
+                                       let time = this.now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+                                       let parts = time.match(/^(\d{1,2}:\d{2}):(\d{2})\s*(AM|PM)$/i);
+                                       return parts ? { main: parts[1], sec: parts[2], period: parts[3] } : { main: time, sec: '', period: '' };
+                                   }
+                               }">
                               <div class="flex min-w-0 items-center gap-1.5">
                                   <svg class="w-3.5 h-3.5 shrink-0 text-muted-foreground/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                   <div class="flex min-w-0 items-baseline gap-1.5 truncate">
@@ -671,8 +710,34 @@
                      </div>
                  </header>
 
-                 <!-- Page Content shell -->
-                 <main class="flex-grow min-w-0 w-full flex flex-col">
+                  <!-- Breadcrumbs & Page Title Sub-Header -->
+                  <div class="bg-card border-b border-border px-4 md:px-6 py-2.5 flex items-center justify-between select-none">
+                      <div class="flex flex-col">
+                          <!-- Breadcrumbs -->
+                          <nav class="flex items-center gap-1.5 text-[11px] text-muted-foreground select-none mb-0.5">
+                              @foreach($breadcrumbs as $index => $crumb)
+                                  @if($index > 0)
+                                      <svg class="h-2.5 w-2.5 text-muted-foreground/40 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                  @endif
+                                  @if($crumb['url'])
+                                      <a href="{{ $crumb['url'] }}" class="hover:text-primary transition-colors text-decoration-none">{{ $crumb['label'] }}</a>
+                                  @else
+                                      <span class="truncate font-medium">{{ $crumb['label'] }}</span>
+                                  @endif
+                              @endforeach
+                          </nav>
+                          <!-- Page Title -->
+                          <h1 class="text-base font-semibold text-foreground leading-tight">{{ $pageTitle }}</h1>
+                      </div>
+                      @isset($headerActions)
+                          <div class="flex items-center gap-2">
+                              {{ $headerActions }}
+                          </div>
+                      @endisset
+                  </div>
+
+                  <!-- Page Content shell -->
+                  <main class="flex-grow min-w-0 w-full flex flex-col">
                      @isset($header)
                          <div class="mb-6 px-4 sm:px-6 md:px-8 pt-4">
                              {{ $header }}

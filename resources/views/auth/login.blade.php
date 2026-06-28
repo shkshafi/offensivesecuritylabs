@@ -1,8 +1,8 @@
 <x-guest-layout>
     <!-- Page Headings -->
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-white tracking-tight" style="font-family: var(--font-brand);">Welcome back</h2>
-        <p class="text-sm text-zinc-400 mt-1.5">Sign in to your OffSec Labs command console</p>
+        <h2 class="text-xl font-semibold text-foreground tracking-tight">Welcome back</h2>
+        <p class="text-xs text-muted-foreground mt-1">Sign in to your OffSec Labs command console</p>
     </div>
 
     <!-- Session Status -->
@@ -10,18 +10,19 @@
 
     <!-- Error Banner -->
     @if ($errors->any())
-        <div class="mb-6 p-4 bg-red-950/40 border border-red-800/30 rounded-lg">
+        <div class="mb-5 p-3.5 bg-destructive/10 border border-destructive/20 rounded-[6px]">
             <div class="flex items-start space-x-2">
-                <svg class="w-4 h-4 text-red-400 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                <svg class="w-4 h-4 text-destructive mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
-                <span class="text-red-300 text-xs leading-relaxed">
+                <span class="text-destructive text-xs leading-relaxed font-medium">
                     {{ $errors->first() }}
                 </span>
             </div>
         </div>
     @endif
-
 
     <!-- Login Form -->
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
@@ -29,55 +30,55 @@
 
         <!-- Email Address -->
         <div class="space-y-1.5">
-            <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-zinc-400">Email Address</label>
-            <input id="email" 
-                   class="block w-full px-3.5 py-2.5 rounded-lg border border-white/10 bg-zinc-950/40 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#8b5cf6] focus:ring-1 focus:ring-[#8b5cf6]" 
-                   type="email" 
-                   name="email" 
-                   value="{{ old('email') }}" 
-                   placeholder="name@company.com"
-                   required 
-                   autofocus 
-                   autocomplete="username" />
+            <label for="email" class="block text-xs font-semibold text-foreground uppercase tracking-wider">Email Address</label>
+            <x-text-input id="email" 
+                          class="block w-full" 
+                          type="email" 
+                          name="email" 
+                          value="{{ old('email') }}" 
+                          placeholder="name@company.com"
+                          required 
+                          autofocus 
+                          autocomplete="username" />
         </div>
 
         <!-- Password -->
         <div class="space-y-1.5">
             <div class="flex justify-between items-center">
-                <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-zinc-400">Password</label>
+                <label for="password" class="block text-xs font-semibold text-foreground uppercase tracking-wider">Password</label>
                 @if (Route::has('password.request'))
-                    <a class="text-xs text-[#8b5cf6] hover:text-[#8b5cf6]/90 text-decoration-none" href="{{ route('password.request') }}">
+                    <a class="text-xs text-primary hover:text-primary/95 text-decoration-none font-medium" href="{{ route('password.request') }}">
                         Forgot password?
                     </a>
                 @endif
             </div>
-            <input id="password" 
-                   class="block w-full px-3.5 py-2.5 rounded-lg border border-white/10 bg-zinc-950/40 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#8b5cf6] focus:ring-1 focus:ring-[#8b5cf6]" 
-                   type="password" 
-                   name="password" 
-                   placeholder="••••••••"
-                   required 
-                   autocomplete="current-password" />
+            <x-text-input id="password" 
+                          class="block w-full" 
+                          type="password" 
+                          name="password" 
+                          placeholder="••••••••"
+                          required 
+                          autocomplete="current-password" />
         </div>
 
         <!-- Remember Me -->
         <div class="flex items-center justify-between pt-1">
             <label for="remember_me" class="inline-flex items-center cursor-pointer">
-                <input id="remember_me" type="checkbox" class="rounded bg-zinc-950 border-white/10 text-[#8b5cf6] focus:ring-0" name="remember">
-                <span class="ms-2 text-xs text-zinc-400">Remember session</span>
+                <input id="remember_me" type="checkbox" class="rounded border-border bg-background text-primary focus:ring-0 focus:ring-offset-0" name="remember">
+                <span class="ms-2 text-xs text-muted-foreground">Remember session</span>
             </label>
         </div>
 
         <!-- Submit Button -->
         <div class="pt-2">
-            <button type="submit" class="w-full flex items-center justify-center py-2.5 px-4 rounded-lg bg-gradient-to-r from-[#8b5cf6] to-[#3b82f6] text-white font-semibold text-sm border-none shadow-[0_2px_8px_-2px_rgba(139,92,246,0.4)] hover:brightness-110 transition-all cursor-pointer">
+            <x-primary-button class="w-full">
                 Log In
-            </button>
+            </x-primary-button>
         </div>
     </form>
 
     <!-- Footer Links -->
-    <div class="mt-6 pt-5 border-t border-white/[0.06] text-center">
-        <span class="text-xs text-zinc-500">Registration is managed by system administrators.</span>
+    <div class="mt-6 pt-5 border-t border-border text-center">
+        <span class="text-xs text-muted-foreground/80">Registration is managed by system administrators.</span>
     </div>
 </x-guest-layout>

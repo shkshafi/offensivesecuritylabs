@@ -25,11 +25,11 @@
 /* Shared glass surface for sidebar card + top bar (matched opacity & blur) */
 @layer components {
   .app-chrome-surface {
-    @apply border border-border/50 bg-background/75 text-foreground shadow-[0_4px_24px_-10px_rgba(0,0,0,0.12)] backdrop-blur-xl;
+    @apply border border-border bg-card text-foreground shadow-sm;
   }
 
   .dark .app-chrome-surface {
-    @apply border-white/[0.08] bg-background/65 shadow-[0_4px_28px_-8px_rgba(0,0,0,0.45)];
+    @apply border-border bg-card text-foreground shadow-sm;
   }
 
   /* Align page content with top navbar chrome (mx + inner padding) */
@@ -38,7 +38,7 @@
   }
 
   .app-page-title-gradient {
-    @apply bg-gradient-to-br from-blue-600 via-violet-500 to-cyan-500 bg-clip-text text-transparent dark:from-blue-400 dark:via-violet-400 dark:to-cyan-400;
+    @apply text-foreground;
   }
 
   /* Scrollbar visible only while scrolling or hovering (Cursor-style) */
@@ -104,54 +104,53 @@
 }
 @layer base {
   :root {
-    /* Soft Teal + Graphite + Gold — 2026 */
-    --background: 210 14% 96%;
-    --foreground: 220 25% 15%;
+    --background: 216 33% 97%;
+    --foreground: 215 28% 17%;
 
-    --card: 210 14% 99%;
-    --card-foreground: 220 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 17%;
 
-    --popover: 210 14% 99%;
-    --popover-foreground: 220 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
 
-    --primary: 188 75% 40%;
+    --primary: 220 42% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 15% 45%;
+    --secondary: 220 9% 46%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 16% 92%;
-    --muted-foreground: 210 15% 45%;
+    --muted: 215 55% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 190 40% 92%;
-    --accent-foreground: 188 80% 30%;
+    --accent: 218 62% 95%;
+    --accent-foreground: 220 42% 58%;
 
-    --destructive: 0 70% 55%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 16% 86%;
-    --input: 210 16% 86%;
-    --ring: 188 75% 40%;
+    --border: 217 35% 90%;
+    --input: 217 35% 90%;
+    --ring: 220 42% 58%;
 
-    --premium: 42 85% 50%;
-    --premium-foreground: 220 25% 10%;
+    --premium: 220 42% 58%;
+    --premium-foreground: 0 0% 100%;
 
-    --chart-1: 188 75% 45%;
-    --chart-2: 200 75% 50%;
-    --chart-3: 142 60% 45%;
-    --chart-4: 42 85% 50%;
-    --chart-5: 12 75% 55%;
+    --chart-1: 220 42% 58%;
+    --chart-2: 198 100% 42%;
+    --chart-3: 142 76% 36%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 72% 51%;
 
-    --radius: 0.75rem;
+    --radius: 8px;
 
-    --sidebar-background: 210 14% 94%;
-    --sidebar-foreground: 220 25% 15%;
-    --sidebar-primary: 188 75% 40%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 28% 17%;
+    --sidebar-primary: 220 42% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 190 40% 92%;
-    --sidebar-accent-foreground: 188 80% 30%;
-    --sidebar-border: 210 16% 86%;
-    --sidebar-ring: 188 75% 40%;
+    --sidebar-accent: 218 62% 95%;
+    --sidebar-accent-foreground: 220 42% 58%;
+    --sidebar-border: 217 35% 90%;
+    --sidebar-ring: 220 42% 58%;
   }
 
   /* Target the entire scrollbar */
@@ -193,8 +192,7 @@
   body {
     @apply min-h-svh w-full text-foreground;
     background-color: hsl(var(--background));
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   }
 
   /* Keep monospace only where semantically correct */
@@ -203,58 +201,58 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Use Plus Jakarta Sans for display headings */
+  /* Use Inter / Segoe UI for display headings */
   h1, h2, .font-display {
-    font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 600;
   }
 
   .dark {
-    /* Deep Oceanic Blue-Teal Dashboard — Dark Mode */
-    --background: 205 35% 5%;
-    --foreground: 205 20% 96%;
+    --background: 221 39% 11%;
+    --foreground: 220 14% 96%;
 
-    --card: 205 30% 10%;
-    --card-foreground: 205 20% 96%;
+    --card: 222 33% 15%;
+    --card-foreground: 220 14% 96%;
 
-    --popover: 205 30% 10%;
-    --popover-foreground: 205 20% 96%;
+    --popover: 222 33% 15%;
+    --popover-foreground: 220 14% 96%;
 
-    --primary: 195 85% 52%;
-    --primary-foreground: 205 40% 6%;
+    --primary: 220 42% 58%;
+    --primary-foreground: 220 14% 96%;
 
-    --secondary: 205 25% 25%;
-    --secondary-foreground: 205 20% 96%;
+    --secondary: 213 27% 84%;
+    --secondary-foreground: 221 39% 11%;
 
-    --muted: 205 30% 16%;
-    --muted-foreground: 205 20% 65%;
+    --muted: 219 26% 23%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 195 40% 16%;
-    --accent-foreground: 195 85% 65%;
+    --accent: 220 42% 58% / 0.18;
+    --accent-foreground: 220 14% 96%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 205 30% 20%;
-    --input: 205 30% 20%;
-    --ring: 195 85% 52%;
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+    --ring: 220 42% 58%;
 
-    --premium: 42 85% 55%;
-    --premium-foreground: 205 40% 6%;
+    --premium: 220 42% 58%;
+    --premium-foreground: 220 14% 96%;
 
-    --chart-1: 195 85% 52%;
-    --chart-2: 210 85% 58%;
-    --chart-3: 150 70% 50%;
-    --chart-4: 42 85% 55%;
-    --chart-5: 12 75% 60%;
+    --chart-1: 220 42% 58%;
+    --chart-2: 198 100% 42%;
+    --chart-3: 142 76% 36%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 72% 51%;
 
-    --sidebar-background: 205 35% 6%;
-    --sidebar-foreground: 205 20% 96%;
-    --sidebar-primary: 195 85% 52%;
-    --sidebar-primary-foreground: 205 40% 6%;
-    --sidebar-accent: 195 40% 16%;
-    --sidebar-accent-foreground: 195 85% 65%;
-    --sidebar-border: 205 30% 20%;
-    --sidebar-ring: 195 85% 52%;
+    --sidebar-background: 219 38% 15%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 220 42% 58%;
+    --sidebar-primary-foreground: 220 14% 96%;
+    --sidebar-accent: 220 42% 58% / 0.18;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 215 25% 27%;
+    --sidebar-ring: 220 42% 58%;
   }
 
   /* Sidebar glassmorphism — matches the navbar floating glass style */
@@ -936,5 +934,137 @@ html:not(.dark) #report-creator-root .border-white\/\[0\.08\] { border-color: hs
 html:not(.dark) #report-creator-root .border-white\/\[0\.1\]   { border-color: hsl(var(--border) / 0.8) !important; }
 html:not(.dark) #report-creator-root .border-white\/10       { border-color: hsl(var(--border)) !important; }
 html:not(.dark) #report-creator-root .border-white\/20       { border-color: hsl(var(--border) / 1.2) !important; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NTT DATA Brand Overrides & Global Resets
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Global Input / Focus States */
+input, textarea, select {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #6785C1 !important;
+  box-shadow: 0 0 0 3px rgba(103, 133, 193, 0.25) !important;
+  outline: none !important;
+}
+
+/* Button Active Clicks */
+button, .btn, [type="submit"], [type="button"], a.inline-flex {
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+button:active, .btn:active, [type="submit"]:active, [type="button"]:active, a.inline-flex:active {
+  transform: scale(0.98) !important;
+}
+
+/* Required Fields Asterisk */
+.required-asterisk::after {
+  content: " *";
+  color: #DC2626;
+  font-weight: bold;
+}
+
+/* Overrides for hardcoded backgrounds and surface states in React components */
+.dark #report-creator-root .bg-\[\#131A2B\],
+.dark #report-creator-root .bg-\[\#0B101E\],
+.dark #report-creator-root .bg-\[\#0F1424\],
+.dark #report-creator-root .bg-\[\#070913\],
+.dark #report-creator-root .bg-\[\#090D14\],
+.dark #report-creator-root .bg-\[\#1C2438\],
+.dark #report-creator-root .bg-\[\#1A233A\],
+.dark #report-creator-root .bg-\[\#0b0e1f\],
+.dark #report-creator-root .bg-\[\#0f1424\],
+.dark #report-creator-root .bg-white {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Dialog backdrops and overlays */
+.dark #report-creator-root .bg-slate-900\/60,
+.dark #report-creator-root .bg-\[\#0B101E\]\/90,
+.dark #report-creator-root .bg-\[\#131A2B\]\/90 {
+  background-color: rgba(17, 24, 39, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Dynamic list backgrounds */
+.dark #report-creator-root .bg-\[\#131A2B\]\/40,
+.dark #report-creator-root .bg-\[\#0B101E\]\/40 {
+  background-color: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border) / 0.5) !important;
+}
+
+/* Text selections & styles */
+.dark #report-creator-root .text-slate-800,
+.dark #report-creator-root .text-slate-700,
+.dark #report-creator-root .text-slate-600 {
+  color: hsl(var(--foreground) / 0.85) !important;
+}
+
+.dark #report-creator-root .text-slate-500,
+.dark #report-creator-root .text-slate-400 {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Overriding specific text colors inside dark background blocks */
+.dark #report-creator-root .bg-\[\#0B101E\] .text-white,
+.dark #report-creator-root .bg-\[\#131A2B\] .text-white,
+.dark #report-creator-root .bg-\[\#0B101E\] .text-slate-100,
+.dark #report-creator-root .bg-\[\#0B101E\] .text-slate-200,
+.dark #report-creator-root .bg-\[\#0B101E\] .text-slate-300,
+.dark #report-creator-root .bg-\[\#131A2B\] .text-slate-100,
+.dark #report-creator-root .bg-\[\#131A2B\] .text-slate-250,
+.dark #report-creator-root .bg-\[\#131A2B\] .text-slate-300 {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Accent status indicators override */
+.dark #report-creator-root .text-\[\#00C853\] { color: #16A34A !important; }
+.dark #report-creator-root .bg-\[\#00C853\]\/10 { background-color: rgba(22, 163, 74, 0.1) !important; }
+.dark #report-creator-root .border-\[\#00C853\]\/20 { border-color: rgba(22, 163, 74, 0.2) !important; }
+
+.dark #report-creator-root .text-\[\#FFB020\] { color: #F59E0B !important; }
+.dark #report-creator-root .bg-\[\#FFB020\]\/10 { background-color: rgba(245, 158, 11, 0.1) !important; }
+.dark #report-creator-root .border-\[\#FFB020\]\/20 { border-color: rgba(245, 158, 11, 0.2) !important; }
+
+.dark #report-creator-root .hover\:bg-white\/\[0\.08\]:hover {
+  background-color: hsl(var(--muted)) !important;
+}
+.dark #report-creator-root .hover\:bg-white\/\[0\.05\]:hover {
+  background-color: hsl(var(--muted) / 0.8) !important;
+}
+
+/* SSH / PoC code block backgrounds */
+.dark #report-creator-root pre,
+.dark #report-creator-root code,
+.dark #report-creator-root .bg-zinc-950\/40,
+.dark #report-creator-root .bg-slate-900\/50 {
+  background-color: hsl(var(--background)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+
+/* Premium beam button reset to a clean primary solid button */
+.ntt-btn-glowing {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+.ntt-btn-glowing::before {
+  display: none !important;
+}
+.ntt-btn-glowing-inner {
+  background: transparent !important;
+  color: hsl(var(--primary-foreground)) !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+}
+.ntt-btn-glowing:hover {
+  background: hsl(var(--primary) / 0.9) !important;
+}
+
 
 
