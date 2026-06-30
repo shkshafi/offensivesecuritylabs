@@ -29,6 +29,7 @@ interface Finding {
   title: string;
   severity: 'Critical' | 'High' | 'Medium' | 'Low' | 'Info';
   cvss: string;
+  vector?: string;
   category: string;
   status: string;
   description: string;

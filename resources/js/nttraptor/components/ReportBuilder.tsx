@@ -59,6 +59,7 @@ interface Finding {
   title: string;
   severity: 'Critical' | 'High' | 'Medium' | 'Low' | 'Info';
   cvss: string;
+  vector?: string;
   category: string;
   status: string;
   description: string;
@@ -1404,6 +1405,15 @@ export default function ReportBuilder({
       .replace(/'/g, '&#039;');
   };
 
+  const getVectorUrl = (vector?: string) => {
+    if (!vector || !vector.trim()) return '';
+    let version = '4.0';
+    if (vector.includes('4.0')) version = '4.0';
+    else if (vector.includes('3.1')) version = '3.1';
+    else if (vector.includes('3.0')) version = '3.0';
+    return `https://www.first.org/cvss/calculator/${version}#${vector.trim()}`;
+  };
+
   const formatText = (text: string) => {
     if (!text) return '';
 
@@ -1975,7 +1985,8 @@ export default function ReportBuilder({
               <div class="fb-meta-item"><label>FINDING ID</label><span>F-{{finding_index}}</span></div>
               <div class="fb-meta-item"><label>RISK RATING</label><span><span class="rb rb-{{finding_severity_class}}">{{finding_severity}}</span></span></div>
               <div class="fb-meta-item"><label>AFFECTED SYSTEM(S)</label><span>{{finding_category}}</span></div>
-              <div class="fb-meta-item"><label>CVSSv3.1 SCORE</label><span>{{finding_cvss}}</span></div>
+              <div class="fb-meta-item"><label>CVSS SCORE</label><span>{{finding_cvss}}</span></div>
+              <div class="fb-meta-item"><label>CVSS VECTOR</label><span><a href="{{finding_vector_url}}" target="_blank" style="color: #818cf8; text-decoration: underline;">{{finding_vector}}</a></span></div>
             </div>
             <div class="fb-section">
               <div class="fb-section-lbl">DESCRIPTION</div>
@@ -2064,6 +2075,8 @@ export default function ReportBuilder({
       fHtml = fHtml.replace(/{{finding_severity}}/g, () => escapeHtml((finding.severity || '').toUpperCase()));
       fHtml = fHtml.replace(/{{finding_severity_class}}/g, () => finding.severity?.toLowerCase() || 'info');
       fHtml = fHtml.replace(/{{finding_cvss}}/g, () => escapeHtml(finding.cvss));
+      fHtml = fHtml.replace(/{{finding_vector}}/g, () => escapeHtml(finding.vector || 'N/A'));
+      fHtml = fHtml.replace(/{{finding_vector_url}}/g, () => escapeHtml(getVectorUrl(finding.vector)));
       fHtml = fHtml.replace(/{{finding_category}}/g, () => escapeHtml(finding.category));
       fHtml = fHtml.replace(/{{finding_status}}/g, () => escapeHtml(finding.status));
       fHtml = fHtml.replace(/{{finding_description}}/g, () => formatText(finding.description));
@@ -3226,7 +3239,17 @@ export default function ReportBuilder({
                                   </select>
                                 </div>
                                 <div>
-                                  <label className="block text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1.5">CVSS Base</label>
+                                  <div className="flex justify-between items-center mb-1.5">
+                                    <label className="block text-[10px] uppercase tracking-wider text-slate-400 font-bold">CVSS Base</label>
+                                    <div className="text-[10px] text-indigo-400 font-semibold flex items-center gap-1.5">
+                                      <span className="text-slate-500 font-normal">Calculator:</span>
+                                      <a href="https://www.first.org/cvss/calculator/3.0" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-300 transition-colors">3.0</a>
+                                      <span className="text-slate-700">|</span>
+                                      <a href="https://www.first.org/cvss/calculator/3.1" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-300 transition-colors">3.1</a>
+                                      <span className="text-slate-700">|</span>
+                                      <a href="https://www.first.org/cvss/calculator/4.0" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-300 transition-colors">4.0</a>
+                                    </div>
+                                  </div>
                                   <input
                                     type="text"
                                     value={finding.cvss}
@@ -3248,6 +3271,29 @@ export default function ReportBuilder({
                                     <option value="Risk Accepted">Risk Accepted</option>
                                   </select>
                                 </div>
+                              </div>
+
+                              <div className="mt-4">
+                                <div className="flex justify-between items-center mb-1.5">
+                                  <label className="block text-[10px] uppercase tracking-wider text-slate-400 font-bold">CVSS Vector</label>
+                                  {finding.vector && finding.vector.trim() && (
+                                    <a
+                                      href={getVectorUrl(finding.vector)}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-[10px] text-indigo-400 hover:text-indigo-300 font-semibold transition-colors underline flex items-center gap-1"
+                                    >
+                                      <span>Preview Vector Options ↗</span>
+                                    </a>
+                                  )}
+                                </div>
+                                <input
+                                  type="text"
+                                  value={finding.vector || ''}
+                                  onChange={(e) => updateFindingField(finding.id, 'vector', e.target.value)}
+                                  placeholder="e.g. CVSS:4.0/AV:A/AC:H/AT:P/PR:L/UI:P/VC:H/VI:H/VA:L/SC:H/SI:L/SA:H"
+                                  className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
+                                />
                               </div>
 
                               <div>

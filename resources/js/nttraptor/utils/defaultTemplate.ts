@@ -1723,7 +1723,8 @@ export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
       <div class="fb-meta-item"><label>FINDING ID</label><span>F-{{finding_index}}</span></div>
       <div class="fb-meta-item"><label>RISK RATING</label><span><span class="rb rb-{{finding_severity_class}}">{{finding_severity}}</span></span></div>
       <div class="fb-meta-item"><label>AFFECTED SYSTEM(S)</label><span>{{finding_category}}</span></div>
-      <div class="fb-meta-item"><label>CVSSv3.1 SCORE</label><span>{{finding_cvss}}</span></div>
+      <div class="fb-meta-item"><label>CVSS SCORE</label><span>{{finding_cvss}}</span></div>
+      <div class="fb-meta-item"><label>CVSS VECTOR</label><span><a href="{{finding_vector_url}}" target="_blank" style="color: #818cf8; text-decoration: underline;">{{finding_vector}}</a></span></div>
     </div>
     <div class="fb-section">
       <div class="fb-section-lbl">DESCRIPTION</div>

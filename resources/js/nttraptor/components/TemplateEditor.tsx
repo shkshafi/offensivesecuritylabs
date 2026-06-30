@@ -29,6 +29,7 @@ interface Finding {
   title: string;
   severity: 'Critical' | 'High' | 'Medium' | 'Low' | 'Info';
   cvss: string;
+  vector?: string;
   category: string;
   status: string;
   description: string;
@@ -273,6 +274,15 @@ export default function TemplateEditor({
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  };
+
+  const getVectorUrl = (vector?: string) => {
+    if (!vector || !vector.trim()) return '';
+    let version = '4.0';
+    if (vector.includes('4.0')) version = '4.0';
+    else if (vector.includes('3.1')) version = '3.1';
+    else if (vector.includes('3.0')) version = '3.0';
+    return `https://www.first.org/cvss/calculator/${version}#${vector.trim()}`;
   };
 
   const formatText = (text: string) => {
@@ -716,6 +726,8 @@ export default function TemplateEditor({
       fHtml = fHtml.replace(/{{finding_severity}}/g, escapeHtml(finding.severity));
       fHtml = fHtml.replace(/{{finding_severity_class}}/g, finding.severity?.toLowerCase() || 'info');
       fHtml = fHtml.replace(/{{finding_cvss}}/g, escapeHtml(finding.cvss));
+      fHtml = fHtml.replace(/{{finding_vector}}/g, escapeHtml(finding.vector || 'N/A'));
+      fHtml = fHtml.replace(/{{finding_vector_url}}/g, escapeHtml(getVectorUrl(finding.vector)));
       fHtml = fHtml.replace(/{{finding_category}}/g, escapeHtml(finding.category));
       fHtml = fHtml.replace(/{{finding_status}}/g, escapeHtml(finding.status));
       fHtml = fHtml.replace(/{{finding_description}}/g, formatText(finding.description));
@@ -1170,6 +1182,8 @@ export default function TemplateEditor({
                   {renderPlaceholderButton('Severity Label', '{{finding_severity}}')}
                   {renderPlaceholderButton('Severity Color Class', '{{finding_severity_class}}')}
                   {renderPlaceholderButton('CVSS Score', '{{finding_cvss}}')}
+                  {renderPlaceholderButton('CVSS Vector', '{{finding_vector}}')}
+                  {renderPlaceholderButton('CVSS Vector URL', '{{finding_vector_url}}')}
                   {renderPlaceholderButton('Category', '{{finding_category}}')}
                   {renderPlaceholderButton('Status', '{{finding_status}}')}
                   {renderPlaceholderButton('Description', '{{finding_description}}')}
