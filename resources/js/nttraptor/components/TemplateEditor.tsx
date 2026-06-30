@@ -1062,11 +1062,11 @@ export default function TemplateEditor({
       )}
 
       {/* Editor Header */}
-      <header className="bg-slate-100 dark:bg-[#0B101E] border-b border-slate-200 dark:border-white/[0.05] h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
+      <header className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700/50 h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
         <div className="flex items-center gap-4">
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
+            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -1084,14 +1084,14 @@ export default function TemplateEditor({
                 onSaveTemplate(DEFAULT_TEMPLATE);
               }
             }}
-            className="flex items-center gap-2 bg-slate-200/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-4 py-2 text-xs font-semibold rounded-lg transition-all"
+            className="flex items-center gap-2 bg-slate-200/50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-4 py-2 text-xs font-semibold rounded-lg transition-all"
           >
             <RotateCcw className="w-4 h-4 text-slate-400" />
             <span>Reset Default</span>
           </button>
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-xs font-semibold rounded-lg transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white px-4 py-2 text-xs font-semibold rounded-lg transition-all shadow-[0_0_15px_rgba(96,165,250,0.3)]"
           >
             <Save className="w-4 h-4" />
             <span>Save Template</span>
@@ -1105,7 +1105,7 @@ export default function TemplateEditor({
         {/* Column 1: Available Placeholders */}
         <div
           style={{ width: `${col1Width}%`, flexShrink: 0 }}
-          className="bg-white dark:bg-[#0B101E] border-r border-slate-200 dark:border-white/[0.05] flex flex-col h-full overflow-y-auto p-5"
+          className="bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700/50 flex flex-col h-full overflow-y-auto p-5"
         >
           <h3 className="text-xs text-slate-555 dark:text-slate-400 uppercase tracking-widest font-bold mb-5 flex items-center gap-2">
             <Info className="w-4 h-4" />
@@ -1114,7 +1114,7 @@ export default function TemplateEditor({
 
           <div className="space-y-6">
             <div>
-              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-white/[0.05] pb-1.5">Metadata</span>
+              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-slate-200 dark:border-slate-700/50 pb-1.5">Metadata</span>
               {renderPlaceholderButton('Report Title', '{{title}}')}
               {renderPlaceholderButton('Client Name', '{{client}}')}
               {renderPlaceholderButton('Assessment Date', '{{date}}')}
@@ -1125,15 +1125,15 @@ export default function TemplateEditor({
             </div>
 
             <div>
-              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-white/[0.05] pb-1.5">Sections</span>
+              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-slate-200 dark:border-slate-700/50 pb-1.5">Sections</span>
               {renderPlaceholderButton('Executive Summary', '{{executive_summary}}')}
               {renderPlaceholderButton('Assessment Scope', '{{scope}}')}
             </div>
 
             <div>
-              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-white/[0.05] pb-1.5">Goals & Scenarios</span>
+              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-slate-200 dark:border-slate-700/50 pb-1.5">Goals & Scenarios</span>
               {renderPlaceholderButton('Goals & Scenarios Container', '{{goals_scenarios_list}}')}
-              <div className="mt-3 text-[10px] text-slate-400 bg-white/[0.02] p-3 border border-white/[0.05] rounded-lg leading-relaxed">
+              <div className="mt-3 text-[10px] text-slate-400 bg-slate-50 dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700/50 rounded-lg leading-relaxed">
                 <span className="text-[#FF4D6D] font-bold uppercase block mb-1.5">LOOP TAG BLOCK:</span>
                 Wrap goals/scenarios placeholders between these HTML comments:
                 <span className="text-blue-400 select-all block mt-2 font-mono font-bold">{"<!-- GOAL_SCENARIO_TEMPLATE_START -->"}</span>
@@ -1148,7 +1148,7 @@ export default function TemplateEditor({
             </div>
 
             <div>
-              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-white/[0.05] pb-1.5">Metrics Stats</span>
+              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-slate-200 dark:border-slate-700/50 pb-1.5">Metrics Stats</span>
               {renderPlaceholderButton('Critical Count', '{{count_critical}}')}
               {renderPlaceholderButton('High Count', '{{count_high}}')}
               {renderPlaceholderButton('Medium Count', '{{count_medium}}')}
@@ -1157,9 +1157,9 @@ export default function TemplateEditor({
             </div>
 
             <div>
-              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-white/[0.05] pb-1.5">Vulnerabilities</span>
+              <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-3 border-b border-slate-200 dark:border-slate-700/50 pb-1.5">Vulnerabilities</span>
               {renderPlaceholderButton('Findings List Container', '{{findings_list}}')}
-              <div className="mt-3 text-[10px] text-slate-400 bg-white/[0.02] p-3 border border-white/[0.05] rounded-lg leading-relaxed">
+              <div className="mt-3 text-[10px] text-slate-400 bg-slate-50 dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700/50 rounded-lg leading-relaxed">
                 <span className="text-[#FF4D6D] font-bold uppercase block mb-1.5">LOOP TAG BLOCK:</span>
                 Wrap findings placeholders between these HTML comments:
                 <span className="text-blue-400 select-all block mt-2 select-all font-mono font-bold">{"<!-- FINDING_TEMPLATE_START -->"}</span>
@@ -1183,7 +1183,7 @@ export default function TemplateEditor({
 
         {/* Drag Handle 1 */}
         <div 
-          className="w-1.5 bg-[#0B101E] hover:bg-blue-500/50 active:bg-blue-500 cursor-col-resize transition-colors flex items-center justify-center z-10"
+          className="w-1.5 bg-slate-250 dark:bg-slate-950 hover:bg-blue-400 active:bg-blue-400 cursor-col-resize transition-colors flex items-center justify-center z-10"
           onMouseDown={startDrag1}
         >
           <div className="w-0.5 h-8 bg-white/20 rounded-full"></div>
@@ -1192,11 +1192,11 @@ export default function TemplateEditor({
         {/* Column 2: HTML Editor */}
         <div 
           style={{ width: `${col2Width}%`, flexShrink: 0 }}
-          className="bg-[#090D14] flex flex-col h-full border-r border-white/[0.05] relative"
+          className="bg-slate-950 flex flex-col h-full border-r border-slate-200 dark:border-slate-700/50 relative"
         >
           {/* Find & Replace Bar */}
           {showFindReplace && (
-            <div className="absolute top-0 left-0 right-0 z-20 bg-[#131A2B] border-b border-white/[0.05] p-3 shadow-lg flex flex-col gap-2">
+            <div className="absolute top-0 left-0 right-0 z-20 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700/50 p-3 shadow-lg flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-slate-400 flex-shrink-0" />
                 <input
@@ -1204,16 +1204,16 @@ export default function TemplateEditor({
                   placeholder="Find..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 bg-[#090D14] border border-white/[0.1] rounded-md px-2.5 py-1 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-md px-2.5 py-1 text-sm text-slate-850 dark:text-slate-100 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20"
                   autoFocus
                 />
                 <span className="text-xs text-slate-500 min-w-[50px] text-center">
                   {searchQuery ? `${displayMatchNum}/${matches.length}` : ''}
                 </span>
-                <button onClick={handleFindPrev} disabled={!searchQuery} className="p-1 hover:bg-white/10 rounded disabled:opacity-50 text-slate-300">
+                <button onClick={handleFindPrev} disabled={!searchQuery} className="p-1 hover:bg-white/10 rounded disabled:opacity-50 text-slate-350 dark:text-slate-300">
                   <ChevronUp className="w-4 h-4" />
                 </button>
-                <button onClick={handleFindNext} disabled={!searchQuery} className="p-1 hover:bg-white/10 rounded disabled:opacity-50 text-slate-300">
+                <button onClick={handleFindNext} disabled={!searchQuery} className="p-1 hover:bg-white/10 rounded disabled:opacity-50 text-slate-350 dark:text-slate-300">
                   <ChevronDown className="w-4 h-4" />
                 </button>
                 <button onClick={() => setShowFindReplace(false)} className="p-1 hover:bg-white/10 rounded ml-2 text-slate-400 hover:text-white">
@@ -1226,19 +1226,19 @@ export default function TemplateEditor({
                   placeholder="Replace with..."
                   value={replaceQuery}
                   onChange={(e) => setReplaceQuery(e.target.value)}
-                  className="flex-1 bg-[#090D14] border border-white/[0.1] rounded-md px-2.5 py-1 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-md px-2.5 py-1 text-sm text-slate-850 dark:text-slate-100 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20"
                 />
                 <button 
                   onClick={handleReplace} 
                   disabled={!searchQuery}
-                  className="px-2.5 py-1 text-xs font-semibold bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] rounded text-slate-300 disabled:opacity-50 transition-colors"
+                  className="px-2.5 py-1 text-xs font-semibold bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:bg-slate-300 dark:hover:bg-slate-600 rounded text-slate-750 dark:text-slate-300 disabled:opacity-50 transition-colors"
                 >
                   Replace
                 </button>
                 <button 
                   onClick={handleReplaceAll} 
                   disabled={!searchQuery}
-                  className="px-2.5 py-1 text-xs font-semibold bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] rounded text-slate-300 disabled:opacity-50 transition-colors"
+                  className="px-2.5 py-1 text-xs font-semibold bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:bg-slate-300 dark:hover:bg-slate-600 rounded text-slate-750 dark:text-slate-300 disabled:opacity-50 transition-colors"
                 >
                   All
                 </button>
@@ -1250,7 +1250,7 @@ export default function TemplateEditor({
             ref={textareaRef}
             value={templateCode}
             onChange={(e) => setTemplateCode(e.target.value)}
-            className="flex-1 w-full bg-[#090D14] text-slate-300 font-mono text-sm p-5 focus:outline-none resize-none leading-relaxed"
+            className="flex-1 w-full bg-slate-955 dark:bg-slate-950 text-slate-300 font-mono text-sm p-5 focus:outline-none resize-none leading-relaxed"
             placeholder="<html>...</html>"
             spellCheck="false"
           />
@@ -1258,65 +1258,65 @@ export default function TemplateEditor({
 
         {/* Drag Handle 2 */}
         <div 
-          className="w-1.5 bg-[#090D14] hover:bg-blue-500/50 active:bg-blue-500 cursor-col-resize transition-colors flex items-center justify-center z-10"
+          className="w-1.5 bg-slate-250 dark:bg-slate-950 hover:bg-blue-400 active:bg-blue-400 cursor-col-resize transition-colors flex items-center justify-center z-10"
           onMouseDown={startDrag2}
         >
           <div className="w-0.5 h-8 bg-white/20 rounded-full"></div>
         </div>
 
         {/* Column 3: Live Preview */}
-        <div className="flex-1 bg-[#070913] flex flex-col relative overflow-hidden">
+        <div className="flex-1 bg-slate-200 dark:bg-slate-955 flex flex-col relative overflow-hidden">
           
           {/* Zoom & Page Controls Overlay */}
-          <div className="absolute top-4 right-6 z-20 flex items-center gap-1 bg-[#131A2B]/80 backdrop-blur-md border border-white/[0.1] rounded-lg p-1 shadow-lg">
+          <div className="absolute top-4 right-6 z-20 flex items-center gap-1 bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-300 dark:border-slate-700/50 rounded-lg p-1 shadow-lg">
             <button
               onClick={() => {
                 setZoomMode('custom');
                 setCustomZoom(prev => Math.max(25, prev - 10));
               }}
-              className="p-1.5 rounded hover:bg-white/[0.05] text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
               title="Zoom Out"
             >
               <ZoomOut className="w-4 h-4" />
             </button>
             <div className="px-2 min-w-[60px] text-center">
-              <span className="text-xs font-bold text-white">{Math.round(calculatedZoom * 100)}%</span>
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-100">{Math.round(calculatedZoom * 100)}%</span>
             </div>
             <button
               onClick={() => {
                 setZoomMode('custom');
                 setCustomZoom(prev => Math.min(300, prev + 10));
               }}
-              className="p-1.5 rounded hover:bg-white/[0.05] text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
               title="Zoom In"
             >
               <ZoomIn className="w-4 h-4" />
             </button>
-            <div className="w-px h-4 bg-white/10 mx-1"></div>
+            <div className="w-px h-4 bg-slate-300 dark:bg-slate-700/50 mx-1"></div>
             <button
               onClick={handleFitHeightToggle}
-              className={`px-2 py-1 text-xs font-semibold rounded transition-colors ${zoomMode === 'height' ? 'bg-blue-500/20 text-blue-400' : 'hover:bg-white/[0.05] text-slate-400 hover:text-white'}`}
+              className={`px-2 py-1 text-xs font-semibold rounded transition-colors ${zoomMode === 'height' ? 'bg-blue-500/20 text-blue-500 dark:text-blue-400' : 'hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'}`}
               title="Fit to Height"
             >
               Fit
             </button>
           </div>
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-[#131A2B]/90 backdrop-blur-md border border-white/[0.1] rounded-full px-4 py-2 shadow-2xl">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-slate-100/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-300 dark:border-slate-700/50 rounded-full px-4 py-2 shadow-2xl">
             <button
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="p-1.5 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
+              className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full disabled:opacity-30 text-slate-850 dark:text-white transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-xs font-bold text-white tracking-wider">
+            <span className="text-xs font-bold text-slate-850 dark:text-white tracking-wider">
               PAGE {currentPage} OF {totalPages}
             </span>
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="p-1.5 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
+              className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full disabled:opacity-30 text-slate-850 dark:text-white transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

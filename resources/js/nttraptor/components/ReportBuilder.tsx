@@ -565,10 +565,17 @@ export default function ReportBuilder({
   const [expandedCustomSection, setExpandedCustomSection] = useState<string | null>(null);
   const [isCustomSaved, setIsCustomSaved] = useState(false);
 
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('report-builder-active', { detail: { active: true } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent('report-builder-active', { detail: { active: false } }));
+    };
+  }, []);
+
   // Pagination & Zooming states
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [zoomMode, setZoomMode] = useState<'width' | 'height' | 'custom'>('width');
+  const [zoomMode, setZoomMode] = useState<'width' | 'height' | 'custom'>('custom');
   const [customZoom, setCustomZoom] = useState(100);
   const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
 
@@ -2588,11 +2595,11 @@ export default function ReportBuilder({
       `}</style>
 
       {/* Top Action Bar */}
-      <header className="bg-slate-100 dark:bg-[#0B101E] border-b border-slate-200 dark:border-white/[0.05] h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
+      <header className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700/50 h-16 flex items-center justify-between px-6 flex-shrink-0 z-40">
         <div className="flex items-center gap-4 flex-1 min-w-0 max-w-xl lg:max-w-2xl xl:max-w-3xl">
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full border border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 bg-slate-200/50 dark:bg-white/[0.02] hover:bg-slate-200 dark:hover:bg-white/[0.06] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all flex-shrink-0"
+            className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 bg-slate-200/50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-350 hover:text-slate-900 dark:hover:text-white transition-all flex-shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -2607,89 +2614,41 @@ export default function ReportBuilder({
               type="text"
               value={report.name}
               onChange={(e) => updateReportField('name', e.target.value)}
-              className="bg-transparent border-none p-0 text-base font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight mt-0.5 focus:outline-none focus:ring-0 focus:border-b focus:border-slate-300 dark:focus:border-white/10 w-full"
+              className="bg-white dark:bg-slate-950/40 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-1 text-sm font-extrabold text-slate-800 dark:text-slate-100 mt-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 w-full shadow-sm"
             />
           </div>
         </div>
 
         {/* Redesigned Progress Indicator */}
-        <div className="hidden lg:flex items-center gap-4 bg-white/[0.02] border border-white/[0.05] rounded-xl px-4 py-2 hover:bg-white/[0.04] transition-all duration-200">
+        <div className="hidden lg:flex items-center gap-4 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-xl px-4 py-2.5 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200">
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Progress</span>
-            <div className="w-24 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+            <div className="w-24 bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full transition-all duration-300"
+                className="h-full bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(96,165,250,0.5)]"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
-            <span className="text-xs font-extrabold text-white">{progressPercent}%</span>
+            <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">{progressPercent}%</span>
           </div>
-          <div className="w-px h-5 bg-white/10" />
+          <div className="w-px h-5 bg-slate-200 dark:bg-slate-700/50" />
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5" title={`${completeCount} sections complete`}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]"></span>
-              <span className="text-[10px] font-bold text-slate-300">{completeCount}</span>
+              <span className="text-[10px] font-bold text-slate-650 dark:text-slate-300">{completeCount}</span>
             </div>
             <div className="flex items-center gap-1.5" title={`${inProgressCount} sections in progress`}>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.4)]"></span>
-              <span className="text-[10px] font-bold text-slate-300">{inProgressCount}</span>
+              <span className="text-[10px] font-bold text-slate-650 dark:text-slate-300">{inProgressCount}</span>
             </div>
             <div className="flex items-center gap-1.5" title={`${incompleteCount} sections incomplete`}>
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(239,68,68,0.4)]"></span>
-              <span className="text-[10px] font-bold text-slate-300">{incompleteCount}</span>
+              <span className="text-[10px] font-bold text-slate-650 dark:text-slate-300">{incompleteCount}</span>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Zoom controls */}
-          <div className="flex items-center gap-1.5 bg-white/[0.02] border border-white/[0.05] rounded-lg p-1">
-            <button
-              className="p-1 rounded hover:bg-white/[0.05] text-slate-400 hover:text-white transition-colors"
-              title="Search"
-            >
-              <Search className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => {
-                setZoomMode('custom');
-                setCustomZoom(prev => Math.max(25, prev - 10));
-              }}
-              className="p-1 rounded hover:bg-white/[0.05] text-slate-400 hover:text-white transition-colors"
-              title="Zoom Out"
-            >
-              <ZoomOut className="w-3.5 h-3.5" />
-            </button>
-            <div className="px-1 min-w-[40px] text-center">
-              <span className="text-[11px] font-bold text-slate-300">{Math.round(calculatedZoom * 100)}%</span>
-            </div>
-            <button
-              onClick={() => {
-                setZoomMode('custom');
-                setCustomZoom(prev => Math.min(300, prev + 10));
-              }}
-              className="p-1 rounded hover:bg-white/[0.05] text-slate-400 hover:text-white transition-colors"
-              title="Zoom In"
-            >
-              <ZoomIn className="w-3.5 h-3.5" />
-            </button>
-            <div className="w-px h-3.5 bg-white/10 mx-1"></div>
-            <button
-              onClick={handleFitToggle}
-              className={`px-2 py-0.5 text-[10px] font-bold rounded transition-colors ${zoomMode === 'width' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'hover:bg-white/[0.05] text-slate-400 hover:text-white border border-transparent'}`}
-              title="Fit to Width"
-            >
-              Fit
-            </button>
-          </div>
-
-          <button
-            onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-2 hover:bg-white/[0.05] rounded-lg text-slate-400 hover:text-white border border-transparent transition-colors"
-            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Preview"}
-          >
-            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-          </button>
           <button
             onClick={handleExportPlaywrightPDF}
             disabled={isGeneratingPlaywrightPDF}
@@ -2719,12 +2678,11 @@ export default function ReportBuilder({
 
         {/* Column 2: Center Editor Panel (hidden in fullscreen preview) */}
         <div
-          style={{ width: isFullscreen ? '0%' : `${leftWidth}%` }}
-          className={`flex flex-col bg-white dark:bg-[#0B101E] h-full border-r border-slate-200 dark:border-white/[0.05] ${isFullscreen ? 'hidden' : ''}`}
+          className={`flex flex-col bg-white dark:bg-slate-900 h-full border-r border-slate-200 dark:border-slate-700/50 flex-1 ${isFullscreen ? 'hidden' : ''}`}
         >
           {/* Chrome-style tabs */}
           {!isFullscreen && (
-            <div className="flex items-end bg-slate-200 dark:bg-[#070913] px-2 pt-2 border-b border-slate-300 dark:border-white/[0.05] overflow-x-auto no-scrollbar flex-nowrap flex-shrink-0 select-none">
+            <div className="flex items-end bg-slate-200 dark:bg-slate-950 px-2 pt-2 border-b border-slate-300 dark:border-slate-700/50 overflow-x-auto no-scrollbar flex-nowrap flex-shrink-0 select-none">
               {sections.map((sec, idx) => {
                 const isActive = activeSection === sec.id;
                 const status = sectionsStatus[sec.id as keyof typeof sectionsStatus];
@@ -2742,8 +2700,8 @@ export default function ReportBuilder({
                     onClick={() => setActiveSection(sec.id as any)}
                     className={`flex items-center gap-2 px-4 py-3 text-xs font-bold rounded-t-xl transition-all relative z-10 flex-shrink-0 -mb-[1px] border-t-2 border-x ${
                       isActive 
-                        ? 'bg-white dark:bg-[#0B101E] border-t-blue-500 border-x-slate-300 dark:border-x-white/[0.08] border-b-transparent text-blue-600 dark:text-blue-400 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.25)] z-20 scale-105 origin-bottom' 
-                        : 'bg-slate-100/70 dark:bg-[#0B101E]/40 border-t-transparent border-x-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0B101E]/70 border-b-slate-200 dark:border-b-white/[0.05] hover:scale-[1.02] origin-bottom'
+                        ? 'bg-white dark:bg-slate-900 border-t-blue-500 border-x-slate-300 dark:border-x-slate-700/50 border-b-transparent text-blue-600 dark:text-blue-455 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.25)] z-20 scale-105 origin-bottom' 
+                        : 'bg-slate-100/70 dark:bg-slate-900/40 border-t-transparent border-x-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border-b-slate-200 dark:border-b-slate-700/50 hover:scale-[1.02] origin-bottom'
                     }`}
                     style={{
                       minWidth: '120px',
@@ -2759,9 +2717,9 @@ export default function ReportBuilder({
           )}
 
           {/* Editor Header */}
-          <div className="p-6 pb-4 border-b border-slate-200 dark:border-white/[0.05] flex items-center justify-between flex-shrink-0">
+          <div className="p-6 pb-4 border-b border-slate-200 dark:border-slate-700/50 flex items-center justify-between flex-shrink-0">
             <div>
-              <h2 className="text-lg font-bold text-slate-800 dark:text-white tracking-tight">{activeMeta.title}</h2>
+              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">{activeMeta.title}</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{activeMeta.desc}</p>
             </div>
             
@@ -2777,7 +2735,7 @@ export default function ReportBuilder({
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Client / Target */}
-                  <div className="border border-slate-200 dark:border-white/[0.05] bg-slate-50 dark:bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
                     <Building2 className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Client / Target</label>
@@ -2786,13 +2744,13 @@ export default function ReportBuilder({
                         value={report.client}
                         onChange={(e) => updateReportField('client', e.target.value)}
                         placeholder="Client Name"
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 placeholder-slate-600"
+                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-450 dark:placeholder-slate-500"
                       />
                     </div>
                   </div>
 
                   {/* Document Version */}
-                  <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
                     <Hash className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Document Version</label>
@@ -2801,13 +2759,13 @@ export default function ReportBuilder({
                         value={report.version}
                         onChange={(e) => updateReportField('version', e.target.value)}
                         placeholder="1.0"
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 placeholder-slate-600"
+                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-450 dark:placeholder-slate-500"
                       />
                     </div>
                   </div>
 
                   {/* Assessment Date Range */}
-                  <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-start gap-3 focus-within:border-blue-500/50 transition-colors">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-start gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
                     <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0 mt-1" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Assessment Date Range</label>
@@ -2818,7 +2776,7 @@ export default function ReportBuilder({
                             type="date"
                             value={report.date}
                             onChange={(e) => updateReportField('date', e.target.value)}
-                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 [color-scheme:dark]"
+                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0"
                           />
                         </div>
                         <div className="flex items-center gap-2">
@@ -2828,7 +2786,7 @@ export default function ReportBuilder({
                             value={report.dateEnd || report.date}
                             min={report.date}
                             onChange={(e) => updateReportField('dateEnd', e.target.value)}
-                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 [color-scheme:dark]"
+                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0"
                           />
                         </div>
                       </div>
@@ -2836,7 +2794,7 @@ export default function ReportBuilder({
                   </div>
 
                   {/* Report Date */}
-                  <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
                     <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Report Date</label>
@@ -2844,13 +2802,13 @@ export default function ReportBuilder({
                         type="date"
                         value={report.reportDate || report.date}
                         onChange={(e) => updateReportField('reportDate', e.target.value)}
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 [color-scheme:dark]"
+                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0"
                       />
                     </div>
                   </div>
 
                   {/* Status */}
-                  <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors relative">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750 relative">
                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
                       report.status === 'Final' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' :
                       report.status === 'Review in progress' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' :
@@ -2861,19 +2819,19 @@ export default function ReportBuilder({
                       <select
                         value={report.status || 'Draft'}
                         onChange={(e) => updateReportField('status', e.target.value)}
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-6 font-sans"
+                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-6 font-sans"
                         style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
                       >
-                        <option value="Draft" className="bg-[#131A2B] text-white">Draft</option>
-                        <option value="Review in progress" className="bg-[#131A2B] text-white">Review in progress</option>
-                        <option value="Final" className="bg-[#131A2B] text-white">Final</option>
+                        <option value="Draft" className="bg-white dark:bg-slate-850 text-slate-800 dark:text-slate-100">Draft</option>
+                        <option value="Review in progress" className="bg-white dark:bg-slate-850 text-slate-800 dark:text-slate-100">Review in progress</option>
+                        <option value="Final" className="bg-white dark:bg-slate-850 text-slate-800 dark:text-slate-100">Final</option>
                       </select>
                     </div>
                     <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 pointer-events-none" />
                   </div>
 
                   {/* Lead Analyst */}
-                  <div className="border border-white/[0.05] bg-[#0F1424] rounded-xl p-3 flex items-center gap-3 focus-within:border-blue-500/50 transition-colors sm:col-span-2">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750 sm:col-span-2">
                     <User className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Lead Analyst</label>
@@ -2882,14 +2840,14 @@ export default function ReportBuilder({
                         value={report.author}
                         onChange={(e) => updateReportField('author', e.target.value)}
                         placeholder="Analyst Name"
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-white focus:outline-none focus:ring-0 placeholder-slate-600"
+                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-455 dark:placeholder-slate-500"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Additional Settings */}
-                <div className="space-y-3 pt-4 border-t border-white/[0.05]">
+                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-700/50">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Additional Settings</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <button
@@ -3176,15 +3134,15 @@ export default function ReportBuilder({
                       return (
                         <div
                           key={finding.id}
-                          className={`bg-[#0B101E] border border-white/[0.05] rounded-xl overflow-hidden transition-all duration-200 ${isExpanded ? 'ring-1 ring-white/20 shadow-lg' : 'hover:border-white/10'}`}
+                          className={`bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden transition-all duration-200 ${isExpanded ? 'ring-1 ring-indigo-400/20 shadow-lg' : 'hover:border-slate-650'}`}
                         >
                           {/* Collapsible Header */}
-                          <div className={`p-4 flex items-center justify-between cursor-pointer border-l-4 ${sevColors[finding.severity]} bg-[#131A2B]/40`}
+                          <div className={`p-4 flex items-center justify-between cursor-pointer border-l-4 ${sevColors[finding.severity]} bg-slate-200/40 dark:bg-slate-800/40`}
                             onClick={() => setExpandedFinding(isExpanded ? null : finding.id)}
                           >
                             <div className="flex items-center gap-3 overflow-hidden">
                               <span className="text-xs font-semibold text-slate-505">{idx + 1}.</span>
-                              <span className={`font-semibold text-sm ${isExpanded ? 'text-white' : 'text-slate-300'} truncate max-w-[200px] sm:max-w-[280px]`}>
+                              <span className={`font-semibold text-sm ${isExpanded ? 'text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-455'} truncate max-w-[200px] sm:max-w-[280px]`}>
                                 {finding.title}
                               </span>
                             </div>
@@ -3214,7 +3172,7 @@ export default function ReportBuilder({
 
                           {/* Expanded Fields */}
                           {isExpanded && (
-                            <div className="p-5 border-t border-white/[0.05] bg-[#131A2B] space-y-5">
+                            <div className="p-6 border-t border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 space-y-5">
                               <div className="grid grid-cols-2 gap-4">
                                 <div>
                                   <label className="block text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1.5">Finding Title</label>
@@ -3223,7 +3181,7 @@ export default function ReportBuilder({
                                     value={finding.title}
                                     onChange={(e) => updateFindingField(finding.id, 'title', e.target.value)}
                                     {...commitHandlers(`finding-${finding.id}`)}
-                                    className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 font-semibold bg-[#0B101E] text-white border border-white/[0.1] placeholder-slate-600 transition-all ${sevTextColors[finding.severity]}`}
+                                    className={`w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all ${sevTextColors[finding.severity]}`}
                                   />
                                 </div>
                                 <div>
@@ -3233,7 +3191,7 @@ export default function ReportBuilder({
                                     value={finding.category}
                                     onChange={(e) => updateFindingField(finding.id, 'category', e.target.value)}
                                     placeholder="e.g. Injection, Auth Bypass"
-                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] placeholder-slate-600 transition-all"
+                                    className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                   />
                                 </div>
                               </div>
@@ -3243,7 +3201,7 @@ export default function ReportBuilder({
                                 <select
                                   value={finding.scenarioId || ''}
                                   onChange={(e) => updateFindingField(finding.id, 'scenarioId', e.target.value || undefined)}
-                                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] transition-all"
+                                  className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                 >
                                   <option value="">General / Unassociated</option>
                                   {report.goalsAndScenarios?.map(gs => (
@@ -3258,7 +3216,7 @@ export default function ReportBuilder({
                                   <select
                                     value={finding.severity}
                                     onChange={(e) => updateFindingField(finding.id, 'severity', e.target.value)}
-                                    className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 font-semibold bg-[#0B101E] border border-white/[0.1] transition-all ${sevTextColors[finding.severity]}`}
+                                    className={`w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all ${sevTextColors[finding.severity]}`}
                                   >
                                     <option value="Critical" className="text-[#FF4D6D]">Critical</option>
                                     <option value="High" className="text-[#FF7A45]">High</option>
@@ -3274,7 +3232,7 @@ export default function ReportBuilder({
                                     value={finding.cvss}
                                     onChange={(e) => updateFindingField(finding.id, 'cvss', e.target.value)}
                                     placeholder="e.g. 8.9"
-                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] placeholder-slate-600 transition-all"
+                                    className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                   />
                                 </div>
                                 <div>
@@ -3282,7 +3240,7 @@ export default function ReportBuilder({
                                   <select
                                     value={finding.status}
                                     onChange={(e) => updateFindingField(finding.id, 'status', e.target.value)}
-                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] transition-all"
+                                    className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                   >
                                     <option value="Open">Open</option>
                                     <option value="In Progress">In Progress</option>
@@ -3299,7 +3257,7 @@ export default function ReportBuilder({
                                   value={finding.description}
                                   onChange={(val) => updateFindingField(finding.id, 'description', val)}
                                   onCommit={() => notifyEdit(`finding-${finding.id}`)}
-                                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] placeholder-slate-600 transition-all"
+                                  className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                   fieldType="findingDescription"
                                   model={aiModel}
                                 />
@@ -3312,20 +3270,21 @@ export default function ReportBuilder({
                                   value={finding.poc}
                                   onChange={(val) => updateFindingField(finding.id, 'poc', val)}
                                   onCommit={() => notifyEdit(`finding-${finding.id}`)}
-                                  className="w-full font-mono text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#090D14] text-[#A5B4FC] border border-white/[0.1] placeholder-slate-700 transition-all"
+                                  className="w-full font-mono text-xs rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-955 dark:bg-slate-950 text-indigo-800 dark:text-indigo-300 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-955/80 dark:hover:bg-slate-950/80 transition-all"
                                   placeholder="Paste terminal output, HTTP requests, or exploitation steps here..."
                                   fieldType="poc"
                                   model={aiModel}
                                 />
                               </div>
 
-                              <div className="mt-4 border border-white/[0.05] rounded-lg p-4 bg-[#0B101E]/50 space-y-4">
+                              <div className="mt-4 border border-slate-200 dark:border-slate-700/50 rounded-lg p-4 bg-slate-100/50 dark:bg-slate-900/50 space-y-4">
                                 <div className="flex justify-between items-center">
-                                  <h4 className="text-xs font-bold text-slate-350 uppercase tracking-wider flex items-center gap-1.5">
+                                  <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                                     Evidence Screenshots
                                   </h4>
-                                  <label className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg text-xs hover:border-blue-500/50 text-blue-400 cursor-pointer transition-colors font-semibold shadow-sm">
+                                  <label className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-400/30 rounded-lg text-xs hover:border-blue-400/50 text-blue-400 dark:text-blue-400 cursor-pointer transition-colors font-semibold shadow-sm">
                                     <Plus className="w-3.5 h-3.5" />
+                                    <span>Upload Image</span>                  <Plus className="w-3.5 h-3.5" />
                                     <span>Upload Image</span>
                                     <input
                                       type="file"
@@ -3356,7 +3315,7 @@ export default function ReportBuilder({
                                 </div>
 
                                 {(!finding.screenshots || finding.screenshots.length === 0) ? (
-                                  <div className="text-center py-4 text-xs text-slate-500 border border-dashed border-white/5 rounded-lg">
+                                  <div className="text-center py-4 text-xs text-slate-500 border border-dashed border-slate-200 dark:border-slate-700/50 rounded-lg">
                                     No screenshots added. Upload image files as visual proof of concept.
                                   </div>
                                 ) : (
@@ -3396,8 +3355,8 @@ export default function ReportBuilder({
                                         };
 
                                         return (
-                                          <div key={screenshot.id} className="flex flex-col md:flex-row gap-3 bg-[#0B101E] border border-white/[0.05] p-3 rounded-lg relative group">
-                                            <div className="w-full md:w-28 h-20 bg-black/40 border border-white/[0.05] rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+                                          <div key={screenshot.id} className="flex flex-col md:flex-row gap-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 p-4 rounded-lg relative group hover:border-slate-300 dark:hover:border-slate-650">
+                                            <div className="w-full md:w-28 h-20 bg-black/40 border border-slate-200 dark:border-slate-700/50 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
                                               <img src={screenshot.data} className="max-w-full max-h-full object-contain" alt="preview" />
                                             </div>
 
@@ -3409,7 +3368,7 @@ export default function ReportBuilder({
                                                     type="text"
                                                     value={screenshot.caption}
                                                     onChange={(e) => updateScreenshotField('caption', e.target.value)}
-                                                    className="w-full text-xs rounded px-2.5 py-1.5 bg-[#131A2B] text-white border border-white/[0.08] focus:outline-none focus:border-white/20 transition-all font-semibold"
+                                                    className="w-full text-xs rounded px-3 py-2 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 transition-all font-semibold hover:bg-slate-100 dark:hover:bg-slate-750"
                                                     placeholder="e.g. Exploitation console output"
                                                   />
                                                 </div>
@@ -3419,7 +3378,7 @@ export default function ReportBuilder({
                                                     type="text"
                                                     value={screenshot.width || ''}
                                                     onChange={(e) => updateScreenshotField('width', e.target.value)}
-                                                    className="w-full text-xs rounded px-2.5 py-1.5 bg-[#131A2B] text-white border border-white/[0.08] focus:outline-none focus:border-white/20 transition-all text-center font-semibold"
+                                                    className="w-full text-xs rounded px-3 py-2 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 transition-all text-center font-semibold hover:bg-slate-100 dark:hover:bg-slate-750"
                                                     placeholder="auto"
                                                   />
                                                 </div>
@@ -3429,7 +3388,7 @@ export default function ReportBuilder({
                                                     type="text"
                                                     value={screenshot.height || ''}
                                                     onChange={(e) => updateScreenshotField('height', e.target.value)}
-                                                    className="w-full text-xs rounded px-2.5 py-1.5 bg-[#131A2B] text-white border border-white/[0.08] focus:outline-none focus:border-white/20 transition-all text-center font-semibold"
+                                                    className="w-full text-xs rounded px-3 py-2 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 transition-all text-center font-semibold hover:bg-slate-100 dark:hover:bg-slate-750"
                                                     placeholder="auto"
                                                   />
                                                 </div>
@@ -3495,13 +3454,13 @@ export default function ReportBuilder({
                                   value={finding.remediation}
                                   onChange={(val) => updateFindingField(finding.id, 'remediation', val)}
                                   onCommit={() => notifyEdit(`finding-${finding.id}`)}
-                                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] placeholder-slate-600 transition-all"
+                                  className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                   fieldType="remediation"
                                   model={aiModel}
                                 />
                               </div>
 
-                              <div className="flex justify-end pt-3 border-t border-white/[0.05]">
+                              <div className="flex justify-end pt-3 border-t border-slate-200 dark:border-slate-700/50">
                                 <button
                                   onClick={() => deleteFinding(finding.id)}
                                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-400 hover:text-[#FF4D6D] hover:bg-[#FF4D6D]/10 rounded-md transition-all"
@@ -3537,15 +3496,15 @@ export default function ReportBuilder({
                 </div>
 
                 {!report.supplementalSections || report.supplementalSections.length === 0 ? (
-                  <div className="border border-dashed border-white/10 rounded-xl p-8 text-center text-slate-505 text-xs">
+                  <div className="border border-dashed border-slate-200 dark:border-slate-700/50 rounded-xl p-8 text-center text-slate-505 text-xs">
                     No supplemental sections. Click "Add Section" to begin.
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {report.supplementalSections.map((sec, idx) => (
-                      <div key={sec.id} className="bg-[#0B101E] border border-white/[0.05] rounded-xl p-4 space-y-4">
+                      <div key={sec.id} className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 space-y-4 hover:border-slate-300 dark:hover:border-slate-650">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-slate-400">Heading 3.{idx + 1}</span>
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Heading 3.{idx + 1}</span>
                           <button
                             type="button"
                             onClick={() => deleteSupplementalSection(sec.id)}
@@ -3562,7 +3521,7 @@ export default function ReportBuilder({
                             value={sec.title}
                             onChange={(e) => updateSupplementalSectionField(sec.id, 'title', e.target.value)}
                             {...commitHandlers(`supp-sec-${sec.id}`)}
-                            className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1]"
+                            className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-750 transition-all"
                           />
                         </div>
                         <div>
@@ -3573,20 +3532,20 @@ export default function ReportBuilder({
                             onChange={(val) => updateSupplementalSectionField(sec.id, 'content', val)}
                             onCommit={() => notifyEdit(`supp-sec-${sec.id}`)}
                             placeholder="General section description..."
-                            className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1]"
+                            className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-750 transition-all"
                             fieldType="supplemental"
                             model={aiModel}
                           />
                         </div>
 
                         {/* Subsections */}
-                        <div className="border-t border-white/[0.05] pt-3 space-y-3">
+                        <div className="border-t border-slate-200 dark:border-slate-700/50 pt-3 space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-xs font-semibold text-slate-350">Sub-headings (3.{idx + 1}.x)</span>
+                            <span className="text-xs font-semibold text-slate-500 dark:text-slate-455">Sub-headings (3.{idx + 1}.x)</span>
                             <button
                               type="button"
                               onClick={() => addSupplementalSubSection(sec.id)}
-                              className="flex items-center gap-1 px-2 py-1 bg-white/[0.03] border border-white/[0.05] rounded text-[10px] text-slate-300 hover:bg-white/[0.08]"
+                              className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded text-[10px] text-slate-700 dark:text-slate-350 hover:bg-slate-250 dark:hover:bg-slate-700 transition-colors"
                             >
                               <Plus className="w-3 h-3" />
                               <span>Add Sub-heading</span>
@@ -3594,7 +3553,7 @@ export default function ReportBuilder({
                           </div>
 
                           {(sec.subSections || []).map((sub, sIdx) => (
-                            <div key={sub.id} className="bg-[#131A2B] border border-white/[0.05] rounded-lg p-3 space-y-3">
+                            <div key={sub.id} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-lg p-4 space-y-3 hover:border-slate-300 dark:hover:border-slate-650">
                               <div className="flex items-center justify-between">
                                 <span className="text-[10px] font-bold text-slate-400">Sub-heading 3.{idx + 1}.{sIdx + 1}</span>
                                 <button
@@ -3602,7 +3561,7 @@ export default function ReportBuilder({
                                   onClick={() => deleteSupplementalSubSection(sec.id, sub.id)}
                                   className="p-1 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded transition-colors"
                                 >
-                                  <Trash2 className="w-3 h-3" />
+                                  <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               </div>
                               <div>
@@ -3612,7 +3571,7 @@ export default function ReportBuilder({
                                   value={sub.title}
                                   onChange={(e) => updateSupplementalSubSectionField(sec.id, sub.id, 'title', e.target.value)}
                                   {...commitHandlers(`supp-sub-${sub.id}`)}
-                                  className="w-full rounded-lg px-3 py-1.5 text-xs bg-[#0B101E] text-white border border-white/[0.1]"
+                                  className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                 />
                               </div>
                               <div>
@@ -3623,7 +3582,7 @@ export default function ReportBuilder({
                                   onChange={(val) => updateSupplementalSubSectionField(sec.id, sub.id, 'content', val)}
                                   onCommit={() => notifyEdit(`supp-sub-${sub.id}`)}
                                   placeholder="Enter technical details, findings, or walkthrough steps..."
-                                  className="w-full rounded-lg px-3 py-1.5 text-xs bg-[#0B101E] text-white border border-white/[0.1]"
+                                  className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                   fieldType="goalDetails"
                                   model={aiModel}
                                 />
@@ -3832,7 +3791,7 @@ export default function ReportBuilder({
                           </div>
 
                           {isExpanded && (
-                            <div className="p-5 border-t border-white/[0.05] bg-[#131A2B] space-y-5">
+                            <div className="p-6 border-t border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 space-y-5">
                               <div>
                                 <label className="block text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Section Title</label>
                                 <input
@@ -3840,7 +3799,7 @@ export default function ReportBuilder({
                                   value={sec.title}
                                   onChange={(e) => updateCustomSectionField(sec.id, 'title', e.target.value)}
                                   {...commitHandlers(`cust-sec-${sec.id}`)}
-                                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] font-semibold text-cyan-400"
+                                  className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 font-semibold bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all font-semibold text-cyan-500 dark:text-cyan-400"
                                 />
                               </div>
                               <div>
@@ -3851,19 +3810,19 @@ export default function ReportBuilder({
                                   onChange={(val) => updateCustomSectionField(sec.id, 'content', val)}
                                   onCommit={() => notifyEdit(`cust-sec-${sec.id}`)}
                                   placeholder="Section description or introduction..."
-                                  className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 bg-[#0B101E] text-white border border-white/[0.1] placeholder-slate-600 transition-all"
+                                  className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-200 dark:hover:bg-slate-850 transition-all"
                                   fieldType="supplemental"
                                   model={aiModel}
                                 />
                               </div>
 
-                              <div className="border-t border-white/[0.05] pt-3 space-y-3">
+                              <div className="border-t border-slate-200 dark:border-slate-700/50 pt-3 space-y-3">
                                 <div className="flex justify-between items-center">
-                                  <span className="text-xs font-semibold text-slate-300">Sub-headings ({secNum}.x)</span>
+                                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-350">Sub-headings ({secNum}.x)</span>
                                   <button
                                     type="button"
                                     onClick={() => addCustomSubSection(sec.id)}
-                                    className="flex items-center gap-1 px-2 py-1 bg-white/[0.03] border border-white/[0.05] rounded text-[10px] text-slate-300 hover:bg-white/[0.08]"
+                                    className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded text-[10px] text-slate-700 dark:text-slate-350 hover:bg-slate-250 dark:hover:bg-slate-700 transition-colors"
                                   >
                                     <Plus className="w-3 h-3" />
                                     <span>Add Sub-heading</span>
@@ -3871,7 +3830,7 @@ export default function ReportBuilder({
                                 </div>
 
                                 {(sec.subSections || []).map((sub, sIdx) => (
-                                  <div key={sub.id} className="bg-[#0B101E] border border-white/[0.05] rounded-lg p-3 space-y-3">
+                                  <div key={sub.id} className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-lg p-4 space-y-3 hover:border-slate-300 dark:hover:border-slate-650">
                                     <div className="flex items-center justify-between">
                                       <span className="text-[10px] font-bold text-slate-400">Sub-heading {secNum}.{sIdx + 1}</span>
                                       <div className="flex items-center gap-1">
@@ -3909,7 +3868,7 @@ export default function ReportBuilder({
                                         value={sub.title}
                                         onChange={(e) => updateCustomSubSectionField(sec.id, sub.id, 'title', e.target.value)}
                                         {...commitHandlers(`cust-sub-${sub.id}`)}
-                                        className="w-full rounded-lg px-3 py-1.5 text-xs bg-[#131A2B] text-white border border-white/[0.05]"
+                                        className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-750 transition-all"
                                       />
                                     </div>
                                     <div>
@@ -3920,7 +3879,7 @@ export default function ReportBuilder({
                                         onChange={(val) => updateCustomSubSectionField(sec.id, sub.id, 'content', val)}
                                         onCommit={() => notifyEdit(`cust-sub-${sub.id}`)}
                                         placeholder="Enter content for this sub-section..."
-                                        className="w-full rounded-lg px-3 py-1.5 text-xs bg-[#131A2B] text-white border border-white/[0.05]"
+                                        className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-750 transition-all"
                                         fieldType="supplemental"
                                         model={aiModel}
                                       />
@@ -3929,7 +3888,7 @@ export default function ReportBuilder({
                                 ))}
                               </div>
 
-                              <div className="flex justify-end pt-3 border-t border-white/[0.05]">
+                              <div className="flex justify-end pt-3 border-t border-slate-200 dark:border-slate-700/50">
                                 <button
                                   onClick={() => deleteCustomSection(sec.id)}
                                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-400 hover:text-[#FF4D6D] hover:bg-[#FF4D6D]/10 rounded-md transition-all"
@@ -3950,7 +3909,7 @@ export default function ReportBuilder({
           </div>
 
           {/* Sticky Editor Footer with Save & Continue or Finish */}
-          <div className="p-4 border-t border-white/[0.05] flex justify-end items-center gap-3 bg-[#0B101E] flex-shrink-0">
+          <div className="p-4 border-t border-slate-200 dark:border-slate-700/50 flex justify-end items-center gap-3 bg-slate-100 dark:bg-slate-900 flex-shrink-0">
             {activeSection === 'custom' ? (
               <button
                 onClick={() => {
@@ -3961,7 +3920,7 @@ export default function ReportBuilder({
                 className={`flex items-center gap-2 px-5 py-2.5 text-white text-xs font-bold rounded-lg transition-all ${
                   isCustomSaved 
                     ? 'bg-emerald-600 hover:bg-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]' 
-                    : 'bg-blue-600 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]'
+                    : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.4)]'
                 }`}
               >
                 <span>{isCustomSaved ? 'Saved' : 'Save'}</span>
@@ -3970,7 +3929,7 @@ export default function ReportBuilder({
             ) : (
               <button
                 onClick={handleSaveAndContinue}
-                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.4)] text-white text-xs font-bold rounded-lg transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.4)] text-white text-xs font-bold rounded-lg transition-all"
               >
                 <span>Save & Continue</span>
                 <ChevronRight className="w-4 h-4" />
@@ -3979,174 +3938,217 @@ export default function ReportBuilder({
           </div>
         </div>
 
-        {/* Drag Handle (Hidden in fullscreen) */}
-        {!isFullscreen && (
-          <div
-            className="w-[2px] bg-[#070913] hover:bg-blue-500 active:bg-blue-500 cursor-col-resize transition-colors z-30"
-            onMouseDown={startDrag}
-          />
-        )}
-
         {/* Right Side: Live HTML Preview */}
-        <div className="flex-1 bg-[#070913] flex flex-col relative overflow-hidden">
-
-          {/* Custom Translucent Vertical Slider */}
-          <div
-            ref={sliderTrackRef}
-            onMouseDown={handleSliderMouseDown}
-            className="absolute right-4 top-6 bottom-6 w-8 z-20 flex items-center justify-center cursor-pointer select-none group/track"
-            title="Drag to scroll report"
-          >
-            {/* The track line */}
-            <div className="w-2 h-full bg-white/15 group-hover/track:bg-white/25 active:bg-white/35 rounded-full transition-all backdrop-blur-md border border-white/10 shadow-inner" />
-
-            {/* Draggable thumb/handle */}
-            <div
-              ref={sliderThumbRef}
-              className="absolute left-1/2 -translate-x-1/2 w-8 h-14 bg-slate-900/80 backdrop-blur-md border border-white/20 hover:border-blue-500/50 active:bg-blue-600 rounded-xl shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center justify-center text-slate-300 hover:text-white cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-all select-none"
-              style={{
-                top: '0px'
-              }}
-            >
-              <GripVertical className="w-4 h-4" />
+        <div
+          style={{ width: isFullscreen ? '100%' : `${(A4_BASE_WIDTH * calculatedZoom) + 96}px` }}
+          className="flex-shrink-0 bg-[#E8EDF2] flex flex-col relative overflow-hidden h-full"
+        >
+          {/* Dedicated Preview Nav Bar */}
+          <div className="flex items-center justify-between bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 select-none w-full flex-shrink-0">
+            {/* Left side: Mention Report Preview */}
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+              <span className="text-xs font-extrabold text-slate-700 dark:text-slate-200 uppercase tracking-wider">Report Preview</span>
             </div>
-          </div>
 
-          {/* Search Box Overlay */}
-          <div className="absolute top-6 right-16 z-20 flex items-center gap-3 bg-[#131A2B]/90 backdrop-blur-md border border-white/[0.1] rounded-full px-4 py-1.5 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
-            <div className="flex items-center gap-2 pl-2">
-              <Search className="w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search report..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentMatchIndex(0);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    if (totalMatches > 0) {
-                      setCurrentMatchIndex(prev => (prev + 1) % totalMatches);
-                    }
-                  }
-                }}
-                className="bg-transparent border-none text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-0 w-36 py-0.5"
-              />
-            </div>
-            
-            {searchQuery && (
-              <>
-                <div className="w-px h-5 bg-white/10" />
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => {
-                      if (totalMatches > 0) {
-                        setCurrentMatchIndex(prev => (prev - 1 + totalMatches) % totalMatches);
-                      }
-                    }}
-                    disabled={totalMatches === 0}
-                    className="p-1 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
-                    title="Previous match"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <span className="text-[10px] font-bold text-white tracking-wider min-w-[50px] text-center">
-                    {totalMatches > 0 ? `${currentMatchIndex + 1} OF ${totalMatches}` : '0 OF 0'}
-                  </span>
-                  <button
-                    onClick={() => {
+            {/* Right side: Search, Page Navigation, Zoom, Fullscreen Toggle */}
+            <div className="flex items-center gap-3">
+              {/* Search */}
+              <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-0.5">
+                <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                <input
+                  type="text"
+                  placeholder="Search report..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentMatchIndex(0);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
                       if (totalMatches > 0) {
                         setCurrentMatchIndex(prev => (prev + 1) % totalMatches);
                       }
-                    }}
-                    disabled={totalMatches === 0}
-                    className="p-1 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
-                    title="Next match"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSearchQuery('');
-                      setCurrentMatchIndex(0);
-                    }}
-                    className="p-1 hover:bg-white/[0.1] rounded-full text-slate-400 hover:text-white transition-colors"
-                    title="Clear search"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                    }
+                  }}
+                  className="bg-transparent border-none text-[11px] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-0 w-24 py-0"
+                />
+                {searchQuery && (
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      onClick={() => {
+                        if (totalMatches > 0) {
+                          setCurrentMatchIndex(prev => (prev - 1 + totalMatches) % totalMatches);
+                        }
+                      }}
+                      disabled={totalMatches === 0}
+                      className="p-0.5 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded disabled:opacity-30 text-slate-600 dark:text-slate-350 transition-colors"
+                      title="Previous match"
+                    >
+                      <ChevronLeft className="w-3 h-3" />
+                    </button>
+                    <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 tracking-wider min-w-[24px] text-center">
+                      {totalMatches > 0 ? `${currentMatchIndex + 1}/${totalMatches}` : '0/0'}
+                    </span>
+                    <button
+                      onClick={() => {
+                        if (totalMatches > 0) {
+                          setCurrentMatchIndex(prev => (prev + 1) % totalMatches);
+                        }
+                      }}
+                      disabled={totalMatches === 0}
+                      className="p-0.5 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded disabled:opacity-30 text-slate-600 dark:text-slate-350 transition-colors"
+                      title="Next match"
+                    >
+                      <ChevronRight className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSearchQuery('');
+                        setCurrentMatchIndex(0);
+                      }}
+                      className="p-0.5 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded text-slate-400 hover:text-white transition-colors"
+                      title="Clear search"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Page Navigator */}
+              <div className="flex items-center gap-0.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-lg px-1.5 py-0.5">
+                <button
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="p-0.5 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded disabled:opacity-30 text-slate-600 dark:text-slate-350 transition-colors"
+                  title="Previous Page"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 tracking-wider uppercase whitespace-nowrap px-1">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="p-0.5 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded disabled:opacity-30 text-slate-600 dark:text-slate-350 transition-colors"
+                  title="Next Page"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Zoom Controls (Without Fit) */}
+              <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-lg p-0.5">
+                <button
+                  onClick={() => {
+                    setZoomMode('custom');
+                    setCustomZoom(prev => Math.max(25, prev - 10));
+                  }}
+                  className="p-1 rounded hover:bg-slate-200 dark:hover:bg-white/[0.05] text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-white transition-colors"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="w-3.5 h-3.5" />
+                </button>
+                <div className="px-1 min-w-[36px] text-center">
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">{Math.round(calculatedZoom * 100)}%</span>
                 </div>
-              </>
-            )}
+                <button
+                  onClick={() => {
+                    setZoomMode('custom');
+                    setCustomZoom(prev => Math.min(300, prev + 10));
+                  }}
+                  className="p-1 rounded hover:bg-slate-200 dark:hover:bg-white/[0.05] text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-white transition-colors"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Fullscreen Toggle */}
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="p-1 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 hover:bg-slate-200 dark:hover:bg-white/[0.05] rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-white transition-colors"
+                title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Preview"}
+              >
+                {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
 
-          {/* Pagination Controls Overlay - Relocated to Bottom Right */}
-          <div className="absolute bottom-6 right-16 z-20 flex items-center gap-3 bg-[#131A2B]/90 backdrop-blur-md border border-white/[0.1] rounded-full px-4 py-2 shadow-2xl">
-            <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="p-1.5 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span className="text-xs font-bold text-white tracking-wider">
-              PAGE {currentPage} OF {totalPages}
-            </span>
-            <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="p-1.5 hover:bg-white/[0.1] rounded-full disabled:opacity-30 text-white transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Preview Container */}
-          <div
-            ref={previewContainerRef}
-            className="flex-1 overflow-y-auto overflow-x-auto w-full relative bg-[#E8EDF2] no-scrollbar"
-            onScroll={handleScroll}
-          >
-            {/*
-              Scale fix: outer div is sized to post-scale visual dimensions
-              so the scroll container never creates unwanted scrollbars.
-              iframe is full unscaled size + scale(zoom) with origin top-left.
-              PAGE_GAP (24px) lives inside the iframe template (gap between .page elements).
-            */}
+          {/* Combined Preview & Slider Container */}
+          <div className="flex flex-1 flex-row overflow-hidden w-full relative">
+            {/* Preview Container */}
             <div
-              style={{
-                // outer container has scaled layout size
-                width: `${A4_BASE_WIDTH * calculatedZoom}px`,
-                height: `${totalIframeHeight * calculatedZoom}px`,
-                margin: '32px auto',
-                position: 'relative',
-                flexShrink: 0,
-                backgroundColor: '#E8EDF2',
-                overflow: 'hidden'
-              }}
+              ref={previewContainerRef}
+              className="flex-grow overflow-y-auto overflow-x-auto h-full relative bg-[#E8EDF2] no-scrollbar px-6"
+              onScroll={handleScroll}
             >
-              <iframe
-                ref={shadowContainerRef}
-                className="border-none"
-                title="PDF Preview"
-                scrolling="no"
+              {/*
+                Scale fix: outer div is sized to post-scale visual dimensions
+                so the scroll container never creates unwanted scrollbars.
+                iframe is full unscaled size + scale(zoom) with origin top-left.
+                PAGE_GAP (24px) lives inside the iframe template (gap between .page elements).
+              */}
+              <div
                 style={{
-                  width: `${A4_BASE_WIDTH}px`,
-                  height: `${totalIframeHeight}px`,
-                  zoom: calculatedZoom,
-                  // pointerEvents auto so TOC anchor clicks reach the iframe bridge script;
-                  // wheel events inside the iframe are forwarded to the parent container.
-                  pointerEvents: 'auto',
-                  display: 'block',
-                  filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.22))',
-                  overflow: 'hidden',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0
+                  // outer container has scaled layout size
+                  width: `${A4_BASE_WIDTH * calculatedZoom}px`,
+                  height: `${totalIframeHeight * calculatedZoom}px`,
+                  margin: '24px auto',
+                  position: 'relative',
+                  flexShrink: 0,
+                  backgroundColor: 'transparent',
+                  overflow: 'hidden'
                 }}
-              />
+              >
+                <iframe
+                  ref={shadowContainerRef}
+                  className="border-none"
+                  title="PDF Preview"
+                  scrolling="no"
+                  style={{
+                    width: `${A4_BASE_WIDTH}px`,
+                    height: `${totalIframeHeight}px`,
+                    zoom: calculatedZoom,
+                    // pointerEvents auto so TOC anchor clicks reach the iframe bridge script;
+                    // wheel events inside the iframe are forwarded to the parent container.
+                    pointerEvents: 'auto',
+                    display: 'block',
+                    filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.22))',
+                    overflow: 'hidden',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Slider Gutter (Separate space for slider control) */}
+            <div className="w-12 bg-[#E8EDF2] flex flex-col items-center justify-center relative py-6 h-full select-none flex-shrink-0">
+              <div
+                ref={sliderTrackRef}
+                onMouseDown={handleSliderMouseDown}
+                className="w-8 h-full flex items-center justify-center cursor-pointer relative group/track"
+                title="Drag to scroll report"
+              >
+                {/* The track line */}
+                <div className="w-2 h-full bg-slate-350 dark:bg-slate-800 group-hover/track:bg-slate-400 dark:group-hover/track:bg-slate-700 active:bg-slate-500 dark:active:bg-slate-600 rounded-full transition-all border border-slate-200 dark:border-slate-700/50 shadow-inner" />
+
+                {/* Draggable thumb/handle */}
+                <div
+                  ref={sliderThumbRef}
+                  className="absolute left-1/2 -translate-x-1/2 w-8 h-14 bg-slate-100 dark:bg-slate-900/95 backdrop-blur-md border border-slate-300 dark:border-slate-700/50 hover:border-blue-400/50 active:bg-blue-500 rounded-xl shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center justify-center text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-all select-none"
+                  style={{
+                    top: '0px'
+                  }}
+                >
+                  <GripVertical className="w-4 h-4" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -4154,27 +4156,27 @@ export default function ReportBuilder({
       </div>
 
       {isExporting && (
-        <div className="fixed inset-0 bg-[#070913]/85 backdrop-blur-md z-[100] flex flex-col items-center justify-center gap-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-slate-955/85 backdrop-blur-md z-[100] flex flex-col items-center justify-center gap-4 animate-in fade-in duration-300">
           <div className="relative w-16 h-16">
-            <div className="absolute inset-0 rounded-full border-4 border-white/[0.05]"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-slate-200 dark:border-slate-800"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-blue-400 border-t-transparent animate-spin"></div>
           </div>
-          <div className="text-sm font-semibold tracking-wider text-slate-300 uppercase">Generating PDF Report...</div>
+          <div className="text-sm font-semibold tracking-wider text-slate-350 dark:text-slate-300 uppercase">Generating PDF Report...</div>
           <div className="text-xs text-slate-500">This might take a few seconds for multi-page captures</div>
         </div>
       )}
 
       {showVersionHistoryModal && (
-        <div className="fixed inset-0 bg-[#0B101E]/95 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
-          <div className="w-full max-w-2xl bg-[#131A2B] border border-white/[0.08] rounded-xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[85vh]">
-            <div className="p-6 border-b border-white/[0.05] flex items-center justify-between flex-shrink-0">
-              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Clock className="w-5 h-5 text-blue-500" />
+        <div className="fixed inset-0 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
+          <div className="w-full max-w-2xl bg-slate-900 border border-slate-700/50 rounded-xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[85vh]">
+            <div className="p-6 border-b border-slate-700/50 flex items-center justify-between flex-shrink-0">
+              <h3 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-blue-400" />
                 Manage Version History
               </h3>
               <button
                 onClick={() => setShowVersionHistoryModal(false)}
-                className="p-1.5 hover:bg-white/5 rounded-md text-slate-400 hover:text-white transition-colors"
+                className="p-1.5 hover:bg-slate-800 rounded-md text-slate-400 hover:text-white transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -4182,11 +4184,11 @@ export default function ReportBuilder({
             
             <div className="p-6 overflow-y-auto space-y-4 flex-1">
               <div className="flex justify-between items-center">
-                <p className="text-xs text-slate-400">Track and log iterations of the report.</p>
+                <p className="text-xs text-slate-455">Track and log iterations of the report.</p>
                 <button
                   type="button"
                   onClick={addVersionHistoryItem}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white rounded-lg text-xs font-semibold transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Version</span>
@@ -4194,13 +4196,13 @@ export default function ReportBuilder({
               </div>
 
               {(report.versionHistory || []).length === 0 ? (
-                <div className="border border-dashed border-white/10 rounded-xl p-8 text-center text-slate-500 text-xs">
+                <div className="border border-dashed border-slate-700/50 rounded-xl p-8 text-center text-slate-500 text-xs">
                   No version history recorded. Click "Add Version" to log changes.
                 </div>
               ) : (
                 <div className="space-y-3">
                   {(report.versionHistory || []).map((vh) => (
-                    <div key={vh.id} className="bg-[#0B101E] border border-white/[0.05] p-4 rounded-xl space-y-3 relative group">
+                    <div key={vh.id} className="bg-slate-800 border border-slate-700/50 p-4 rounded-xl space-y-3 relative group">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-slate-400">Version {vh.version || 'New'}</span>
                         <button
@@ -4220,7 +4222,7 @@ export default function ReportBuilder({
                             value={vh.version}
                             onChange={(e) => updateVersionHistoryItem(vh.id, 'version', e.target.value)}
                             placeholder="e.g. 1.0"
-                            className="w-full rounded-lg px-3 py-2 text-xs bg-[#131A2B] text-white border border-white/[0.05] focus:outline-none focus:border-blue-500"
+                            className="w-full rounded-lg px-3 py-2 text-xs bg-slate-900 text-slate-100 border border-slate-700/50 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20"
                           />
                         </div>
                         <div>
@@ -4229,7 +4231,7 @@ export default function ReportBuilder({
                             type="date"
                             value={vh.date}
                             onChange={(e) => updateVersionHistoryItem(vh.id, 'date', e.target.value)}
-                            className="w-full rounded-lg px-3 py-2 text-xs bg-[#131A2B] text-white border border-white/[0.05] focus:outline-none focus:border-blue-500 [color-scheme:dark]"
+                            className="w-full rounded-lg px-3 py-2 text-xs bg-slate-900 text-slate-100 border border-slate-700/50 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 [color-scheme:dark]"
                           />
                         </div>
                         <div>
@@ -4239,7 +4241,7 @@ export default function ReportBuilder({
                             value={vh.author}
                             onChange={(e) => updateVersionHistoryItem(vh.id, 'author', e.target.value)}
                             placeholder="Author Name"
-                            className="w-full rounded-lg px-3 py-2 text-xs bg-[#131A2B] text-white border border-white/[0.05] focus:outline-none focus:border-blue-500"
+                            className="w-full rounded-lg px-3 py-2 text-xs bg-slate-900 text-slate-100 border border-slate-700/50 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20"
                           />
                         </div>
                       </div>
@@ -4250,7 +4252,7 @@ export default function ReportBuilder({
                           value={vh.description}
                           onChange={(e) => updateVersionHistoryItem(vh.id, 'description', e.target.value)}
                           placeholder="e.g. Initial Draft for Internal Review"
-                          className="w-full rounded-lg px-3 py-2 text-xs bg-[#131A2B] text-white border border-white/[0.05] focus:outline-none focus:border-blue-500"
+                          className="w-full rounded-lg px-3 py-2 text-xs bg-slate-900 text-slate-100 border border-slate-700/50 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20"
                         />
                       </div>
                     </div>
@@ -4433,7 +4435,7 @@ export default function ReportBuilder({
                       key={index}
                       type="button"
                       onClick={() => setSelectedLibraryIndex(index)}
-                      className={`w-full text-left p-3 rounded-lg border text-xs transition-all ${isSelected ? 'bg-blue-600/10 border-blue-500 text-blue-400 font-semibold' : 'bg-[#0B101E]/50 border-white/[0.03] hover:border-white/[0.1] text-slate-300 hover:text-white'}`}
+                      className={`w-full text-left p-3.5 rounded-lg border text-xs transition-all ${isSelected ? 'bg-indigo-500/10 border-indigo-400 text-indigo-400 font-semibold shadow-sm' : 'bg-slate-900 border-slate-700/50 hover:bg-slate-800 text-slate-355 hover:text-slate-100'}`}
                     >
                       <div className="flex justify-between items-start gap-2 mb-1.5">
                         <span className="font-semibold truncate flex-1 leading-tight">{item.title}</span>
@@ -4448,12 +4450,12 @@ export default function ReportBuilder({
               </div>
 
               {/* Right Column: Vulnerability details preview */}
-              <div className="w-2/3 overflow-y-auto p-6 flex flex-col justify-between bg-[#0B101E]/30 min-h-0">
+              <div className="w-2/3 overflow-y-auto p-6 flex flex-col justify-between bg-slate-950/30 min-h-0">
                 {selectedLibraryIndex === null ? (
                   <div className="flex-1 flex flex-col items-center justify-center text-center text-slate-500 p-8">
-                    <BookOpen className="w-12 h-12 text-slate-600 mb-3" />
+                    <BookOpen className="w-12 h-12 text-slate-650 mb-3" />
                     <span className="text-xs font-semibold uppercase tracking-wider mb-1">Select a Template</span>
-                    <span className="text-[11px] max-w-xs leading-relaxed">Choose an OWASP Top 10 vulnerability from the catalog to preview prefilled data, or create a custom finding.</span>
+                    <span className="text-[11px] max-w-xs leading-relaxed text-slate-400">Choose an OWASP Top 10 vulnerability from the catalog to preview prefilled data, or create a custom finding.</span>
                   </div>
                 ) : (() => {
                   const selected = OWASP_TOP_10_LIBRARY[selectedLibraryIndex];
@@ -4469,21 +4471,21 @@ export default function ReportBuilder({
                       <div className="space-y-4 flex-1 pr-1.5">
                         <div>
                           <span className="text-[10px] text-blue-400 font-semibold uppercase tracking-wider">{selected.category}</span>
-                          <h4 className="text-base font-bold text-white mt-1 leading-snug">{selected.title}</h4>
+                          <h4 className="text-base font-bold text-slate-100 mt-1 leading-snug">{selected.title}</h4>
                           <div className="flex items-center gap-3 mt-2">
                             <span className="text-xs text-slate-400">Severity: <strong className={sevTextColors[selected.severity]}>{selected.severity}</strong></span>
                             <span className="text-xs text-slate-400">CVSS Base Score: <strong>{selected.cvss}</strong></span>
                           </div>
                         </div>
 
-                        <div className="space-y-3 pt-2 text-xs border-t border-white/[0.05]">
+                        <div className="space-y-3 pt-2 text-xs border-t border-slate-700/50">
                           <div>
                             <strong className="block text-[10px] uppercase text-slate-400 tracking-wider font-bold mb-1">Description</strong>
                             <p className="text-slate-300 leading-relaxed text-[11px] whitespace-pre-wrap">{selected.description}</p>
                           </div>
                           <div>
                             <strong className="block text-[10px] uppercase text-slate-400 tracking-wider font-bold mb-1">Proof of Concept / Output</strong>
-                            <pre className="text-[#A5B4FC] bg-[#090D14] p-3 rounded-lg leading-relaxed font-mono text-[10.5px] overflow-x-auto whitespace-pre-wrap">{selected.poc}</pre>
+                            <pre className="text-indigo-300 bg-slate-950 p-4 rounded-lg leading-relaxed font-mono text-[10.5px] overflow-x-auto whitespace-pre-wrap border border-slate-700/50">{selected.poc}</pre>
                           </div>
                           <div>
                             <strong className="block text-[10px] uppercase text-slate-400 tracking-wider font-bold mb-1">Remediation Steps</strong>
@@ -4493,11 +4495,11 @@ export default function ReportBuilder({
                       </div>
 
                       {/* Modal Actions */}
-                      <div className="pt-4 border-t border-white/[0.05] flex justify-end gap-3 flex-shrink-0 mt-4">
+                      <div className="pt-4 border-t border-slate-700/50 flex justify-end gap-3 flex-shrink-0 mt-4">
                         <button
                           type="button"
                           onClick={() => addPrefilledFinding(selected)}
-                          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-md transition-colors"
+                          className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white rounded-lg text-xs font-semibold shadow-md transition-colors"
                         >
                           Add Selected Finding
                         </button>

@@ -96,13 +96,26 @@
                  sidebarPinned: true,
                  sidebarHovered: false,
                  mobileSidebarOpen: false,
+                 inReportBuilder: false,
                  init() {
                      let storedPinned = localStorage.getItem('sidebar_pinned');
                      this.sidebarPinned = (storedPinned === null || storedPinned === 'true');
+
+                     window.addEventListener('report-builder-active', (e) => {
+                         this.inReportBuilder = e.detail.active;
+                         if (this.inReportBuilder) {
+                             this.sidebarPinned = false;
+                         } else {
+                             let storedPinned = localStorage.getItem('sidebar_pinned');
+                             this.sidebarPinned = (storedPinned === null || storedPinned === 'true');
+                         }
+                     });
                  },
                  togglePinned() {
                      this.sidebarPinned = !this.sidebarPinned;
-                     localStorage.setItem('sidebar_pinned', this.sidebarPinned);
+                     if (!this.inReportBuilder) {
+                         localStorage.setItem('sidebar_pinned', this.sidebarPinned);
+                     }
                  }
              }">
 
@@ -711,7 +724,7 @@
                  </header>
 
                   <!-- Breadcrumbs & Page Title Sub-Header -->
-                  <div class="bg-card border-b border-border px-4 md:px-6 py-2.5 flex items-center justify-between select-none">
+                  <div x-show="!inReportBuilder" class="bg-card border-b border-border px-4 md:px-6 py-2.5 flex items-center justify-between select-none">
                       <div class="flex flex-col">
                           <!-- Breadcrumbs -->
                           <nav class="flex items-center gap-1.5 text-[11px] text-muted-foreground select-none mb-0.5">

@@ -264,28 +264,28 @@ export default function Dashboard({
 
             {/* High-Level Stats Cards */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white dark:bg-[#131A2B] border border-slate-200 dark:border-white/[0.05] rounded-xl p-5 relative overflow-hidden group hover:border-slate-300 dark:hover:border-white/[0.1] transition-colors shadow-sm">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-600 transition-colors shadow-sm">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
                 <div className="flex items-center gap-2 mb-3">
                   <FolderGit2 className="w-4 h-4 text-slate-400" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Engagements</span>
                 </div>
-                <span className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">{reports.length}</span>
+                <span className="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">{reports.length}</span>
               </div>
 
-              <div className="bg-white dark:bg-[#131A2B] border border-slate-200 dark:border-white/[0.05] rounded-xl p-5 relative overflow-hidden group hover:border-slate-300 dark:hover:border-white/[0.1] transition-colors shadow-sm">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-600 transition-colors shadow-sm">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
                 <div className="flex items-center gap-2 mb-3">
                   <Users className="w-4 h-4 text-slate-400" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Clients</span>
                 </div>
-                <span className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">{uniqueClients}</span>
+                <span className="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">{uniqueClients}</span>
               </div>
             </div>
 
             {/* Severity Analytics Chart */}
-            <div className="bg-white dark:bg-[#131A2B] border border-slate-200 dark:border-white/[0.05] rounded-xl p-6 flex flex-col shadow-sm">
-              <h3 className="text-sm font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl p-6 flex flex-col shadow-sm">
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-slate-400" />
                 Report Status Distribution
               </h3>
@@ -326,9 +326,9 @@ export default function Dashboard({
             </div>
 
             {/* Quick Actions & Recent Activity Feed */}
-            <div className="bg-white dark:bg-[#131A2B] border border-slate-200 dark:border-white/[0.05] rounded-xl overflow-hidden flex flex-col shadow-sm">
-              <div className="p-5 border-b border-slate-200 dark:border-white/[0.05]">
-                <h3 className="text-sm font-semibold text-slate-800 dark:text-white flex items-center gap-2">
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden flex flex-col shadow-sm">
+              <div className="p-5 border-b border-slate-200 dark:border-slate-700/50">
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                   <Clock className="w-4 h-4 text-slate-400" />
                   Recent Activity
                 </h3>
@@ -340,14 +340,14 @@ export default function Dashboard({
                   recentActivities.map((activity, idx) => (
                     <div key={activity.id} className="flex gap-4 relative">
                       {idx !== recentActivities.length - 1 && (
-                        <div className="absolute top-6 left-3.5 bottom-[-20px] w-px bg-slate-200 dark:bg-white/[0.05]"></div>
+                        <div className="absolute top-6 left-3.5 bottom-[-20px] w-px bg-slate-200 dark:bg-slate-700/50"></div>
                       )}
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-slate-100 dark:bg-[#1A233A] border border-slate-200 dark:border-white/[0.05] flex items-center justify-center z-10">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center z-10">
                         <activity.icon className={`w-3.5 h-3.5 ${activity.color}`} />
                       </div>
                       <div>
                         <p className="text-sm text-slate-700 dark:text-slate-300">
-                          {activity.action} <span className="font-medium text-slate-900 dark:text-white">{activity.target}</span>
+                          {activity.action} <span className="font-medium text-slate-900 dark:text-slate-100">{activity.target}</span>
                         </p>
                         <span className="text-xs text-slate-500 mt-1 block">{activity.time}</span>
                       </div>
@@ -362,25 +362,25 @@ export default function Dashboard({
           {/* Right Column: Active Reports (col-span-8) */}
           <div className="lg:col-span-8 flex flex-col gap-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Active Reports</h3>
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">Active Reports</h3>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-slate-500">Sort by:</span>
-                <button className="text-xs font-medium text-slate-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 flex items-center gap-1">
+                <button className="text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-blue-500 dark:hover:text-blue-400 flex items-center gap-1">
                   Last Updated <ChevronUp className="w-3 h-3" />
                 </button>
               </div>
             </div>
 
             {reports.length === 0 ? (
-              <div className="bg-white dark:bg-[#131A2B] border border-dashed border-slate-200 dark:border-white/10 rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[400px] shadow-sm">
-                <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.05] flex items-center justify-center mb-4">
+              <div className="bg-white dark:bg-slate-800 border border-dashed border-slate-200 dark:border-slate-700/50 rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[400px] shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center mb-4">
                   <FolderGit2 className="w-8 h-8 text-slate-500" />
                 </div>
-                <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-2">No Active Reports</h3>
+                <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-2">No Active Reports</h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm mb-6">Initialize a new report to begin cataloging vulnerabilities and generating reports.</p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white dark:text-slate-950 font-bold rounded-lg transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)]"
                 >
                   Create New Report
                 </button>
@@ -398,14 +398,14 @@ export default function Dashboard({
                   return (
                     <div
                       key={report.id}
-                      className="group bg-white dark:bg-[#131A2B] border border-slate-200 dark:border-white/[0.05] hover:border-slate-300 dark:hover:border-white/[0.12] rounded-xl p-5 transition-all flex flex-col sm:flex-row gap-5 relative overflow-hidden shadow-sm"
+                      className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl p-5 transition-all flex flex-col sm:flex-row gap-5 relative overflow-hidden shadow-sm"
                     >
                       {/* Subtle gradient hover effect on cards */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/0 to-blue-500/[0.02] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/0 to-blue-400/[0.03] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
 
                       <div className="flex-1">
                         <div className="flex flex-col gap-1.5 mb-2">
-                          <h4 className="text-base font-semibold text-slate-800 dark:text-white break-words">{report.name}</h4>
+                          <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100 break-words">{report.name}</h4>
                           <div className="flex items-center gap-2">
                             {status === 'Final' && (
                               <span className="text-[10px] uppercase tracking-wider font-bold text-[#00C853] bg-[#00C853]/10 border border-[#00C853]/20 px-2 py-0.5 rounded-full">Final</span>
@@ -414,7 +414,7 @@ export default function Dashboard({
                               <span className="text-[10px] uppercase tracking-wider font-bold text-[#FFB020] bg-[#FFB020]/10 border border-[#FFB020]/20 px-2 py-0.5 rounded-full">Review</span>
                             )}
                             {status === 'Draft' && (
-                              <span className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 px-2 py-0.5 rounded-full">Draft</span>
+                              <span className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 px-2 py-0.5 rounded-full">Draft</span>
                             )}
                           </div>
                         </div>
@@ -434,31 +434,31 @@ export default function Dashboard({
                         {/* Severity Badges (Linear Style) */}
                         <div className="flex items-center gap-2 flex-wrap">
                           {critCount > 0 && (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-[#1C2438] border border-slate-200/60 dark:border-white/[0.03]">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/50">
                               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.Critical }}></div>
                               <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{critCount} Critical</span>
                             </div>
                           )}
                           {highCount > 0 && (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-[#1C2438] border border-slate-200/60 dark:border-white/[0.03]">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/50">
                               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.High }}></div>
                               <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{highCount} High</span>
                             </div>
                           )}
                           {medCount > 0 && (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-[#1C2438] border border-slate-200/60 dark:border-white/[0.03]">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/50">
                               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.Medium }}></div>
                               <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{medCount} Medium</span>
                             </div>
                           )}
                           {lowCount > 0 && (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-[#1C2438] border border-slate-200/60 dark:border-white/[0.03]">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/50">
                               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.Low }}></div>
                               <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{lowCount} Low</span>
                             </div>
                           )}
                           {infoCount > 0 && (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-[#1C2438] border border-slate-200/60 dark:border-white/[0.03]">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/50">
                               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.Info }}></div>
                               <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{infoCount} Info</span>
                             </div>
@@ -470,7 +470,7 @@ export default function Dashboard({
                       </div>
 
                       {/* Card Actions */}
-                      <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-white/[0.05] pt-4 sm:pt-0 sm:pl-5 mt-2 sm:mt-0 relative z-10">
+                      <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-700/50 pt-4 sm:pt-0 sm:pl-5 mt-2 sm:mt-0 relative z-10">
                         <button
                           onClick={() => setReportToDelete(report.id)}
                           className="p-1.5 text-slate-500 hover:text-[#FF4D6D] hover:bg-[#FF4D6D]/10 rounded-md transition-all"
@@ -481,7 +481,7 @@ export default function Dashboard({
 
                         <button
                           onClick={() => onSelectReport(report.id)}
-                          className="flex items-center gap-2 bg-slate-100 dark:bg-white/[0.03] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.05] px-4 py-2 rounded-lg text-sm font-medium text-slate-800 dark:text-white transition-all group-hover:border-slate-300 dark:group-hover:border-white/10"
+                          className="flex items-center gap-2 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 px-4 py-2 rounded-lg text-sm font-medium text-slate-800 dark:text-slate-100 transition-all group-hover:border-slate-300 dark:group-hover:border-slate-600"
                         >
                           Editor <ArrowRight className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-white transition-colors" />
                         </button>
@@ -497,10 +497,10 @@ export default function Dashboard({
 
       {/* Create Report Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-slate-900/60 dark:bg-[#0B101E]/90 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
-          <div className="w-full max-w-md bg-white dark:bg-[#131A2B] border border-slate-200 dark:border-white/[0.08] rounded-xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
+          <div className="w-full max-w-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
             <div className="p-6">
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-2">
                 <Terminal className="w-5 h-5 text-blue-500" />
                 Create New Report
               </h3>
@@ -517,7 +517,7 @@ export default function Dashboard({
                     value={newReportName}
                     onChange={(e) => setNewReportName(e.target.value)}
                     placeholder="e.g. Q3 External Pentest"
-                    className="w-full rounded-lg bg-slate-50 dark:bg-[#0B101E] border border-slate-200 dark:border-white/[0.1] px-4 py-2.5 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 px-4 py-3 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-400 dark:focus:border-blue-400 focus:ring-1 focus:ring-blue-400/20 dark:focus:ring-blue-400/20 transition-all hover:bg-slate-100 dark:hover:bg-slate-750"
                   />
                 </div>
                 {templates && templates.length > 1 && (
@@ -528,17 +528,17 @@ export default function Dashboard({
                     <select
                       value={selectedTemplateId}
                       onChange={(e) => setSelectedTemplateId(e.target.value)}
-                      className="w-full rounded-lg bg-slate-50 dark:bg-[#0B101E] border border-slate-200 dark:border-white/[0.1] px-4 py-2.5 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="w-full rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 px-4 py-3 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-400 dark:focus:border-blue-400 focus:ring-1 focus:ring-blue-400/20 dark:focus:ring-blue-400/20 transition-all hover:bg-slate-100 dark:hover:bg-slate-750"
                     >
                       {templates.map((t) => (
-                        <option key={t.id} value={t.id} className="text-slate-800 dark:text-white">
+                        <option key={t.id} value={t.id} className="text-slate-800 dark:text-slate-100">
                           {t.name} {t.isDefault ? '(Default)' : ''}
                         </option>
                       ))}
                     </select>
                   </div>
                 )}
-                <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-white/[0.05]">
+                <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-slate-700/50">
                   <button
                     type="button"
                     onClick={() => {
@@ -552,7 +552,7 @@ export default function Dashboard({
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-slate-900 text-white dark:bg-white dark:text-[#0B101E] hover:bg-slate-800 dark:hover:bg-slate-100 text-sm font-semibold rounded-lg transition-all shadow-md dark:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                    className="px-5 py-2.5 bg-slate-900 text-white dark:bg-blue-500 dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-blue-400 text-sm font-bold rounded-lg transition-all shadow-md dark:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
                   >
                     Create Report
                   </button>
@@ -565,18 +565,18 @@ export default function Dashboard({
 
       {/* Delete Confirmation Modal */}
       {reportToDelete && (
-        <div className="fixed inset-0 bg-slate-900/60 dark:bg-[#0B101E]/90 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
-          <div className="w-full max-w-md bg-white dark:bg-[#131A2B] border border-slate-200 dark:border-white/[0.08] rounded-xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
+          <div className="w-full max-w-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
             <div className="p-6">
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-500" />
                 Delete Report
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
-                Are you sure you want to delete <span className="font-semibold text-slate-900 dark:text-white">"{reports.find(r => r.id === reportToDelete)?.name}"</span>? This action cannot be undone.
+                Are you sure you want to delete <span className="font-semibold text-slate-900 dark:text-slate-100">"{reports.find(r => r.id === reportToDelete)?.name}"</span>? This action cannot be undone.
               </p>
 
-              <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-white/[0.05]">
+              <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-slate-700/50">
                 <button
                   type="button"
                   onClick={() => setReportToDelete(null)}
