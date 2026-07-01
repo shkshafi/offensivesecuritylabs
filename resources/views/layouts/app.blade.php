@@ -532,20 +532,42 @@
                                  }, 30000);
                              },
                              fetchUnreadCount() {
-                                 fetch('{{ route('dashboard.notifications.unread-count') }}')
-                                     .then(res => res.json())
-                                     .then(data => {
-                                         this.unreadCount = data.count;
-                                     });
+                                 fetch('{{ route('dashboard.notifications.unread-count') }}', {
+                                     headers: {
+                                         'Accept': 'application/json'
+                                     }
+                                 })
+                                 .then(res => {
+                                     if (res.status === 401) {
+                                         window.location.reload();
+                                         return null;
+                                     }
+                                     return res.json();
+                                 })
+                                 .then(data => {
+                                     if (data) this.unreadCount = data.count;
+                                 });
                              },
                              fetchRecent() {
                                  this.loading = true;
-                                 fetch('{{ route('dashboard.notifications.recent') }}')
-                                     .then(res => res.json())
-                                     .then(data => {
+                                 fetch('{{ route('dashboard.notifications.recent') }}', {
+                                     headers: {
+                                         'Accept': 'application/json'
+                                     }
+                                 })
+                                 .then(res => {
+                                     if (res.status === 401) {
+                                         window.location.reload();
+                                         return null;
+                                     }
+                                     return res.json();
+                                 })
+                                 .then(data => {
+                                     if (data) {
                                          this.notifications = data.notifications;
                                          this.loading = false;
-                                     });
+                                     }
+                                 });
                              },
                              toggle() {
                                  this.open = !this.open;

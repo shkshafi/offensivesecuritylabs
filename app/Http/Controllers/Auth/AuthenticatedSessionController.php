@@ -28,7 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $intended = session()->pull('url.intended', route('dashboard', absolute: false));
+
+        if (preg_match('/(notifications|unread-count|recent)/i', $intended)) {
+            $intended = route('dashboard', absolute: false);
+        }
+
+        return redirect()->to($intended);
     }
 
     /**
