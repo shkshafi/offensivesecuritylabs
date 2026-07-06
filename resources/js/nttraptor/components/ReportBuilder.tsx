@@ -565,6 +565,9 @@ export default function ReportBuilder({
   const [activeSection, setActiveSection] = useState<'info' | 'summary' | 'goals_scenarios' | 'findings' | 'supplemental' | 'appendices' | 'custom'>('info');
   const [expandedCustomSection, setExpandedCustomSection] = useState<string | null>(null);
   const [isCustomSaved, setIsCustomSaved] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const lastSavedReportRef = useRef<Report>(report);
+  const saveTimeoutRef = useRef<any>(null);
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('report-builder-active', { detail: { active: true } }));
@@ -911,7 +914,13 @@ export default function ReportBuilder({
   // Autosave report locally when it changes
   useEffect(() => {
     onSaveReport(report);
-  }, [report]);
+  }, [report, onSaveReport]);
+
+  // Sync lastSavedReportRef when a different report is loaded
+  useEffect(() => {
+    lastSavedReportRef.current = report;
+    setSaveStatus('idle');
+  }, [report.id]);
 
   // Update internal state if initialReport changes
   useEffect(() => {
@@ -941,6 +950,34 @@ export default function ReportBuilder({
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
   }, []);
+
+  const handleFieldBlur = () => {
+    setTimeout(() => {
+      setReport(currentReport => {
+        if (JSON.stringify(lastSavedReportRef.current) !== JSON.stringify(currentReport)) {
+          setSaveStatus('saving');
+          
+          if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+          }
+          
+          const timerId = setTimeout(() => {
+            setSaveStatus('saved');
+            
+            const resetTimerId = setTimeout(() => {
+              setSaveStatus('idle');
+            }, 2000);
+            
+            saveTimeoutRef.current = resetTimerId;
+          }, 800);
+
+          saveTimeoutRef.current = timerId;
+          lastSavedReportRef.current = currentReport;
+        }
+        return currentReport;
+      });
+    }, 50);
+  };
 
   // Track the most-recently-edited section so we can auto-scroll the preview to it.
   const [editTarget, setEditTarget] = useState<{ id: string; ts: number } | null>(null);
@@ -2692,6 +2729,7 @@ export default function ReportBuilder({
         {/* Column 2: Center Editor Panel (hidden in fullscreen preview) */}
         <div
           className={`flex flex-col bg-white dark:bg-slate-900 h-full border-r border-slate-200 dark:border-slate-700/50 flex-1 ${isFullscreen ? 'hidden' : ''}`}
+          onBlur={handleFieldBlur}
         >
           {/* Chrome-style tabs */}
           {!isFullscreen && (
@@ -2736,9 +2774,23 @@ export default function ReportBuilder({
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{activeMeta.desc}</p>
             </div>
             
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Auto-saved</span>
+            <div className={`flex items-center gap-1.5 px-3 py-1 border rounded-full text-xs font-semibold transition-all duration-300 ${
+              saveStatus === 'saving'
+                ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-405 shadow-[0_0_8px_rgba(59,130,246,0.1)]'
+                : saveStatus === 'saved'
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.1)]'
+                : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+            }`}>
+              {saveStatus === 'saving' ? (
+                <Loader2 className="w-3 h-3 animate-spin text-blue-500 dark:text-blue-400" />
+              ) : saveStatus === 'saved' ? (
+                <Check className="w-3 h-3 text-emerald-500 dark:text-emerald-400 stroke-[3]" />
+              ) : (
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              )}
+              <span className="transition-all duration-200">
+                {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Auto-saved'}
+              </span>
             </div>
           </div>
 
@@ -2746,9 +2798,9 @@ export default function ReportBuilder({
           <div className="flex-1 overflow-y-auto p-6 space-y-5">
             {activeSection === 'info' && (
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {/* Client / Target */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
                     <Building2 className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Client / Target</label>
@@ -2762,8 +2814,23 @@ export default function ReportBuilder({
                     </div>
                   </div>
 
+                  {/* Lead Analyst */}
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                    <User className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Lead Analyst</label>
+                      <input
+                        type="text"
+                        value={report.author}
+                        onChange={(e) => updateReportField('author', e.target.value)}
+                        placeholder="Analyst Name"
+                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-455 dark:placeholder-slate-500"
+                      />
+                    </div>
+                  </div>
+
                   {/* Document Version */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
                     <Hash className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Document Version</label>
@@ -2777,51 +2844,8 @@ export default function ReportBuilder({
                     </div>
                   </div>
 
-                  {/* Assessment Date Range */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-start gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
-                    <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0 mt-1" />
-                    <div className="flex-1 min-w-0">
-                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Assessment Date Range</label>
-                      <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[9px] text-slate-500 uppercase tracking-wider w-8 flex-shrink-0">From</span>
-                          <input
-                            type="date"
-                            value={report.date}
-                            onChange={(e) => updateReportField('date', e.target.value)}
-                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0"
-                          />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[9px] text-slate-500 uppercase tracking-wider w-8 flex-shrink-0">To</span>
-                          <input
-                            type="date"
-                            value={report.dateEnd || report.date}
-                            min={report.date}
-                            onChange={(e) => updateReportField('dateEnd', e.target.value)}
-                            className="flex-1 bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Report Date */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
-                    <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Report Date</label>
-                      <input
-                        type="date"
-                        value={report.reportDate || report.date}
-                        onChange={(e) => updateReportField('reportDate', e.target.value)}
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0"
-                      />
-                    </div>
-                  </div>
-
                   {/* Status */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750 relative">
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750 relative">
                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
                       report.status === 'Final' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' :
                       report.status === 'Review in progress' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' :
@@ -2832,7 +2856,7 @@ export default function ReportBuilder({
                       <select
                         value={report.status || 'Draft'}
                         onChange={(e) => updateReportField('status', e.target.value)}
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-6 font-sans"
+                        className="w-full bg-transparent bg-none border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-6 font-sans"
                         style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
                       >
                         <option value="Draft" className="bg-white dark:bg-slate-850 text-slate-800 dark:text-slate-100">Draft</option>
@@ -2843,17 +2867,46 @@ export default function ReportBuilder({
                     <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 pointer-events-none" />
                   </div>
 
-                  {/* Lead Analyst */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750 sm:col-span-2">
-                    <User className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                  {/* Assessment Date Range */}
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                    <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Lead Analyst</label>
+                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Assessment Date Range</label>
+                      <div className="flex items-center gap-3 mt-0.5">
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                          <span className="text-[9px] text-slate-500 uppercase tracking-wider flex-shrink-0">From</span>
+                          <input
+                            type="date"
+                            value={report.date}
+                            onChange={(e) => updateReportField('date', e.target.value)}
+                            className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 dark:[color-scheme:dark] dark:[&::-webkit-calendar-picker-indicator]:invert"
+                          />
+                        </div>
+                        <span className="text-slate-300 dark:text-slate-700 select-none">|</span>
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                          <span className="text-[9px] text-slate-500 uppercase tracking-wider flex-shrink-0">To</span>
+                          <input
+                            type="date"
+                            value={report.dateEnd || report.date}
+                            min={report.date}
+                            onChange={(e) => updateReportField('dateEnd', e.target.value)}
+                            className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 dark:[color-scheme:dark] dark:[&::-webkit-calendar-picker-indicator]:invert"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Report Date */}
+                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                    <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Report Date</label>
                       <input
-                        type="text"
-                        value={report.author}
-                        onChange={(e) => updateReportField('author', e.target.value)}
-                        placeholder="Analyst Name"
-                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-455 dark:placeholder-slate-500"
+                        type="date"
+                        value={report.reportDate || report.date}
+                        onChange={(e) => updateReportField('reportDate', e.target.value)}
+                        className="w-full bg-transparent border-none p-0 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 dark:[color-scheme:dark] dark:[&::-webkit-calendar-picker-indicator]:invert"
                       />
                     </div>
                   </div>

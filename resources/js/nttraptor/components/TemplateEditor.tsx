@@ -14,7 +14,9 @@ import {
   ChevronUp,
   ChevronDown,
   ZoomIn,
-  ZoomOut
+  ZoomOut,
+  Loader2,
+  Check
 } from 'lucide-react';
 import { DEFAULT_TEMPLATE } from '../utils/defaultTemplate';
 
@@ -115,6 +117,9 @@ export default function TemplateEditor({
 }: TemplateEditorProps) {
   const [templateCode, setTemplateCode] = useState(currentTemplate);
   const [showSavedToast, setShowSavedToast] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const lastSavedTemplateCodeRef = useRef<string>(templateCode);
+  const saveTimeoutRef = useRef<any>(null);
   const shadowContainerRef = useRef<HTMLIFrameElement>(null);
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -207,6 +212,12 @@ export default function TemplateEditor({
     return () => clearTimeout(timer);
   }, [templateCode, onSaveTemplate]);
 
+  // Sync lastSavedTemplateCodeRef when template changes/loads
+  useEffect(() => {
+    lastSavedTemplateCodeRef.current = currentTemplate;
+    setSaveStatus('idle');
+  }, [currentTemplate]);
+
   // Observe container size to compute auto-zoom factors
   useEffect(() => {
     const container = previewContainerRef.current;
@@ -224,6 +235,34 @@ export default function TemplateEditor({
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
   }, []);
+
+  const handleFieldBlur = () => {
+    setTimeout(() => {
+      setTemplateCode(currentCode => {
+        if (lastSavedTemplateCodeRef.current !== currentCode) {
+          setSaveStatus('saving');
+          
+          if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+          }
+          
+          const timerId = setTimeout(() => {
+            setSaveStatus('saved');
+            
+            const resetTimerId = setTimeout(() => {
+              setSaveStatus('idle');
+            }, 2000);
+            
+            saveTimeoutRef.current = resetTimerId;
+          }, 800);
+
+          saveTimeoutRef.current = timerId;
+          lastSavedTemplateCodeRef.current = currentCode;
+        }
+        return currentCode;
+      });
+    }, 50);
+  };
 
   // Programmatically determine total page count inside iframe
   const calculateTotalPages = () => {
@@ -1083,8 +1122,28 @@ export default function TemplateEditor({
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <span className="text-xs text-blue-500 font-bold uppercase tracking-wider block mb-0.5">Template Configuration</span>
-            <h2 className="text-sm font-semibold text-slate-850 dark:text-white leading-tight">Edit Report Template</h2>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-blue-500 font-bold uppercase tracking-wider block">Template Configuration</span>
+              <div className={`flex items-center gap-1.5 px-2 py-0.5 border rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${
+                saveStatus === 'saving'
+                  ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.1)]'
+                  : saveStatus === 'saved'
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.1)]'
+                  : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+              }`}>
+                {saveStatus === 'saving' ? (
+                  <Loader2 className="w-2.5 h-2.5 animate-spin text-blue-500 dark:text-blue-400" />
+                ) : saveStatus === 'saved' ? (
+                  <Check className="w-2.5 h-2.5 text-emerald-500 dark:text-emerald-400 stroke-[3]" />
+                ) : (
+                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>
+                )}
+                <span>
+                  {saveStatus === 'saving' ? 'Saving' : saveStatus === 'saved' ? 'Saved' : 'Auto-saved'}
+                </span>
+              </div>
+            </div>
+            <h2 className="text-sm font-semibold text-slate-850 dark:text-white leading-tight mt-0.5">Edit Report Template</h2>
           </div>
         </div>
 
@@ -1264,6 +1323,7 @@ export default function TemplateEditor({
             ref={textareaRef}
             value={templateCode}
             onChange={(e) => setTemplateCode(e.target.value)}
+            onBlur={handleFieldBlur}
             className="flex-1 w-full bg-slate-955 dark:bg-slate-950 text-slate-300 font-mono text-sm p-5 focus:outline-none resize-none leading-relaxed"
             placeholder="<html>...</html>"
             spellCheck="false"

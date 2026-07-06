@@ -1079,5 +1079,17 @@ button:active, .btn:active, [type="submit"]:active, [type="button"]:active, a.in
   background: hsl(var(--primary) / 0.9) !important;
 }
 
+/* Fix native calendar picker icon color in dark mode */
+.dark input[type="date"] {
+  color-scheme: dark !important;
+}
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  filter: invert(1) !important;
+  opacity: 1 !important;
+  cursor: pointer;
+}
+
+
 
 
