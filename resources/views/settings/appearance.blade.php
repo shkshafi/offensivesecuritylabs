@@ -3,7 +3,7 @@
         
         @if (session('status') === 'appearance-updated')
             <div class="mb-6 p-3.5 rounded-[8px] border border-success/20 bg-success/10 text-success text-xs font-medium flex items-center gap-2">
-                <svg class="h-4.5 w-4.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 <span>Appearance preferences saved successfully.</span>
             </div>
         @endif

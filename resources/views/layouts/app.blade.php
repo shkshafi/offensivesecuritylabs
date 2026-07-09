@@ -432,7 +432,7 @@
                               </span>
                               <input x-ref="searchInput" type="text" placeholder="Search resources..." class="w-full h-8 pl-7 pr-10 rounded-[6px] border border-border bg-background/50 text-[11px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-background focus:border-primary transition-colors focus:ring-1 focus:ring-primary/20">
                               <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
-                                  <kbd class="inline-flex h-4.5 items-center rounded border border-border bg-muted px-1 font-mono text-[9px] font-medium text-muted-foreground/60">
+                                  <kbd class="inline-flex h-4 items-center rounded border border-border bg-muted px-1 font-mono text-[9px] font-medium text-muted-foreground/60">
                                       <span class="text-[8px] mr-0.5">⌘</span>K
                                   </kbd>
                               </div>
