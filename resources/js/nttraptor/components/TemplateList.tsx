@@ -37,22 +37,22 @@ export default function TemplateList({
 
   return (
     <div className="min-h-screen bg-transparent text-slate-700 dark:text-slate-200 font-sans selection:bg-blue-500/30">
-      <main className="w-full px-6 py-8">
+      <main className="w-full px-10 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 pt-4 pb-2 mb-8 border-b border-slate-200 dark:border-slate-700/50">
           <div className="flex items-center gap-4">
             <button
               onClick={onClose}
-              className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all"
+              className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all"
               title="Back to Dashboard"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-800 dark:text-white flex items-center gap-2">
-                Template
+                Template{' '}
                 <span className="bg-gradient-to-br from-blue-500 to-indigo-500 bg-clip-text text-transparent">
-                  Settings
+                  settings
                 </span>
               </h1>
               <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-0.5">
@@ -63,11 +63,11 @@ export default function TemplateList({
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="ntt-btn-glowing w-auto shrink-0"
+            className="ntt-btn-glowing w-auto shrink-0 !rounded-full"
           >
-            <span className="ntt-btn-glowing-inner py-2 px-4 h-full">
+            <span className="ntt-btn-glowing-inner py-2 px-4 h-full !rounded-full">
               <Plus className="w-4 h-4" />
-              <span>Create New Template</span>
+              <span>Create template</span>
             </span>
           </button>
         </div>
@@ -118,10 +118,10 @@ export default function TemplateList({
 
                 <button
                   onClick={() => onEditTemplate(template.id)}
-                  className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700/50 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-800 dark:text-white transition-all group-hover:border-slate-300 dark:group-hover:border-slate-650"
+                  className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700/50 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-800 dark:text-white transition-all group-hover:border-slate-300 dark:group-hover:border-slate-650"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
-                  <span>Edit</span>
+                  <span>Edit template</span>
                 </button>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function TemplateList({
             <div className="p-6">
               <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-blue-500" />
-                Create New Template
+                Create new template
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
                 Enter a name for the new template. It will copy the current default template as its base content.
@@ -144,8 +144,8 @@ export default function TemplateList({
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
-                    Template Name
+                  <label className="block text-xs font-medium text-slate-500 dark:text-slate-300 mb-1.5">
+                    Template name
                   </label>
                   <input
                     type="text"
@@ -169,9 +169,9 @@ export default function TemplateList({
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-slate-900 text-white dark:bg-gradient-to-r dark:from-blue-500 dark:to-indigo-500 dark:text-white hover:bg-slate-800 dark:hover:from-blue-400 dark:hover:to-indigo-400 text-sm font-semibold rounded-lg transition-all shadow-md dark:shadow-[0_0_15px_rgba(96,165,250,0.15)]"
+                    className="px-5 py-2 bg-slate-900 text-white dark:bg-gradient-to-r dark:from-blue-500 dark:to-indigo-500 dark:text-white hover:bg-slate-800 dark:hover:from-blue-400 dark:hover:to-indigo-400 text-sm font-semibold rounded-full transition-all shadow-md dark:shadow-[0_0_15px_rgba(96,165,250,0.15)]"
                   >
-                    Create Template
+                    Create template
                   </button>
                 </div>
               </form>
@@ -187,7 +187,7 @@ export default function TemplateList({
             <div className="p-6">
               <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2 flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-500" />
-                Delete Template
+                Delete template
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
                 Are you sure you want to delete the template <span className="font-semibold text-slate-900 dark:text-white">"{templates.find(t => t.id === templateToDelete)?.name}"</span>? This action cannot be undone.
@@ -209,9 +209,9 @@ export default function TemplateList({
                       setTemplateToDelete(null);
                     }
                   }}
-                  className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)]"
+                  className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-full transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)]"
                 >
-                  Delete
+                  Delete template
                 </button>
               </div>
             </div>

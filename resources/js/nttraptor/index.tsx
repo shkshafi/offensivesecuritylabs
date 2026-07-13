@@ -227,8 +227,14 @@ export default function ReportCreatorIndex() {
     try {
       // Set Auth Status
       setIsLoggedIn(true);
+      const parts = window.location.pathname.split('/');
+      const builderId = window.location.pathname.includes('/dashboard/builder') ? parts[parts.length - 1] : null;
+
       if (window.location.pathname.includes('/templates')) {
         setPage('template_list');
+      } else if (builderId && builderId !== 'builder') {
+        setActiveReportId(builderId);
+        setPage('builder');
       } else {
         setPage('dashboard');
       }
@@ -303,6 +309,15 @@ export default function ReportCreatorIndex() {
     const handlePopState = () => {
       if (window.location.pathname.includes('/templates')) {
         setPage('template_list');
+      } else if (window.location.pathname.includes('/dashboard/builder')) {
+        const parts = window.location.pathname.split('/');
+        const id = parts[parts.length - 1];
+        if (id && id !== 'builder') {
+          setActiveReportId(id);
+          setPage('builder');
+        } else {
+          setPage('dashboard');
+        }
       } else {
         setPage('dashboard');
       }
@@ -355,6 +370,8 @@ export default function ReportCreatorIndex() {
     localStorage.setItem(reportsKey, JSON.stringify(updatedReports));
     setActiveReportId(newReport.id);
     setPage('builder');
+    window.history.pushState(null, '', `/dashboard/builder/${newReport.id}`);
+    window.dispatchEvent(new Event('pushstate-changed'));
   };
 
   const handleSaveReport = (updatedReport: Report) => {
@@ -462,7 +479,7 @@ export default function ReportCreatorIndex() {
     return (
       <div className="min-h-screen bg-[#0A0F1C] flex flex-col justify-center items-center font-sans text-zinc-500">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#3B82F6] mb-4"></div>
-        <span className="text-sm font-medium tracking-wider">LAUNCHING SYSTEMS...</span>
+        <span className="text-sm font-medium tracking-wider">Launching systems...</span>
       </div>
     );
   }
@@ -481,11 +498,14 @@ export default function ReportCreatorIndex() {
           onSelectReport={(id) => {
             setActiveReportId(id);
             setPage('builder');
+            window.history.pushState(null, '', `/dashboard/builder/${id}`);
+            window.dispatchEvent(new Event('pushstate-changed'));
           }}
           onDeleteReport={handleDeleteReport}
           onEditTemplate={() => {
             setPage('template_list');
-            window.history.pushState(null, '', '/report-creator/templates');
+            window.history.pushState(null, '', '/dashboard/templates');
+            window.dispatchEvent(new Event('pushstate-changed'));
           }}
           onLogout={() => {}}
           username={username}
@@ -507,7 +527,8 @@ export default function ReportCreatorIndex() {
           onDeleteTemplate={handleDeleteTemplate}
           onClose={() => {
             setPage('dashboard');
-            window.history.pushState(null, '', '/report-creator');
+            window.history.pushState(null, '', '/dashboard');
+            window.dispatchEvent(new Event('pushstate-changed'));
           }}
         />
       )}
@@ -520,6 +541,8 @@ export default function ReportCreatorIndex() {
           onClose={() => {
             setActiveReportId(null);
             setPage('dashboard');
+            window.history.pushState(null, '', '/dashboard');
+            window.dispatchEvent(new Event('pushstate-changed'));
           }}
         />
       )}

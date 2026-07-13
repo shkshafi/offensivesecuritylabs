@@ -41,7 +41,8 @@ import {
   X,
   Copy,
   Eye,
-  Check
+  Check,
+  Edit
 } from 'lucide-react';
 
 interface FindingScreenshot {
@@ -425,7 +426,7 @@ function AITextarea({
 
   return (
     <div className="relative w-full group flex flex-col gap-1.5">
-      <div className="flex items-center gap-1.5 bg-[#0f1424] border border-white/[0.06] rounded-t-lg p-1.5 w-full">
+      <div className="flex items-center gap-1.5 bg-slate-100/50 dark:bg-[#0f1424]/40 border border-slate-200/25 dark:border-slate-800/65 rounded-t-xl p-1.5 w-full">
         <button
           type="button"
           onClick={() => handleFormat('bold')}
@@ -442,7 +443,7 @@ function AITextarea({
         >
           <Italic className="w-3.5 h-3.5" />
         </button>
-        <div className="w-px h-3.5 bg-white/[0.1] mx-1"></div>
+        <div className="w-px h-3.5 bg-slate-200 dark:bg-white/[0.1] mx-1"></div>
         <button
           type="button"
           onClick={() => handleFormat('bullet')}
@@ -479,7 +480,7 @@ function AITextarea({
             }
           }}
           placeholder={placeholder}
-          className={`${className} pr-32 !rounded-t-none`}
+          className="w-full bg-slate-50/20 dark:bg-[#0a0f1d]/30 text-slate-850 dark:text-slate-100 border border-t-0 border-slate-200/25 dark:border-slate-800/65 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/10 rounded-b-xl p-3 text-sm focus:outline-none placeholder-slate-400 dark:placeholder-slate-600 transition-all font-sans leading-relaxed pr-32 !rounded-t-none"
         />
         {value && value.trim() && (
           <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
@@ -524,6 +525,7 @@ export default function ReportBuilder({
   onClose
 }: ReportBuilderProps) {
   const [report, setReport] = useState<Report>({ ...initialReport });
+  const [isEditingName, setIsEditingName] = useState(false);
   const [aiModel, setAiModel] = useState<string>('llama-3.3-70b-versatile');
   const [availableModels, setAvailableModels] = useState<string[]>([]);
 
@@ -2660,12 +2662,46 @@ export default function ReportBuilder({
                 {report.classification}
               </span>
             </div>
-            <input
-              type="text"
-              value={report.name}
-              onChange={(e) => updateReportField('name', e.target.value)}
-              className="bg-white dark:bg-slate-950/40 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-1 text-sm font-extrabold text-slate-800 dark:text-slate-100 mt-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 w-full shadow-sm"
-            />
+            {isEditingName ? (
+              <div className="flex items-center gap-2 mt-1 w-full max-w-md">
+                <input
+                  type="text"
+                  value={report.name}
+                  onChange={(e) => updateReportField('name', e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setIsEditingName(false);
+                      handleFieldBlur();
+                    }
+                  }}
+                  autoFocus
+                  className="bg-white dark:bg-slate-950/40 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-1 text-sm font-extrabold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 w-full shadow-sm"
+                />
+                <button
+                  onClick={() => {
+                    setIsEditingName(false);
+                    handleFieldBlur();
+                  }}
+                  className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-450 hover:bg-emerald-500/20 flex items-center justify-center flex-shrink-0 transition-colors"
+                  title="Save name"
+                >
+                  <Check className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 mt-1.5 group/title">
+                <h1 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 truncate max-w-sm sm:max-w-md">
+                  {report.name}
+                </h1>
+                <button
+                  onClick={() => setIsEditingName(true)}
+                  className="p-1 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors flex-shrink-0"
+                  title="Edit report name"
+                >
+                  <Edit className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -2702,7 +2738,7 @@ export default function ReportBuilder({
           <button
             onClick={handleExportPlaywrightPDF}
             disabled={isGeneratingPlaywrightPDF}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] ${
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] ${
               isGeneratingPlaywrightPDF 
                 ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed border border-white/[0.05]' 
                 : 'bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]'
@@ -2728,44 +2764,62 @@ export default function ReportBuilder({
 
         {/* Column 2: Center Editor Panel (hidden in fullscreen preview) */}
         <div
-          className={`flex flex-col bg-white dark:bg-slate-900 h-full border-r border-slate-200 dark:border-slate-700/50 flex-1 ${isFullscreen ? 'hidden' : ''}`}
+          className={`flex bg-white dark:bg-slate-900 h-full border-r border-slate-200 dark:border-slate-700/50 flex-1 ${isFullscreen ? 'hidden' : ''}`}
           onBlur={handleFieldBlur}
         >
-          {/* Chrome-style tabs */}
+          {/* Vertical Progressometer Stepper Sidebar */}
           {!isFullscreen && (
-            <div className="flex items-end bg-slate-200 dark:bg-slate-950 px-2 pt-2 border-b border-slate-300 dark:border-slate-700/50 overflow-x-auto no-scrollbar flex-nowrap flex-shrink-0 select-none">
-              {sections.map((sec, idx) => {
-                const isActive = activeSection === sec.id;
-                const status = sectionsStatus[sec.id as keyof typeof sectionsStatus];
-                
-                let dotColor = "bg-rose-500 shadow-[0_0_6px_rgba(239,68,68,0.4)]";
-                if (sec.noBadge || status === 'Complete') {
-                  dotColor = "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]";
-                } else if (status === 'In Progress') {
-                  dotColor = "bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.4)]";
-                }
+            <div className="w-56 bg-slate-50 dark:bg-slate-950/40 border-r border-slate-200/40 dark:border-slate-850/40 flex flex-col p-4 select-none shrink-0 overflow-y-auto no-scrollbar">
+              <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">
+                Report sections
+              </div>
+              <div className="flex flex-col gap-2 relative">
+                {/* Stepper timeline line */}
+                <div className="absolute left-[23px] top-4 bottom-4 w-0.5 bg-slate-205 dark:bg-slate-800 pointer-events-none z-0"></div>
+                {sections.map((sec, idx) => {
+                  const isActive = activeSection === sec.id;
+                  const status = sectionsStatus[sec.id as keyof typeof sectionsStatus];
+                  
+                  let dotColor = "bg-rose-500 shadow-[0_0_6px_rgba(239,68,68,0.4)]";
+                  if (sec.noBadge || status === 'Complete') {
+                    dotColor = "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]";
+                  } else if (status === 'In Progress') {
+                    dotColor = "bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.4)]";
+                  }
 
-                return (
-                  <button
-                    key={sec.id}
-                    onClick={() => setActiveSection(sec.id as any)}
-                    className={`flex items-center gap-2 px-4 py-3 text-xs font-bold rounded-t-xl transition-all relative z-10 flex-shrink-0 -mb-[1px] border-t-2 border-x ${
-                      isActive 
-                        ? 'bg-white dark:bg-slate-900 border-t-blue-500 border-x-slate-300 dark:border-x-slate-700/50 border-b-transparent text-blue-600 dark:text-blue-455 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.25)] z-20 scale-105 origin-bottom' 
-                        : 'bg-slate-100/70 dark:bg-slate-900/40 border-t-transparent border-x-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border-b-slate-200 dark:border-b-slate-700/50 hover:scale-[1.02] origin-bottom'
-                    }`}
-                    style={{
-                      minWidth: '120px',
-                    }}
-                  >
-                    <span className="text-[9px] text-slate-550 dark:text-slate-500 font-mono">0{idx + 1}</span>
-                    <span className="truncate max-w-[90px]">{sec.label}</span>
-                    <span className={`w-1.5 h-1.5 rounded-full ${dotColor} ${isActive ? 'ring-2 ring-blue-400/50 animate-pulse' : ''}`} />
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      key={sec.id}
+                      onClick={() => setActiveSection(sec.id as any)}
+                      className={`flex items-center gap-3 p-2 rounded-lg text-left transition-all relative z-10 ${
+                        isActive 
+                          ? 'bg-slate-200/50 dark:bg-slate-900/60 text-blue-600 dark:text-blue-400 font-semibold' 
+                          : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/30 hover:text-slate-800 dark:hover:text-slate-200 font-medium'
+                      }`}
+                    >
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center border font-mono text-[10px] shrink-0 z-10 transition-all ${
+                        isActive
+                          ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/10'
+                          : 'border-slate-200 dark:border-slate-850 bg-white dark:bg-slate-900 text-slate-400 dark:text-slate-500'
+                      }`}>
+                        0{idx + 1}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[12px] truncate">{sec.label}</div>
+                        <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500 leading-none mt-0.5">
+                          {sec.noBadge ? 'Complete' : status}
+                        </div>
+                      </div>
+                      <span className={`w-1.5 h-1.5 rounded-full ${dotColor} shrink-0 ${isActive ? 'ring-2 ring-blue-400/50' : ''}`} />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
+
+          {/* Editor Core Content Container */}
+          <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
 
           {/* Editor Header */}
           <div className="p-6 pb-4 border-b border-slate-200 dark:border-slate-700/50 flex items-center justify-between flex-shrink-0">
@@ -2800,7 +2854,7 @@ export default function ReportBuilder({
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {/* Client / Target */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                  <div className="border border-slate-200/40 dark:border-slate-800/45 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-3 flex items-center gap-3 focus-within:ring-2 focus-within:ring-blue-500/15 focus-within:border-blue-500/30 transition-all hover:bg-slate-100/50 dark:hover:bg-slate-750/30">
                     <Building2 className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Client / Target</label>
@@ -2815,7 +2869,7 @@ export default function ReportBuilder({
                   </div>
 
                   {/* Lead Analyst */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                  <div className="border border-slate-200/40 dark:border-slate-800/45 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-3 flex items-center gap-3 focus-within:ring-2 focus-within:ring-blue-500/15 focus-within:border-blue-500/30 transition-all hover:bg-slate-100/50 dark:hover:bg-slate-750/30">
                     <User className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Lead Analyst</label>
@@ -2830,7 +2884,7 @@ export default function ReportBuilder({
                   </div>
 
                   {/* Document Version */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                  <div className="border border-slate-200/40 dark:border-slate-800/45 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-3 flex items-center gap-3 focus-within:ring-2 focus-within:ring-blue-500/15 focus-within:border-blue-500/30 transition-all hover:bg-slate-100/50 dark:hover:bg-slate-750/30">
                     <Hash className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Document Version</label>
@@ -2845,7 +2899,7 @@ export default function ReportBuilder({
                   </div>
 
                   {/* Status */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750 relative">
+                  <div className="border border-slate-200/40 dark:border-slate-800/45 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-3 flex items-center gap-3 focus-within:ring-2 focus-within:ring-blue-500/15 focus-within:border-blue-500/30 transition-all hover:bg-slate-100/50 dark:hover:bg-slate-750/30 relative">
                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
                       report.status === 'Final' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' :
                       report.status === 'Review in progress' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' :
@@ -2868,7 +2922,7 @@ export default function ReportBuilder({
                   </div>
 
                   {/* Assessment Date Range */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                  <div className="border border-slate-200/40 dark:border-slate-800/45 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-3 flex items-center gap-3 focus-within:ring-2 focus-within:ring-blue-500/15 focus-within:border-blue-500/30 transition-all hover:bg-slate-100/50 dark:hover:bg-slate-750/30">
                     <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Assessment Date Range</label>
@@ -2898,7 +2952,7 @@ export default function ReportBuilder({
                   </div>
 
                   {/* Report Date */}
-                  <div className="border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 focus-within:border-indigo-400 focus-within:ring-1 focus-within:ring-indigo-400/20 transition-colors hover:bg-slate-100 dark:hover:bg-slate-750">
+                  <div className="border border-slate-200/40 dark:border-slate-800/45 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-3 flex items-center gap-3 focus-within:ring-2 focus-within:ring-blue-500/15 focus-within:border-blue-500/30 transition-all hover:bg-slate-100/50 dark:hover:bg-slate-750/30">
                     <Calendar className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Report Date</label>
@@ -2953,7 +3007,7 @@ export default function ReportBuilder({
             {activeSection === 'summary' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-[10px] uppercase text-slate-500 font-bold border-b border-white/[0.05] pb-2 mb-3 tracking-widest">
+                  <h3 className="text-[10px] uppercase text-slate-500 font-extrabold tracking-widest mb-2.5">
                     EXECUTIVE SUMMARY
                   </h3>
                   <AITextarea
@@ -2969,7 +3023,7 @@ export default function ReportBuilder({
                 </div>
 
                 <div>
-                  <h3 className="text-[10px] uppercase text-slate-505 font-bold border-b border-white/[0.05] pb-2 mb-3 tracking-widest">
+                  <h3 className="text-[10px] uppercase text-slate-500 font-extrabold tracking-widest mb-2.5">
                     STRATEGIC RECOMMENDATIONS
                   </h3>
                   <AITextarea
@@ -2985,7 +3039,7 @@ export default function ReportBuilder({
                 </div>
 
                 <div>
-                  <h3 className="text-[10px] uppercase text-slate-505 font-bold border-b border-white/[0.05] pb-2 mb-3 tracking-widest">
+                  <h3 className="text-[10px] uppercase text-slate-500 font-extrabold tracking-widest mb-2.5">
                     USING THIS REPORT
                   </h3>
                   <AITextarea
@@ -3001,7 +3055,7 @@ export default function ReportBuilder({
                 </div>
 
                 <div>
-                  <h3 className="text-[10px] uppercase text-slate-505 font-bold border-b border-white/[0.05] pb-2 mb-3 tracking-widest">
+                  <h3 className="text-[10px] uppercase text-slate-500 font-extrabold tracking-widest mb-2.5">
                     1.1 ENGAGEMENT SCOPE
                   </h3>
                   <AITextarea
@@ -3017,7 +3071,7 @@ export default function ReportBuilder({
                 </div>
 
                 <div>
-                  <h3 className="text-[10px] uppercase text-slate-505 font-bold border-b border-white/[0.05] pb-2 mb-3 tracking-widest">
+                  <h3 className="text-[10px] uppercase text-slate-500 font-extrabold tracking-widest mb-2.5">
                     1.2 CAVEATS
                   </h3>
                   <AITextarea
@@ -3033,7 +3087,7 @@ export default function ReportBuilder({
                 </div>
 
                 <div>
-                  <h3 className="text-[10px] uppercase text-slate-550 font-bold border-b border-white/[0.05] pb-2 mb-3 tracking-widest">
+                  <h3 className="text-[10px] uppercase text-slate-500 font-extrabold tracking-widest mb-2.5">
                     1.3 POST ASSESSMENT CLEANUP
                   </h3>
                   <AITextarea
@@ -4016,25 +4070,26 @@ export default function ReportBuilder({
                   setIsCustomSaved(true);
                   setTimeout(() => setIsCustomSaved(false), 3000);
                 }}
-                className={`flex items-center gap-2 px-5 py-2.5 text-white text-xs font-bold rounded-lg transition-all ${
+                className={`flex items-center gap-2 px-5 py-2.5 text-white text-xs font-bold rounded-full transition-all ${
                   isCustomSaved 
                     ? 'bg-emerald-600 hover:bg-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]' 
                     : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.4)]'
                 }`}
               >
-                <span>{isCustomSaved ? 'Saved' : 'Save'}</span>
+                <span>{isCustomSaved ? 'Saved' : 'Save report'}</span>
                 {isCustomSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
               </button>
             ) : (
               <button
                 onClick={handleSaveAndContinue}
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.4)] text-white text-xs font-bold rounded-lg transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.4)] text-white text-xs font-bold rounded-full transition-all"
               >
-                <span>Save & Continue</span>
+                <span>Save and continue</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             )}
           </div>
+          </div> {/* Closes the editor core content container div */}
         </div>
 
         {/* Right Side: Live HTML Preview */}

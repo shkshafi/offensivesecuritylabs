@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&display=swap');
 @import './landing.css';
 
 :root {
-  --font-brand: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
+  --font-brand: 'Noto Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 @tailwind base;
@@ -104,7 +105,7 @@
 }
 @layer base {
   :root {
-    --background: 216 33% 97%;
+    --background: 210 20% 96%; /* Basecoat Light Background (Greyish `#f4f5f7`) */
     --foreground: 215 28% 17%;
 
     --card: 0 0% 100%;
@@ -113,44 +114,44 @@
     --popover: 0 0% 100%;
     --popover-foreground: 215 28% 17%;
 
-    --primary: 220 42% 58%;
+    --primary: 204 100% 37%; /* NTT Future Blue `#0072BC` */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 9% 46%;
+    --secondary: 206 22% 28%; /* NTT Blue Gray `#374956` */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 215 55% 96%;
+    --muted: 210 20% 93%;
     --muted-foreground: 220 9% 46%;
 
-    --accent: 218 62% 95%;
-    --accent-foreground: 220 42% 58%;
+    --accent: 210 20% 93%;
+    --accent-foreground: 204 100% 37%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 10 100% 45%; /* NTT Danger `#E42600` */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 35% 90%;
-    --input: 217 35% 90%;
-    --ring: 220 42% 58%;
+    --border: 210 14% 89%; /* Lighter Gray `#c0c6ca` */
+    --input: 0 0% 100%;
+    --ring: 204 100% 37%;
 
-    --premium: 220 42% 58%;
+    --premium: 204 100% 37%;
     --premium-foreground: 0 0% 100%;
 
-    --chart-1: 220 42% 58%;
+    --chart-1: 204 100% 37%;
     --chart-2: 198 100% 42%;
-    --chart-3: 142 76% 36%;
-    --chart-4: 38 92% 50%;
-    --chart-5: 0 72% 51%;
+    --chart-3: 147 100% 40%; /* Success `#00CB5D` */
+    --chart-4: 46 100% 50%;  /* Warning `#FFC400` */
+    --chart-5: 10 100% 45%;
 
     --radius: 8px;
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 215 28% 17%;
-    --sidebar-primary: 220 42% 58%;
+    --sidebar-primary: 204 100% 37%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 218 62% 95%;
-    --sidebar-accent-foreground: 220 42% 58%;
-    --sidebar-border: 217 35% 90%;
-    --sidebar-ring: 220 42% 58%;
+    --sidebar-accent: 210 20% 93%;
+    --sidebar-accent-foreground: 204 100% 37%;
+    --sidebar-border: 210 14% 89%;
+    --sidebar-ring: 204 100% 37%;
   }
 
   /* Target the entire scrollbar */
@@ -192,7 +193,7 @@
   body {
     @apply min-h-svh w-full text-foreground;
     background-color: hsl(var(--background));
-    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Noto Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
   }
 
   /* Keep monospace only where semantically correct */
@@ -201,58 +202,58 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Use Inter / Segoe UI for display headings */
+  /* Use Noto Sans for display headings */
   h1, h2, .font-display {
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    font-weight: 600;
+    font-family: 'Noto Sans', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
   }
 
   .dark {
-    --background: 224 71% 4%;
+    --background: 225 69% 8%; /* NTT Smart Navy background `#070F26` */
     --foreground: 210 40% 96.1%;
 
-    --card: 222 47% 11.2%;
+    --card: 219 35% 13%; /* Middle Gray `#151D2C` */
     --card-foreground: 210 40% 96.1%;
 
-    --popover: 217 33% 17.5%;
+    --popover: 215 30% 17%; /* Darker Gray `#1F2A3A` */
     --popover-foreground: 210 40% 96.1%;
 
-    --primary: 213.1 93.9% 67.8%;
-    --primary-foreground: 224 71% 4%;
+    --primary: 204 100% 37%; /* NTT Future Blue `#0072BC` */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 33% 17.5%;
-    --secondary-foreground: 210 40% 96.1%;
+    --secondary: 206 22% 28%; /* NTT Blue Gray `#374956` */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 217 33% 17.5%;
-    --muted-foreground: 215 20% 65.1%;
+    --muted: 205 34% 20%; /* NTT Dark Gray `#213543` */
+    --muted-foreground: 208 11% 65%;
 
-    --accent: 215 64% 11%;
-    --accent-foreground: 213.1 93.9% 67.8%;
+    --accent: 219 35% 13%; /* Middle Gray `#151D2C` */
+    --accent-foreground: 204 100% 37%; /* Future Blue */
 
-    --destructive: 0 72% 51%;
+    --destructive: 10 100% 45%; /* Danger `#E42600` */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 25% 20%;
-    --input: 215 25% 20%;
-    --ring: 213.1 93.9% 67.8%;
+    --border: 215 25% 20%; /* Darker Gray border `#1F2A3A` */
+    --input: 225 69% 8%; /* Smart Navy `#070F26` */
+    --ring: 204 100% 37%;
 
-    --premium: 213.1 93.9% 67.8%;
-    --premium-foreground: 224 71% 4%;
+    --premium: 204 100% 37%;
+    --premium-foreground: 0 0% 100%;
 
-    --chart-1: 213.1 93.9% 67.8%;
+    --chart-1: 204 100% 37%;
     --chart-2: 198 100% 42%;
-    --chart-3: 142 76% 36%;
-    --chart-4: 38 92% 50%;
-    --chart-5: 0 72% 51%;
+    --chart-3: 147 100% 40%; /* Success `#00CB5D` */
+    --chart-4: 46 100% 50%;  /* Warning `#FFC400` */
+    --chart-5: 10 100% 45%;
 
-    --sidebar-background: 222 47% 11.2%;
+    --sidebar-background: 225 69% 8%;
     --sidebar-foreground: 210 40% 96.1%;
-    --sidebar-primary: 213.1 93.9% 67.8%;
-    --sidebar-primary-foreground: 224 71% 4%;
-    --sidebar-accent: 215 64% 11%;
-    --sidebar-accent-foreground: 213.1 93.9% 67.8%;
+    --sidebar-primary: 204 100% 37%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 219 35% 13%;
+    --sidebar-accent-foreground: 204 100% 37%;
     --sidebar-border: 215 25% 20%;
-    --sidebar-ring: 213.1 93.9% 67.8%;
+    --sidebar-ring: 204 100% 37%;
   }
 
   /* Sidebar glassmorphism — matches the navbar floating glass style */
@@ -1062,7 +1063,7 @@ button:active, .btn:active, [type="submit"]:active, [type="button"]:active, a.in
 .ntt-btn-glowing {
   background: hsl(var(--primary)) !important;
   color: hsl(var(--primary-foreground)) !important;
-  border-radius: 6px !important;
+  border-radius: 9999px !important;
   box-shadow: none !important;
   animation: none !important;
 }
@@ -1090,6 +1091,42 @@ button:active, .btn:active, [type="submit"]:active, [type="button"]:active, a.in
   cursor: pointer;
 }
 
+/* NTT DATA branding logo and sidebar background standardization */
+.ntt-logo-img {
+  transition: filter 0.2s ease;
+}
 
+html.dark .ntt-logo-img {
+  filter: brightness(0) invert(1) !important;
+}
 
+aside,
+[data-sidebar="sidebar"],
+html[data-background-style="colourful"] [data-sidebar="sidebar"],
+html[data-background-style="none"] [data-sidebar="sidebar"] {
+  background-image: none !important;
+  background-color: #ffffff !important; /* Pure white in light theme */
+  border-right: 1px solid rgb(232, 232, 232) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
 
+html.dark aside,
+html.dark [data-sidebar="sidebar"],
+html.dark[data-background-style="colourful"] [data-sidebar="sidebar"],
+html.dark[data-background-style="none"] [data-sidebar="sidebar"] {
+  background-image: none !important;
+  background-color: #111621 !important; /* Dark slate-grey in dark theme */
+  border-right: 1px solid rgb(30, 41, 59) !important;
+}
+
+/* Sidebar active item overrides matching the screenshot precisely */
+[data-sidebar="sidebar"] a[class*="bg-slate-200"] {
+  background-color: #e8e8e8 !important; /* light active */
+  color: #070F26 !important;
+}
+
+html.dark [data-sidebar="sidebar"] a[class*="dark:bg-slate-800"] {
+  background-color: #1c2438 !important; /* dark active */
+  color: #ffffff !important;
+}

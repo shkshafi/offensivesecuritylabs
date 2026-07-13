@@ -12,6 +12,9 @@
 /public/storage
 /storage/*.key
 
+/TopCoat
+
+
 # Docusaurus Specific
 /build
 .docusaurus

@@ -30,7 +30,7 @@
 
         <!-- Email Address -->
         <div class="space-y-1.5">
-            <label for="email" class="block text-xs font-semibold text-foreground uppercase tracking-wider">Email Address</label>
+            <label for="email" class="block text-xs font-medium text-foreground">Email address</label>
             <x-text-input id="email" 
                           class="block w-full" 
                           type="email" 
@@ -45,7 +45,7 @@
         <!-- Password -->
         <div class="space-y-1.5">
             <div class="flex justify-between items-center">
-                <label for="password" class="block text-xs font-semibold text-foreground uppercase tracking-wider">Password</label>
+                <label for="password" class="block text-xs font-medium text-foreground">Password</label>
                 @if (Route::has('password.request'))
                     <a class="text-xs text-primary hover:text-primary/95 text-decoration-none font-medium" href="{{ route('password.request') }}">
                         Forgot password?
@@ -72,7 +72,7 @@
         <!-- Submit Button -->
         <div class="pt-2">
             <x-primary-button class="w-full">
-                Log In
+                Log in
             </x-primary-button>
         </div>
     </form>

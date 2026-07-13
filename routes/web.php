@@ -12,16 +12,14 @@ Route::get('/', function () {
 Route::post('/waitlist', [\App\Http\Controllers\WaitlistController::class, 'store'])->name('waitlist.store');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('report-creator');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Appearance Settings
-    Route::get('/settings/appearance', [AppearanceController::class, 'edit'])->name('settings.appearance.edit');
     Route::patch('/settings/appearance', [AppearanceController::class, 'update'])->name('settings.appearance.update');
 
     // Notifications
@@ -38,14 +36,17 @@ Route::middleware('auth')->group(function () {
         return view('coming-soon');
     })->name('coming-soon');
 
-    // Custom Apps
-    Route::get('/report-creator', function () {
-        return view('report-creator');
-    })->name('report-creator');
+    // Redirect old report-creator routes to dashboard
+    Route::redirect('/report-creator', '/dashboard');
+    Route::redirect('/report-creator/templates', '/dashboard/templates');
 
-    Route::get('/report-creator/templates', function () {
+    Route::get('/dashboard/templates', function () {
         return view('report-creator');
-    })->name('report-creator.templates');
+    })->name('dashboard.templates');
+
+    Route::get('/dashboard/builder/{id?}', function () {
+        return view('report-creator');
+    })->name('report-builder');
 
     Route::prefix('admin/groqai')->name('admin.groqai.')->group(function () {
         Route::post('/query', [\App\Http\Controllers\Admin\GroqAIController::class, 'query'])->name('query');

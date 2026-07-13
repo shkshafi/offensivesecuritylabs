@@ -10,30 +10,30 @@ export const DEFAULT_TEMPLATE = `<!DOCTYPE html>
   <style>
     :root {
       /* Brand Color System applied precisely */
-      --navy:         #070F26; /* Black Pearl - Deep Primary */
-      --navy-mid:     #0d193b; /* Mid Deep Pearl */
-      --navy-light:   #142554; /* Light Accent Pearl */
-      --accent:       #0072BB; /* Lochmara - Vivid Brand Accent */
-      --accent-dim:   #00558c; /* Lochmara Shadow */
-      --text:         #070F26; /* High Contrast Primary Text */
-      --text-light:   #4e5d78; /* Secondary Text Tone */
-      --border:       #BAD2EE; /* Spindle - Light Structural Borders */
-      --bg:           #FFFFFF; 
-      --bg-alt:       #F3F7FC; /* Tinted Spindle Neutral Contrast */
+      --navy:         #070F26; /* Smart Navy - Primary Deep */
+      --navy-mid:     #070F26; /* Smart Navy */
+      --navy-light:   #005B96; /* Future Blue 150 - Primary Accent */
+      --accent:       #0072BC; /* Future Blue - Primary Brand Color */
+      --accent-dim:   #005B96; /* Future Blue 150 */
+      --text:         #070F26; /* Smart Navy - Deep Text */
+      --text-light:   #2E404D; /* Text Grey */
+      --border:       #E8E8E8; /* Grey 50 - Structural border */
+      --bg:           #FFFFFF; /* White */
+      --bg-alt:       #E8E8E8; /* Grey 50 - Neutral contrast */
       
-      /* Risk Severity Palette */
-      --critical:     #6E0C1A;
-      --high:         #CC2936;
-      --medium:       #D4700A;
-      --low:          #2B7A0B;
-      --info:         #0072BB; /* Unified with Brand Accent */
+      /* Risk Severity Palette - Mapped to NTT DATA accents */
+      --critical:     #E42600; /* Orange 100 / Red - Attention grabber */
+      --high:         #FF7A00; /* Orange */
+      --medium:       #FFC400; /* Yellow */
+      --low:          #00CB5D; /* Green */
+      --info:         #0072BC; /* Future Blue */
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
     body {
       font-family: 'IBM Plex Sans', sans-serif;
-      background: #E8EDF2;
+      background: #E8E8E8;
       color: var(--text);
       font-size: 13px;
       line-height: 1.65;

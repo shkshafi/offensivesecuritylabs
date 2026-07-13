@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="headerActions">
-        <x-primary-button type="button" @click="openCreateModal = true" class="flex items-center gap-1.5">
+        <x-primary-button type="button" @click="$dispatch('open-create-user-modal')" class="flex items-center gap-1.5">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
@@ -8,7 +8,7 @@
         </x-primary-button>
     </x-slot>
 
-    <div class="w-full px-4 md:px-6 py-6 space-y-6" x-data="{ openModal: false, openCreateModal: false, userName: '', actionUrl: '' }">
+    <div class="w-full px-4 md:px-6 py-6 space-y-6" x-data="{ openModal: false, openCreateModal: false, userName: '', actionUrl: '' }" @open-create-user-modal.window="openCreateModal = true">
         
         <!-- Status Notifications -->
         @if (session('status'))
